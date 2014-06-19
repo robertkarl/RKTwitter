@@ -1,7 +1,10 @@
 package com.codepath.apps.RKTwitterClient.models;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by androiddev on 6/18/14.
@@ -41,5 +44,31 @@ public class Tweet {
             return null;
         }
         return tweet;
+    }
+
+    public static ArrayList<Tweet> fromJSONArray(JSONArray array) {
+        ArrayList<Tweet> tweets = new ArrayList<Tweet>(array.length());
+
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject tweetJson = null;
+            try {
+                tweetJson = array.getJSONObject(i);
+
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                continue;
+            }
+            Tweet tweet = Tweet.fromJSON(tweetJson);
+            if (tweet != null) {
+                tweets.add(tweet);
+            }
+        }
+        return tweets;
+    }
+
+    @Override
+    public String toString() {
+        return  String.format("%s - %s", getBody(), getUser());
     }
 }
