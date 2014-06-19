@@ -1,12 +1,13 @@
 package com.codepath.apps.RKTwitterClient;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
 import com.codepath.oauth.OAuthLoginActivity;
 
-public class LoginActivity extends OAuthLoginActivity<RestClient> {
+public class LoginActivity extends OAuthLoginActivity<TwitterClient> {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -14,7 +15,7 @@ public class LoginActivity extends OAuthLoginActivity<RestClient> {
 		setContentView(R.layout.activity_login);
 	}
 
-	// Inflate the menu; this adds items to the action bar if it is present.
+	// Inflate the menu; this adds1 items to the action bar if it is present.
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.login, menu);
@@ -25,8 +26,8 @@ public class LoginActivity extends OAuthLoginActivity<RestClient> {
 	// i.e Display application "homepage"
     @Override
     public void onLoginSuccess() {
-    	// Intent i = new Intent(this, PhotosActivity.class);
-    	// startActivity(i);
+    	Intent i = new Intent(this, TimelineActivity.class);
+    	startActivity(i);
     }
     
     // OAuth authentication flow failed, handle the error
