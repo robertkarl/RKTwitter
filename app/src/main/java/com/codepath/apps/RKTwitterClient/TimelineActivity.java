@@ -3,7 +3,6 @@ package com.codepath.apps.RKTwitterClient;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.codepath.apps.RKTwitterClient.models.Tweet;
@@ -17,7 +16,7 @@ public class TimelineActivity extends Activity {
     private TwitterClient client;
 
     private ArrayList<Tweet> tweets;
-    private ArrayAdapter<Tweet> aTweets;
+    private TweetArrayAdapter aTweets;
     private ListView lvTweets;
 
     @Override
@@ -30,7 +29,7 @@ public class TimelineActivity extends Activity {
 
         lvTweets = (ListView)findViewById(R.id.lvTweets);
         tweets = new ArrayList<Tweet>();
-        aTweets = new ArrayAdapter<Tweet>(this, android.R.layout.simple_list_item_1, tweets);
+        aTweets = new TweetArrayAdapter(this, tweets);
         lvTweets.setAdapter(aTweets);
     }
 

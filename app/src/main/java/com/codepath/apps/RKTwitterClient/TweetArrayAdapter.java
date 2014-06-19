@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.RKTwitterClient.models.Tweet;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
@@ -35,6 +36,11 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         TextView tvUserName = (TextView) v.findViewById(R.id.tvUserName);
         TextView tvBody = (TextView) v.findViewById(R.id.tvBody);
         ivProfileImage.setImageResource(getContext().getResources().getColor(android.R.color.transparent));
+
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.displayImage(tweet.getUser().getProfileImageURL(), ivProfileImage);
+        tvUserName.setText(tweet.getUser().getScreenName());
+        tvBody.setText(tweet.getBody());
 
         return v;
     }

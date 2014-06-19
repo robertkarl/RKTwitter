@@ -6,9 +6,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-/**
- * Created by androiddev on 6/18/14.
- */
 public class Tweet {
     private String body;
     private long uid;
