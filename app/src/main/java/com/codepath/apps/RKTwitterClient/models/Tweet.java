@@ -12,8 +12,20 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class Tweet {
+
+    public static long OLDEST_TWEET = Long.MAX_VALUE;
     private String body;
-    private long uid;
+
+    public void setID(long ID) {
+        this.ID = ID;
+    }
+
+    private long ID;
+
+    public long getID() {
+        return ID;
+    }
+
     private String createdAt;
     private User user;
     private String relativeDate;
@@ -25,10 +37,6 @@ public class Tweet {
 
     public String getBody() {
         return body;
-    }
-
-    public long getUid() {
-        return uid;
     }
 
     public String getCreatedAt() {
@@ -43,7 +51,7 @@ public class Tweet {
         Tweet tweet = new Tweet();
         try {
             tweet.body = object.getString("text");
-            tweet.uid = object.getLong("id");
+            tweet.ID = object.getLong("id");
             tweet.createdAt = object.getString("created_at");
             tweet.user = User.fromJSON(object.getJSONObject("user"));
             tweet.relativeDate = Tweet.getRelativeTimeAgo(tweet.createdAt);

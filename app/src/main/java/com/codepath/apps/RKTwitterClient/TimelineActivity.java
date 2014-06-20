@@ -19,6 +19,8 @@ public class TimelineActivity extends Activity {
     private TweetArrayAdapter aTweets;
     private ListView lvTweets;
 
+    private long lastTweetID = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,9 +30,34 @@ public class TimelineActivity extends Activity {
         populateTimeline();
 
         lvTweets = (ListView)findViewById(R.id.lvTweets);
+        lvTweets.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                loadAdditionalTweets(page, totalItemsCount);
+            }
+        });
         tweets = new ArrayList<Tweet>();
         aTweets = new TweetArrayAdapter(this, tweets);
         lvTweets.setAdapter(aTweets);
+    }
+
+    private void loadAdditionalTweets(int page, int totalItemsCount) {
+        client.getHomeTimeLineTweetsNoOlderThan(new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(JSONArray jsonArray) {
+                Log.d("DBG", jsonArray.toString());
+                ArrayList<Tweet> receivedTweets = Tweet.fromJSONArray(jsonArray);
+                lastTweetID = getOldestTweetId(receivedTweets);
+                aTweets.addAll(receivedTweets);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable, String s) {
+                super.onFailure(throwable, s);
+                Log.d("DBG", s);
+            }
+        }, lastTweetID);
     }
 
     public void populateTimeline() {
@@ -39,7 +66,9 @@ public class TimelineActivity extends Activity {
             @Override
             public void onSuccess(JSONArray jsonArray) {
                 Log.d("DBG", jsonArray.toString());
-                aTweets.addAll(Tweet.fromJSONArray(jsonArray));
+                ArrayList<Tweet> receivedTweets = Tweet.fromJSONArray(jsonArray);
+                lastTweetID = getOldestTweetId(receivedTweets);
+                aTweets.addAll(receivedTweets);
             }
 
             @Override
@@ -49,4 +78,15 @@ public class TimelineActivity extends Activity {
             }
         });
     }
+
+    long getOldestTweetId(ArrayList<Tweet> tweets) {
+        long oldest = Tweet.OLDEST_TWEET;
+        for (Tweet tweet: tweets) {
+            if (tweet.getID() < oldest) {
+                oldest = tweet.getID();
+            }
+        }
+        return oldest;
+    }
+
 }

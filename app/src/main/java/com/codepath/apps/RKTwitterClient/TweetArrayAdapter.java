@@ -32,16 +32,24 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
             v = convertView;
         }
 
-        ImageView ivProfileImage = (ImageView)v.findViewById(R.id.ivProfileImage);
-        TextView tvUserName = (TextView) v.findViewById(R.id.tvUserName);
-        TextView tvBody = (TextView) v.findViewById(R.id.tvBody);
-        ivProfileImage.setImageResource(getContext().getResources().getColor(android.R.color.transparent));
+        setupProfileImage(v, tweet);
 
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(tweet.getUser().getProfileImageURL(), ivProfileImage);
-        tvUserName.setText(tweet.getUser().getScreenName());
-        tvBody.setText(tweet.getBody());
+        setText(v, R.id.tvUserName, tweet.getUser().getScreenName());
+        setText(v, R.id.tvBody, tweet.getBody());
+        setText(v, R.id.tvRelativeTimestamp, tweet.getRelativeDate());
 
         return v;
+    }
+
+    void setText(View parentView, int textViewID, String textValue) {
+        TextView tvUserName = (TextView) parentView.findViewById(textViewID);
+        tvUserName.setText(textValue);
+    }
+
+    void setupProfileImage(View v, Tweet tweet) {
+        ImageView ivProfileImage = (ImageView)v.findViewById(R.id.ivProfileImage);
+        ivProfileImage.setImageResource(getContext().getResources().getColor(android.R.color.transparent));
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.displayImage(tweet.getUser().getProfileImageURL(), ivProfileImage);
     }
 }

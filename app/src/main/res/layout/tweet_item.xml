@@ -27,4 +27,15 @@
         android:id="@+id/tvBody"
         android:layout_below="@+id/tvUserName"
         android:layout_toRightOf="@+id/ivProfileImage" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="2dp"
+        android:text="7 mins ago"
+        android:id="@+id/tvRelativeTimestamp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+/>
+
 </RelativeLayout>
