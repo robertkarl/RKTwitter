@@ -1,6 +1,7 @@
 package com.codepath.apps.RKTwitterClient;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -23,7 +24,7 @@ import org.scribe.builder.api.TwitterApi;
  */
 public class TwitterClient extends OAuthBaseClient {
     public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class; // Change this
-    public static final String REST_URL = "https://api.twitter.com/1.1/"; // Change this, base API URL
+    public static final String REST_URL = "https://api.twitter.com/1.1"; // Change this, base API URL
     public static final String REST_CONSUMER_KEY = "FT5gJGNvj5JPSrX8W5HrF14wC";
     public static final String REST_CONSUMER_SECRET = "Cc4gudmSfWD8FynCwdt11Kf1ojjF22CMsuOU0CJNS2x9aquz4p";
     public static final String REST_CALLBACK_URL = "oauth://cpbasictweets"; // Change this (here and in manifest)
@@ -43,6 +44,7 @@ public class TwitterClient extends OAuthBaseClient {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
         RequestParams params = new RequestParams();
         params.put("since_id", "1");
+        Log.i("DBG", String.format("Requesting %s ", apiUrl));
         if (tweetID != 0) {
             params.put("max_id", Long.toString(tweetID));
         }

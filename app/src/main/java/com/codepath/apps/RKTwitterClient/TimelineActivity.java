@@ -95,7 +95,7 @@ public class TimelineActivity extends Activity {
                 super.onFailure(throwable, s);
                 Log.d("DBG", s);
             }
-        }, lastTweetID);
+        }, lastTweetID - 1);
     }
 
     void unpackTweetsFromJSON(JSONArray jsonArray) {
