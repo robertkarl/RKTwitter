@@ -103,6 +103,8 @@ public class Tweet {
         replaceMappings.put(" hour ago", "h");
         replaceMappings.put(" minutes ago", "m");
         replaceMappings.put(" minutes ago", "m");
+        replaceMappings.put(" seconds ago", "s");
+        replaceMappings.put(" second ago", "s");
         replaceMappings.put(" day ago", "d");
         replaceMappings.put(" days ago", "d");
         for (String suffixKey: replaceMappings.keySet()) {

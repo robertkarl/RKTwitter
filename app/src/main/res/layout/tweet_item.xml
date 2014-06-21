@@ -3,7 +3,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@android:color/white"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingBottom="6dp">
 
     <ImageView
         android:id="@+id/ivProfileImage"
@@ -41,7 +42,8 @@
         android:layout_height="wrap_content"
         android:text="Tweet body"
         android:layout_below="@+id/tvUserName"
-        style="@style/MainText"
+        android:layout_marginRight="27dp"
+        style="@style/TweetText"
         android:layout_toRightOf="@+id/ivProfileImage" />
 
     <TextView
@@ -52,7 +54,6 @@
 
         android:text="7 mins ago"
         style="@style/RelativeTimeText"
-        android:fontFamily=""
         android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"/>
