@@ -1,11 +1,16 @@
 package com.codepath.apps.RKTwitterClient;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.codepath.apps.RKTwitterClient.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -47,6 +52,18 @@ public class TimelineActivity extends Activity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.timeline, menu);
+        return true;
+    }
+
+    public boolean onComposeClicked(MenuItem item) {
+        Intent i = new Intent(this, ComposeActivity.class);
+        startActivity(i);
+        return true;
+    }
+
     private void loadAdditionalTweets(int page, int totalItemsCount) {
         client.getHomeTimeLineTweetsNoOlderThan(new JsonHttpResponseHandler() {
 
@@ -75,6 +92,7 @@ public class TimelineActivity extends Activity {
                 ArrayList<Tweet> receivedTweets = Tweet.fromJSONArray(jsonArray);
                 lastTweetID = getOldestTweetId(receivedTweets);
                 aTweets.addAll(receivedTweets);
+                getProgressBar().setVisibility(View.GONE);
             }
 
             @Override
@@ -84,6 +102,11 @@ public class TimelineActivity extends Activity {
             }
         });
     }
+
+    ProgressBar getProgressBar() {
+        return (ProgressBar)findViewById(R.id.progressBar);
+    }
+
 
     long getOldestTweetId(ArrayList<Tweet> tweets) {
         long oldest = Tweet.OLDEST_TWEET;
