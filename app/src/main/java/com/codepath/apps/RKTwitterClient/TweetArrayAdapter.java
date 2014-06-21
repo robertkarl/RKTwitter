@@ -34,7 +34,9 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 
         setupProfileImage(v, tweet);
 
-        setText(v, R.id.tvUserName, tweet.getUser().getScreenName());
+        setText(v, R.id.tvUserName, tweet.getUser().getName());
+        setText(v, R.id.tvUserScreenName, String.format("@%s",
+                tweet.getUser().getScreenName(), "@"));
         setText(v, R.id.tvBody, tweet.getBody());
         setText(v, R.id.tvRelativeTimestamp, tweet.getRelativeDate());
 

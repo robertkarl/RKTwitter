@@ -9,29 +9,24 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class Tweet {
 
     public static long OLDEST_TWEET = Long.MAX_VALUE;
+
     private String body;
-
-    public void setID(long ID) {
-        this.ID = ID;
-    }
-
+    private String createdAt;
+    private User user;
+    private String relativeDate;
     private long ID;
 
     public long getID() {
         return ID;
     }
 
-    private String createdAt;
-    private User user;
-    private String relativeDate;
-
     public String getRelativeDate() {
-
         return relativeDate;
     }
 
@@ -101,6 +96,19 @@ public class Tweet {
                     System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
         } catch (ParseException e) {
             e.printStackTrace();
+        }
+
+        HashMap<String, String> replaceMappings = new HashMap<String, String>();
+        replaceMappings.put(" hours ago", "h");
+        replaceMappings.put(" hour ago", "h");
+        replaceMappings.put(" minutes ago", "m");
+        replaceMappings.put(" minutes ago", "m");
+        replaceMappings.put(" day ago", "d");
+        replaceMappings.put(" days ago", "d");
+        for (String suffixKey: replaceMappings.keySet()) {
+            if (relativeDate.endsWith(suffixKey)) {
+                relativeDate = relativeDate.replace(suffixKey, replaceMappings.get(suffixKey));
+            }
         }
 
         return relativeDate;

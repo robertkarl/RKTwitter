@@ -1,47 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@android:color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
+        android:id="@+id/ivProfileImage"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_margin="10dp"
-        android:id="@+id/ivProfileImage"
         android:src="@drawable/ic_launcher"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
     <TextView
+        android:id="@+id/tvUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Screen name"
+        android:text="Firstname Lastname"
         android:layout_marginTop="5dp"
-        android:id="@+id/tvUserName"
+        style="@style/UserNameText"
         android:layout_alignParentTop="true"
-        style="@style/SubText"
         android:layout_toRightOf="@+id/ivProfileImage" />
 
     <TextView
+        android:id="@+id/tvUserScreenName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="\@Screen_name"
+        android:layout_alignBaseline="@id/tvUserName"
+        android:layout_toRightOf="@id/tvUserName"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="4dp"
+        style="@style/ScreenNameText" />
+
+    <TextView
+        android:id="@+id/tvBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tweet body"
-        android:id="@+id/tvBody"
         android:layout_below="@+id/tvUserName"
         style="@style/MainText"
         android:layout_toRightOf="@+id/ivProfileImage" />
 
     <TextView
+        android:id="@+id/tvRelativeTimestamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/tvUserName"
+
         android:text="7 mins ago"
-        android:layout_marginTop="5dp"
-        style="@style/SubText"
+        style="@style/RelativeTimeText"
         android:fontFamily=""
-        android:id="@+id/tvRelativeTimestamp"
+        android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-/>
+        android:layout_alignParentTop="true"/>
 
 </RelativeLayout>
