@@ -15,6 +15,18 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+
     </style>
+
+    <style name="MainText">
+        <item name="android:textColor">#232323</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="SubText">
+        <item name="android:textColor">#939393</item>
+        <item name="android:fontFamily">sans-serif-light-condensed</item>
+    </style>
+
 
 </resources>

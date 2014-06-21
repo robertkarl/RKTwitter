@@ -1,6 +1,8 @@
 package com.codepath.apps.RKTwitterClient;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
@@ -25,6 +27,8 @@ public class TimelineActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
+
+        getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#4099FF")));
 
         client = TwitterApplication.getRestClient();
         populateTimeline();
