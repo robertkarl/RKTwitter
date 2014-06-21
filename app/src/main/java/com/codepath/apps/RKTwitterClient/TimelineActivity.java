@@ -20,6 +20,7 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 
 public class TimelineActivity extends Activity {
+    public static int COMPOSE_REQUEST = 1234;
     private TwitterClient client;
 
     private ArrayList<Tweet> tweets;
@@ -60,7 +61,7 @@ public class TimelineActivity extends Activity {
 
     public boolean onComposeClicked(MenuItem item) {
         Intent i = new Intent(this, ComposeActivity.class);
-        startActivity(i);
+        startActivityForResult(i, COMPOSE_REQUEST);
         return true;
     }
 
@@ -69,10 +70,8 @@ public class TimelineActivity extends Activity {
 
             @Override
             public void onSuccess(JSONArray jsonArray) {
+                unpackTweetsFromJSON(jsonArray);
                 Log.d("DBG", jsonArray.toString());
-                ArrayList<Tweet> receivedTweets = Tweet.fromJSONArray(jsonArray);
-                lastTweetID = getOldestTweetId(receivedTweets);
-                aTweets.addAll(receivedTweets);
             }
 
             @Override
@@ -83,15 +82,19 @@ public class TimelineActivity extends Activity {
         }, lastTweetID);
     }
 
+    void unpackTweetsFromJSON(JSONArray jsonArray) {
+        ArrayList<Tweet> receivedTweets = Tweet.fromJSONArray(jsonArray);
+        lastTweetID = getOldestTweetId(receivedTweets);
+        aTweets.addAll(receivedTweets);
+    }
+
     public void populateTimeline() {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(JSONArray jsonArray) {
                 Log.d("DBG", jsonArray.toString());
-                ArrayList<Tweet> receivedTweets = Tweet.fromJSONArray(jsonArray);
-                lastTweetID = getOldestTweetId(receivedTweets);
-                aTweets.addAll(receivedTweets);
+                unpackTweetsFromJSON(jsonArray);
                 getProgressBar().setVisibility(View.GONE);
             }
 
@@ -118,4 +121,12 @@ public class TimelineActivity extends Activity {
         return oldest;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Tweet justAddedTweet = (Tweet)data.getSerializableExtra("mostCurrentID");
+        aTweets.insert(justAddedTweet, 0);
+        aTweets.notifyDataSetChanged();
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

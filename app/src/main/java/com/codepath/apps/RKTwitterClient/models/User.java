@@ -3,8 +3,10 @@ package com.codepath.apps.RKTwitterClient.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 
-public class User {
+
+public class User implements Serializable {
 
     public String getName() {
         return name;

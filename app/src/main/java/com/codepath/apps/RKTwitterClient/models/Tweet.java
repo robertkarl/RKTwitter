@@ -6,13 +6,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class Tweet {
+public class Tweet implements Serializable {
 
     public static long OLDEST_TWEET = Long.MAX_VALUE;
 

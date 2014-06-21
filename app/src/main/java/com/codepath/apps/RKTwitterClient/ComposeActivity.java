@@ -1,6 +1,7 @@
 package com.codepath.apps.RKTwitterClient;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -8,8 +9,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.codepath.apps.RKTwitterClient.models.Tweet;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONObject;
 
 public class ComposeActivity extends Activity {
     @Override
@@ -44,11 +49,16 @@ public class ComposeActivity extends Activity {
         String tweetText = et.getText().toString();
         TwitterClient client = TwitterApplication.getRestClient();
         getProgressBar().setVisibility(View.VISIBLE);
-        client.updateStatus(new AsyncHttpResponseHandler() {
+
+        client.updateStatus(new JsonHttpResponseHandler() {
             @Override
-            public void onSuccess(String s) {
+            public void onSuccess(JSONObject object) {
                 getProgressBar().setVisibility(View.GONE);
-                super.onSuccess(s);
+                Toast.makeText(ComposeActivity.this, "Success!", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent();
+                i.putExtra("mostCurrentID", Tweet.fromJSON(object));
+                ComposeActivity.this.setResult(RESULT_OK, i);
+                finish();
             }
 
             @Override
@@ -56,6 +66,7 @@ public class ComposeActivity extends Activity {
                 getProgressBar().setVisibility(View.GONE);
                 Log.e("DBG", throwable.toString());
                 Log.e("DBG", s);
+                Toast.makeText(ComposeActivity.this, "Tweet failed!", Toast.LENGTH_SHORT).show();
                 super.onFailure(throwable, s);
             }
         }, tweetText);
