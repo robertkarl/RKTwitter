@@ -31,9 +31,8 @@
 
     <style name="UserNameText">
         <item name="android:textColor">#282f33</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">11dp</item>
+        <!-- Roboto-Medium set at runtime  -->
+        <item name="android:textSize">12dp</item>
     </style>
 
     <style name="ScreenNameText">

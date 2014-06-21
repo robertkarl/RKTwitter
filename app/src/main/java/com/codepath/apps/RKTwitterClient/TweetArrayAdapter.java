@@ -1,6 +1,7 @@
 package com.codepath.apps.RKTwitterClient;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,18 +33,21 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
             v = convertView;
         }
 
+        Typeface robotoMedium = Typeface.createFromAsset(getContext().getAssets(), "Roboto/Roboto-Medium.ttf");
+        TextView userName = (TextView)v.findViewById(R.id.tvUserName);
+        userName.setTypeface(robotoMedium);
+
         setupProfileImage(v, tweet);
 
-        setText(v, R.id.tvUserName, tweet.getUser().getName());
-        setText(v, R.id.tvUserScreenName, String.format("@%s",
-                tweet.getUser().getScreenName(), "@"));
-        setText(v, R.id.tvBody, tweet.getBody());
-        setText(v, R.id.tvRelativeTimestamp, tweet.getRelativeDate());
+        setupTextviewContents(v, R.id.tvUserName, tweet.getUser().getName());
+        setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", tweet.getUser().getScreenName(), "@"));
+        setupTextviewContents(v, R.id.tvBody, tweet.getBody());
+        setupTextviewContents(v, R.id.tvRelativeTimestamp, tweet.getRelativeDate());
 
         return v;
     }
 
-    void setText(View parentView, int textViewID, String textValue) {
+    void setupTextviewContents(View parentView, int textViewID, String textValue) {
         TextView tvUserName = (TextView) parentView.findViewById(textViewID);
         tvUserName.setText(textValue);
     }

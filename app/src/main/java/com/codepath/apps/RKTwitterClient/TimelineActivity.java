@@ -43,6 +43,7 @@ public class TimelineActivity extends Activity {
         tweets = new ArrayList<Tweet>();
         aTweets = new TweetArrayAdapter(this, tweets);
         lvTweets.setAdapter(aTweets);
+
     }
 
     private void loadAdditionalTweets(int page, int totalItemsCount) {
