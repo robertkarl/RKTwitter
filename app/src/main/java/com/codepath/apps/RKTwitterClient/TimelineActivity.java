@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.codepath.apps.RKTwitterClient.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -19,6 +20,10 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
 public class TimelineActivity extends Activity {
     public static int COMPOSE_REQUEST = 1234;
     private TwitterClient client;
@@ -26,6 +31,7 @@ public class TimelineActivity extends Activity {
     private ArrayList<Tweet> tweets;
     private TweetArrayAdapter aTweets;
     private ListView lvTweets;
+    private PullToRefreshLayout mPullToRefreshLayout;
 
     private long lastTweetID = -1;
 
@@ -38,7 +44,7 @@ public class TimelineActivity extends Activity {
         getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#4099FF")));
 
         client = TwitterApplication.getRestClient();
-        populateTimeline();
+        clearAndPopulateTimeline();
 
         lvTweets = (ListView)findViewById(R.id.lvTweets);
         lvTweets.setOnScrollListener(new EndlessScrollListener() {
@@ -50,6 +56,16 @@ public class TimelineActivity extends Activity {
         tweets = new ArrayList<Tweet>();
         aTweets = new TweetArrayAdapter(this, tweets);
         lvTweets.setAdapter(aTweets);
+
+        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
+        ActionBarPullToRefresh.from(this).allChildrenArePullable()
+                .listener(new OnRefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        clearAndPopulateTimeline();
+                    }
+                })
+                .setup(mPullToRefreshLayout);
 
     }
 
@@ -66,7 +82,7 @@ public class TimelineActivity extends Activity {
     }
 
     private void loadAdditionalTweets(int page, int totalItemsCount) {
-        client.getHomeTimeLineTweetsNoOlderThan(new JsonHttpResponseHandler() {
+        client.fetchOlderTweets(new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(JSONArray jsonArray) {
@@ -88,22 +104,30 @@ public class TimelineActivity extends Activity {
         aTweets.addAll(receivedTweets);
     }
 
-    public void populateTimeline() {
+    public void clearAndPopulateTimeline() {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(JSONArray jsonArray) {
                 Log.d("DBG", jsonArray.toString());
+                aTweets.clear();
                 unpackTweetsFromJSON(jsonArray);
                 getProgressBar().setVisibility(View.GONE);
+                completeRefreshIfNeeded();
             }
 
             @Override
             public void onFailure(Throwable throwable, String s) {
-                super.onFailure(throwable, s);
-                Log.d("DBG", s);
+                completeRefreshIfNeeded();
             }
         });
+    }
+
+    private void completeRefreshIfNeeded() {
+        if (mPullToRefreshLayout.isRefreshing()) {
+            mPullToRefreshLayout.setRefreshComplete();
+            Toast.makeText(this, "Refresh completed!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     ProgressBar getProgressBar() {
@@ -123,10 +147,11 @@ public class TimelineActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Tweet justAddedTweet = (Tweet)data.getSerializableExtra("mostCurrentID");
-        aTweets.insert(justAddedTweet, 0);
-        aTweets.notifyDataSetChanged();
-
+        if (resultCode == RESULT_OK) {
+            Tweet justAddedTweet = (Tweet)data.getSerializableExtra("mostCurrentID");
+            aTweets.insert(justAddedTweet, 0);
+            aTweets.notifyDataSetChanged();
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

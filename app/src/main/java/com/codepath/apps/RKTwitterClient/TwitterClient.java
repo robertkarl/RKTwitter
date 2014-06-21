@@ -33,13 +33,13 @@ public class TwitterClient extends OAuthBaseClient {
     }
 
     public void getHomeTimeline(AsyncHttpResponseHandler handler) {
-        getHomeTimeLineTweetsNoOlderThan(handler, 0);
+        fetchOlderTweets(handler, 0);
     }
 
     /**
      * @param tweetID tweets will not be returned as new or newer than this one
      */
-    public void getHomeTimeLineTweetsNoOlderThan(AsyncHttpResponseHandler handler, long tweetID) {
+    public void fetchOlderTweets(AsyncHttpResponseHandler handler, long tweetID) {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
         RequestParams params = new RequestParams();
         params.put("since_id", "1");
