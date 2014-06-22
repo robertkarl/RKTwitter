@@ -18,7 +18,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
-import static com.codepath.apps.RKTwitterClient.Util.setupTextviewContents;
+import static com.codepath.apps.RKTwitterClient.util.Util.setupTextviewContents;
 
 public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 
@@ -49,7 +49,6 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", tweet.getUser().getScreenName(), "@"));
         setupTextviewContents(v, R.id.tvBody, tweet.getBody());
         setupTextviewContents(v, R.id.tvRelativeTimestamp, tweet.getRelativeDate());
-
         TextView body = (TextView)v.findViewById(R.id.tvBody);
 
         final TimelineActivity activity = (TimelineActivity)getContext();

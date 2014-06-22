@@ -19,6 +19,9 @@ import android.widget.Toast;
 import com.activeandroid.query.Select;
 import com.codepath.apps.RKTwitterClient.models.Tweet;
 import com.codepath.apps.RKTwitterClient.models.User;
+import com.codepath.apps.RKTwitterClient.util.Connectivity;
+import com.codepath.apps.RKTwitterClient.util.EndlessScrollListener;
+import com.codepath.apps.RKTwitterClient.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -82,6 +85,11 @@ public class TimelineActivity extends Activity {
                 .setup(mPullToRefreshLayout);
 
         checkForInternetConnectivity();
+
+    }
+
+    View getView() {
+        return findViewById(R.id.rlDetailsRoot);
     }
 
     void launchTweetDetails(Tweet tweet) {
@@ -140,9 +148,7 @@ public class TimelineActivity extends Activity {
             public void run() {
                 ColorDrawable drawable = new ColorDrawable(Color.parseColor("#D52114"));
                 Log.d("DBG", "setting drawable " + drawable.toString());
-                getActionBar().setBackgroundDrawable(drawable);
-                getActionBar().setDisplayShowTitleEnabled(false);
-                getActionBar().setDisplayShowTitleEnabled(true);
+                Util.setActionBarDrawable(getActionBar(), drawable);
             }
         });
     }
@@ -151,11 +157,7 @@ public class TimelineActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ColorDrawable drawable = new ColorDrawable(Color.parseColor("#4099FF"));
-                Log.d("DBG", "setting drawable " + drawable.toString());
-                getActionBar().setBackgroundDrawable(drawable);
-                getActionBar().setDisplayShowTitleEnabled(false);
-                getActionBar().setDisplayShowTitleEnabled(true);
+                Util.setActionBarDrawable(getActionBar(), new ColorDrawable(getResources().getColor(R.color.twitterBlue)));
             }
         });
     }

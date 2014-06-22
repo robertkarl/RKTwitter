@@ -72,6 +72,9 @@ public class Tweet extends Model implements Serializable {
     @Column(name = "urls")
     public ArrayList<TwitterURL> urls;
 
+    @Column
+    public String mediaURL;
+
     public static Tweet fromJSON(JSONObject object) {
         Tweet tweet = new Tweet();
         try {
@@ -85,6 +88,14 @@ public class Tweet extends Model implements Serializable {
 
             tweet.retweeted_status = attemptGetRetweet(object);
             tweet.urls = Tweet.attemptLoadURLs(object);
+
+            JSONObject entities = object.getJSONObject("entities");
+            if (entities.has("media")) {
+                JSONObject media = entities.getJSONArray("media").getJSONObject(0); // Ignore subsequent media
+                if (media.has("media_url")) {
+                    tweet.mediaURL = media.getString("media_url");
+                }
+            }
 
             tweet.user.save();
             tweet.save();

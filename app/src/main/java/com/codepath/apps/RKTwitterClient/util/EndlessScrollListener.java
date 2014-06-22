@@ -1,4 +1,4 @@
-package com.codepath.apps.RKTwitterClient;
+package com.codepath.apps.RKTwitterClient.util;
 
 import android.widget.AbsListView;
 
