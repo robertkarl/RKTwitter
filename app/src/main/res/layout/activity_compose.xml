@@ -1,13 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/vgComposeRoot"
+    android:background="@android:color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/ivProfileImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_star"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"/>
+
     <EditText
-        android:id="@+id/tvTweetCompose"
+        android:id="@+id/etTweetCompose"
         android:text="Testing Twitter API 1"
+        android:layout_width="match_parent"
+        android:singleLine="true"
+        android:hint="What's happening?"
+        android:background="@android:color/transparent"
+        style="@style/ComposeText"
+        android:layout_margin="10dp"
+
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivProfileImage"/>
+
+
+    <TextView
+        android:id="@+id/tvUserName"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Firstname Lastname"
+        android:layout_marginTop="10dp"
+        style="@style/UserNameText"
+        android:layout_toRightOf="@id/ivProfileImage" />
+
+    <TextView
+        android:id="@+id/tvUserScreenName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="\@Screen_name"
+        android:layout_toRightOf="@id/ivProfileImage"
+        android:layout_below="@id/tvUserName"
+        style="@style/ScreenNameText" />
+
+    <Button
+        android:id="@+id/btnTweet"
+        android:layout_width="63dp"
+        android:layout_height="33dp"
+        android:layout_alignTop="@id/ivProfileImage"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/button_tweet"
+        style="@style/TweetButtonText"
+        android:text="TWEET"/>
+
+    <TextView
+        android:id="@+id/tvCharacterCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/btnTweet"
+        android:layout_alignTop="@id/btnTweet"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="8dp"
+        style="@style/ScreenNameText"
+        android:text="140" />
 
     <ProgressBar
         android:id="@+id/progressBarCompose"

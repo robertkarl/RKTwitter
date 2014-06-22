@@ -49,10 +49,15 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", tweet.getUser().getScreenName(), "@"));
         setupTextviewContents(v, R.id.tvBody, tweet.getBody());
         setupTextviewContents(v, R.id.tvRelativeTimestamp, tweet.getRelativeDate());
+        if (tweet.favoriteCount != 0) {
+            setupTextviewContents(v, R.id.tvFavoriteCount, String.format("%d", tweet.favoriteCount));
+        }
+        if (tweet.retweetCount != 0) {
+            setupTextviewContents(v, R.id.tvRetweetCount, String.format("%d", tweet.retweetCount));
+        }
         TextView body = (TextView)v.findViewById(R.id.tvBody);
 
         final TimelineActivity activity = (TimelineActivity)getContext();
-
         body.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

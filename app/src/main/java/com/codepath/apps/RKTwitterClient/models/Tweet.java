@@ -38,7 +38,10 @@ public class Tweet extends Model implements Serializable {
     public String absoluteDate;
 
     @Column(name = "retweet_count")
-    private int retweetCount;
+    public int retweetCount;
+
+    @Column
+    public int favoriteCount;
 
     public Tweet retweeted_status;
 
@@ -66,10 +69,6 @@ public class Tweet extends Model implements Serializable {
         super();
     }
 
-    public int getRetweetCount() {
-        return retweetCount;
-    }
-
     @Column
     public boolean retweeted;
 
@@ -86,6 +85,7 @@ public class Tweet extends Model implements Serializable {
             tweet.ID = object.getLong("id");
             tweet.retweeted = object.getBoolean("retweeted");
             tweet.retweetCount = object.getInt("retweet_count");
+            tweet.favoriteCount= object.getInt("favorite_count");
             tweet.createdAt = object.getString("created_at");
             tweet.user = User.fromJSON(object.getJSONObject("user"));
             tweet.relativeDate = Tweet.getRelativeTimeAgo(tweet.createdAt);

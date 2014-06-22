@@ -2,4 +2,6 @@
 <resources>
     <color name="textBlack">#232323</color>
     <color name="twitterBlue">#4099FF</color>
+    <color name="tweetButtonDisabled">#BCDDF4</color>
+    <color name="tweetButtonEnabled">#55ACEE</color>
 </resources>

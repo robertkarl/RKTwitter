@@ -4,25 +4,76 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.apps.RKTwitterClient.models.Tweet;
+import com.codepath.apps.RKTwitterClient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONObject;
 
+import static com.codepath.apps.RKTwitterClient.util.Util.setupTextviewContents;
+
 public class ComposeActivity extends Activity {
+    User mUser;
+    ImageView ivProfile;
+    TextView mFreeCharacters;
+    EditText mComposeEditText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_compose);
+        getActionBar().hide();
         getProgressBar().setVisibility(View.GONE);
-        super.onCreate(savedInstanceState);
+        ivProfile = (ImageView)findViewById(R.id.ivProfileImage);
+        mFreeCharacters = (TextView)findViewById(R.id.tvCharacterCount);
+        mComposeEditText = (EditText)findViewById(R.id.etTweetCompose);
 
+        mComposeEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                updateFreeCharactersLabel();
+                return false;
+            }
+        });
+
+        TwitterApplication.getRestClient().getUser(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+                mUser = User.fromJSON(jsonObject);
+                ImageLoader.getInstance().displayImage(mUser.getProfileImageURL(), ivProfile);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        View v = getRoot();
+                        setupTextviewContents(v, R.id.tvUserName, mUser.getName());
+                        setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", mUser.getScreenName(), "@"));
+                    }
+                });
+            }
+        });
+
+        updateFreeCharactersLabel();
+
+        super.onCreate(savedInstanceState);
+    }
+
+    void updateFreeCharactersLabel() {
+        mFreeCharacters.setText(String.format("%d", 140 - mComposeEditText.getText().length()));
+    }
+
+    View getRoot() {
+        View v = findViewById(R.id.vgComposeRoot);
+        return v;
     }
 
     @Override
@@ -45,7 +96,7 @@ public class ComposeActivity extends Activity {
     }
 
     private void onTweet() {
-        EditText et = (EditText)findViewById(R.id.tvTweetCompose);
+        EditText et = (EditText)findViewById(R.id.etTweetCompose);
         String tweetText = et.getText().toString();
         TwitterClient client = TwitterApplication.getRestClient();
         getProgressBar().setVisibility(View.VISIBLE);

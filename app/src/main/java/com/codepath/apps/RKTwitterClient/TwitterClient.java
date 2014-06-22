@@ -33,6 +33,10 @@ public class TwitterClient extends OAuthBaseClient {
         super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
     }
 
+    public void getProfile(AsyncHttpResponseHandler handler) {
+        fetchOlderTweets(handler, 0);
+    }
+
     public void getHomeTimeline(AsyncHttpResponseHandler handler) {
         fetchOlderTweets(handler, 0);
     }
@@ -60,6 +64,11 @@ public class TwitterClient extends OAuthBaseClient {
         RequestParams params = new RequestParams();
         params.put("status", tweetContents);
         client.post(apiUrl, params, handler);
+    }
+
+    public void getUser(AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("account/verify_credentials.json");
+        client.get(apiUrl, handler);
     }
 
     /* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint

@@ -13,16 +13,16 @@ README!
 - [x] User can compose a new tweet
 - [x] User can then enter a new tweet and post this to twitter
 - [x] User is taken back and the new tweet is visible
-- [ ] User can see a counter of number of characters available
+- [x] User can see a counter of number of characters available
 
 #### Optionals
 - [x] Pull to refresh
 - [x] Offline, persisted tweets
 - [x] Detail view for a tweet
 - [ ] reply to respond to a tweet
-- [ ] Brand the app like twitter
+- [x] Brand the app like twitter
   - [x] Tweets list branding
-  - [ ] Compose branding
+  - [x] Compose branding
   - [x] Detail branding
 - [x] User can see embedded image media within the tweet detail view
 - [ ] Compose is replaced with a modal overlay (tried this, not the correct U/X if you ask me)
