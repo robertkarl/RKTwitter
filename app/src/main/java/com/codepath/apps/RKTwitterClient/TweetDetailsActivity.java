@@ -33,11 +33,12 @@ public class TweetDetailsActivity extends Activity {
         setupTextviewContents(v, R.id.tvUserName, tweet.getUser().getName());
         setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", tweet.getUser().getScreenName(), "@"));
         setupTextviewContents(v, R.id.tvBody, tweet.getBody());
-        setupTextviewContents(v, R.id.tvRelativeTimestamp, tweet.getRelativeDate());
+        setupTextviewContents(v, R.id.tvTimestamp, tweet.absoluteDate);
 
         ImageView previewImage = (ImageView)findViewById(R.id.ivTweetImagePreview);
+        ImageView profileImage= (ImageView)findViewById(R.id.ivProfileImage);
         ImageLoader.getInstance().displayImage(tweet.mediaURL, previewImage);
-
+        ImageLoader.getInstance().displayImage(tweet.getUser().getProfileImageURL(), profileImage);
         setupRetweetBanner(v, tweet);
 
         Util.setActionBarDrawable(getActionBar(), new ColorDrawable(getResources().getColor(R.color.twitterBlue)));

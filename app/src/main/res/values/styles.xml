@@ -24,6 +24,12 @@
         <item name="android:textSize">12dp</item>
     </style>
 
+    <style name="TweetTextDetails">
+        <item name="android:textColor">#232323</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">14dp</item>
+    </style>
+
     <style name="RelativeTimeText">
         <item name="android:textColor">#8899a6</item>
         <item name="android:fontFamily">sans-serif-light</item>

@@ -18,12 +18,12 @@ README!
 #### Optionals
 - [x] Pull to refresh
 - [x] Offline, persisted tweets
-- [ ] Detail view for a tweet
+- [x] Detail view for a tweet
 - [ ] reply to respond to a tweet
 - [ ] Brand the app like twitter
   - [x] Tweets list branding
   - [ ] Compose branding
-  - [ ] Detail branding
-- [ ] User can see embedded image media within the tweet detail view
-- [ ] Compose is replaced with a modal overlay
+  - [x] Detail branding
+- [x] User can see embedded image media within the tweet detail view
+- [ ] Compose is replaced with a modal overlay (tried this, not the correct U/X if you ask me)
 

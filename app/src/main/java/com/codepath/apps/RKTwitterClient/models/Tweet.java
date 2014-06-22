@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,6 +33,9 @@ public class Tweet extends Model implements Serializable {
     private String relativeDate;
     @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private long ID;
+
+    @Column
+    public String absoluteDate;
 
     @Column(name = "retweet_count")
     private int retweetCount;
@@ -85,6 +89,7 @@ public class Tweet extends Model implements Serializable {
             tweet.createdAt = object.getString("created_at");
             tweet.user = User.fromJSON(object.getJSONObject("user"));
             tweet.relativeDate = Tweet.getRelativeTimeAgo(tweet.createdAt);
+            tweet.absoluteDate = Tweet.getAbsoluteTime(tweet.createdAt);
 
             tweet.retweeted_status = attemptGetRetweet(object);
             tweet.urls = Tweet.attemptLoadURLs(object);
@@ -157,6 +162,21 @@ public class Tweet extends Model implements Serializable {
     @Override
     public String toString() {
         return  String.format("%s - %s", getBody(), getUser());
+    }
+
+    public static String getAbsoluteTime(String rawJsonDate) {
+        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+        sf.setLenient(true);
+
+        String absoluteDate = "";
+        try {
+            long dateMillis = sf.parse(rawJsonDate).getTime();
+            absoluteDate = DateUtils.formatSameDayTime(dateMillis, System.currentTimeMillis(), DateFormat.MEDIUM, DateFormat.MEDIUM).toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return absoluteDate;
     }
 
     public static String getRelativeTimeAgo(String rawJsonDate) {
