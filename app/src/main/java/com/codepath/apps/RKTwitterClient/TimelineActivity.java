@@ -101,7 +101,7 @@ public class TimelineActivity extends Activity {
                 .setMessage("Until then we've saved some old Tweets for you.").show();
 
 
-//        dimActionBar();
+        dimActionBar();
 
     }
 
@@ -109,13 +109,26 @@ public class TimelineActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ff0000")));
+                ColorDrawable drawable = new ColorDrawable(Color.parseColor("#D52114"));
+                Log.d("DBG", "setting drawable " + drawable.toString());
+                getActionBar().setBackgroundDrawable(drawable);
+                getActionBar().setDisplayShowTitleEnabled(false);
+                getActionBar().setDisplayShowTitleEnabled(true);
             }
         });
     }
 
     void setActionBarTwitterColor() {
-        getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#4099FF")));
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ColorDrawable drawable = new ColorDrawable(Color.parseColor("#4099FF"));
+                Log.d("DBG", "setting drawable " + drawable.toString());
+                getActionBar().setBackgroundDrawable(drawable);
+                getActionBar().setDisplayShowTitleEnabled(false);
+                getActionBar().setDisplayShowTitleEnabled(true);
+            }
+        });
     }
 
 

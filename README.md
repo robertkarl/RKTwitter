@@ -17,7 +17,7 @@ README!
 
 #### Optionals
 - [x] Pull to refresh
-- [ ] Offline, persisted tweets
+- [x] Offline, persisted tweets
 - [ ] Detail view for a tweet
 - [ ] reply to respond to a tweet
 - [ ] Brand the app like twitter
