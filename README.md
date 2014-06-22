@@ -1,2 +1,29 @@
 README!
------
+
+
+# User Stories
+#### Timeline
+- [x] User should be able to see the username, name, body and timestamp for each tweet
+- [x] User can view the tweets from their home timeline
+- [x] User should be displayed the relative timestamp for a tweet "8m", "7h"
+- [x] User can view more tweets as they scroll with infinite pagination
+- [ ] autolink
+
+#### Compose
+- [x] User can compose a new tweet
+- [x] User can then enter a new tweet and post this to twitter
+- [x] User is taken back and the new tweet is visible
+- [ ] User can see a counter of number of characters available
+
+#### Optionals
+- [x] Pull to refresh
+- [ ] Offline, persisted tweets
+- [ ] Detail view for a tweet
+- [ ] reply to respond to a tweet
+- [ ] Brand the app like twitter
+  - [x] Tweets list branding
+  - [ ] Compose branding
+  - [ ] Detail branding
+- [ ] User can see embedded image media within the tweet detail view
+- [ ] Compose is replaced with a modal overlay
+

@@ -2,6 +2,10 @@ package com.codepath.apps.RKTwitterClient.models;
 
 import android.text.format.DateUtils;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,14 +17,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class Tweet implements Serializable {
+@Table(name = "Tweets")
+public class Tweet extends Model implements Serializable {
 
     public static long OLDEST_TWEET = Long.MAX_VALUE;
 
+    @Column(name = "body")
     private String body;
+    @Column(name = "created_at")
     private String createdAt;
+    @Column(name = "user")
     private User user;
+    @Column(name = "relative_date")
     private String relativeDate;
+    @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private long ID;
 
     public long getID() {
@@ -43,6 +53,10 @@ public class Tweet implements Serializable {
         return user;
     }
 
+    public Tweet() {
+        super();
+    }
+
     public static Tweet fromJSON(JSONObject object) {
         Tweet tweet = new Tweet();
         try {
@@ -51,6 +65,8 @@ public class Tweet implements Serializable {
             tweet.createdAt = object.getString("created_at");
             tweet.user = User.fromJSON(object.getJSONObject("user"));
             tweet.relativeDate = Tweet.getRelativeTimeAgo(tweet.createdAt);
+            tweet.user.save();
+            tweet.save();
         }
         catch (JSONException e) {
             e.printStackTrace();

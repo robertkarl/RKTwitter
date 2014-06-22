@@ -1,12 +1,26 @@
 package com.codepath.apps.RKTwitterClient.models;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
 
 
-public class User implements Serializable {
+@Table(name = "User")
+public class User extends Model implements Serializable {
+
+    @Column(name="name")
+    private String name;
+    @Column(name="remote_id")
+    private long uid;
+    @Column(name="screen_name")
+    private String screenName;
+    @Column(name="profile_image_url")
+    private String profileImageURL;
 
     public String getName() {
         return name;
@@ -23,11 +37,6 @@ public class User implements Serializable {
     public String getProfileImageURL() {
         return profileImageURL;
     }
-
-    private String name;
-    private long uid;
-    private String screenName;
-    private String profileImageURL;
 
     public static User fromJSON(JSONObject object) {
         User user = new User();

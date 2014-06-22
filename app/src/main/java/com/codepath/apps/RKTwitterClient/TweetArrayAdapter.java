@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.RKTwitterClient.models.Tweet;
+import com.codepath.apps.RKTwitterClient.models.User;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
@@ -56,6 +57,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         ImageView ivProfileImage = (ImageView)v.findViewById(R.id.ivProfileImage);
         ivProfileImage.setImageResource(getContext().getResources().getColor(android.R.color.transparent));
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(tweet.getUser().getProfileImageURL(), ivProfileImage);
+        User user = tweet.getUser();
+        imageLoader.displayImage(user.getProfileImageURL(), ivProfileImage);
     }
 }

@@ -1,10 +1,12 @@
 package com.codepath.apps.RKTwitterClient;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,12 +15,15 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.activeandroid.query.Select;
 import com.codepath.apps.RKTwitterClient.models.Tweet;
+import com.codepath.apps.RKTwitterClient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
@@ -41,7 +46,7 @@ public class TimelineActivity extends Activity {
         setContentView(R.layout.activity_timeline);
         setTitle("Home");
 
-        getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#4099FF")));
+        setActionBarTwitterColor();
 
         client = TwitterApplication.getRestClient();
         clearAndPopulateTimeline();
@@ -67,7 +72,52 @@ public class TimelineActivity extends Activity {
                 })
                 .setup(mPullToRefreshLayout);
 
+        checkForInternetConnectivity();
     }
+
+    void checkForInternetConnectivity() {
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (!Connectivity.isOnline(TimelineActivity.this)) {
+                    showSavedTweets();
+                }
+            }
+        });
+    }
+
+    void showSavedTweets() {
+        getProgressBar().setVisibility(View.GONE);
+        aTweets.clear();
+        List<Tweet> storedTweets = new Select().from(Tweet.class).execute();
+        List<User> users = new Select().from(User.class).execute();
+        aTweets.addAll(storedTweets);
+        aTweets.notifyDataSetChanged();
+
+        new AlertDialog.Builder(this)
+                .setTitle("Please reconnect!")
+                .setPositiveButton("OK", null)
+                .setMessage("Until then we've saved some old Tweets for you.").show();
+
+
+//        dimActionBar();
+
+    }
+
+    void dimActionBar() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ff0000")));
+            }
+        });
+    }
+
+    void setActionBarTwitterColor() {
+        getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#4099FF")));
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -113,20 +163,22 @@ public class TimelineActivity extends Activity {
                 aTweets.clear();
                 unpackTweetsFromJSON(jsonArray);
                 getProgressBar().setVisibility(View.GONE);
-                completeRefreshIfNeeded();
+                completeRefreshIfNeeded(true);
+                setActionBarTwitterColor();
             }
 
             @Override
             public void onFailure(Throwable throwable, String s) {
-                completeRefreshIfNeeded();
+                completeRefreshIfNeeded(false);
             }
         });
     }
 
-    private void completeRefreshIfNeeded() {
+    private void completeRefreshIfNeeded(boolean refreshSucceeded) {
         if (mPullToRefreshLayout.isRefreshing()) {
             mPullToRefreshLayout.setRefreshComplete();
-            Toast.makeText(this, "Refresh completed!", Toast.LENGTH_SHORT).show();
+            String message = refreshSucceeded ? "Refresh completed!" : "Please reconnect and try again";
+            Toast.makeText(this, message , Toast.LENGTH_SHORT).show();
         }
     }
 
