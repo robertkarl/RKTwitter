@@ -1,33 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@android:color/white"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlDetailsRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:descendantFocusability="blocksDescendants"
-    android:paddingBottom="6dp">
-
-    <!-- Retweet bar is shown only for retweets. -->
-    <LinearLayout
-        android:id="@+id/llRetweetContainer"
-        android:layout_marginTop="6dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginLeft="40dp"
-            android:src="@drawable/ic_retweet"/>
-        <TextView
-            android:id="@+id/tvRetweeterLabel"
-            android:text="WIRED retweeted"
-            style="@style/ScreenNameText"
-            android:layout_marginLeft="5dp"
-            android:includeFontPadding="false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.codepath.apps.RKTwitterClient.TweetDetailsActivity">
 
     <ImageView
         android:id="@+id/ivProfileImage"
@@ -35,7 +15,7 @@
         android:layout_height="40dp"
         android:layout_margin="10dp"
         android:src="@drawable/ic_star"
-        android:layout_below="@id/llRetweetContainer"
+        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
     <TextView
@@ -45,7 +25,6 @@
         android:text="Firstname Lastname"
         android:layout_marginTop="5dp"
         style="@style/UserNameText"
-        android:layout_below="@id/llRetweetContainer"
         android:layout_toRightOf="@+id/ivProfileImage" />
 
     <TextView
@@ -55,7 +34,6 @@
         android:text="\@Screen_name"
         android:layout_alignBaseline="@id/tvUserName"
         android:layout_toRightOf="@id/tvUserName"
-        android:layout_below="@id/llRetweetContainer"
         android:layout_marginLeft="4dp"
         style="@style/ScreenNameText" />
 
@@ -66,7 +44,6 @@
         android:text="Tweet body"
         android:autoLink="all"
         android:linksClickable="true"
-        android:focusable="false"
         android:layout_below="@+id/tvUserName"
         android:layout_marginRight="27dp"
         style="@style/TweetText"
@@ -83,5 +60,4 @@
         android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"/>
-
 </RelativeLayout>

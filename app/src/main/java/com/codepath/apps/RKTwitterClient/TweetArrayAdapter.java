@@ -1,9 +1,10 @@
 package com.codepath.apps.RKTwitterClient;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.RKTwitterClient.models.Tweet;
-import com.codepath.apps.RKTwitterClient.models.TwitterURL;
 import com.codepath.apps.RKTwitterClient.models.User;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
+
+import static com.codepath.apps.RKTwitterClient.Util.setupTextviewContents;
 
 public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 
@@ -27,7 +29,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Tweet tweet = getItem(position);
+        final Tweet tweet = getItem(position);
         View v;
         if (convertView == null) {
             LayoutInflater inflator = LayoutInflater.from(getContext());
@@ -46,32 +48,40 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         setupTextviewContents(v, R.id.tvUserName, tweet.getUser().getName());
         setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", tweet.getUser().getScreenName(), "@"));
         setupTextviewContents(v, R.id.tvBody, tweet.getBody());
-        setupBodyContents((TextView) v.findViewById(R.id.tvBody), tweet);
         setupTextviewContents(v, R.id.tvRelativeTimestamp, tweet.getRelativeDate());
+
+        TextView body = (TextView)v.findViewById(R.id.tvBody);
+
+        final TimelineActivity activity = (TimelineActivity)getContext();
+
+        body.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("DBG", String.format("onClick"));
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((Activity)getContext()).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!activity.mIsRunning) {
+                                    Log.d("DBG", "Detected a click on a URL. ignoring.");
+                                    return;
+                                }
+                                else {
+                                    activity.onTweetClicked(tweet);
+                                }
+                            }
+                        });
+                    }
+                }, 10);
+            }
+        });
 
         setupRetweetBanner(v, tweet);
 
         return v;
-    }
-
-    void setupBodyContents(TextView body, Tweet tweet) {
-        String contents = tweet.getBody();
-        for (TwitterURL url : tweet.urls) {
-            int start = url.inlineIndices.first;
-            int end = url.inlineIndices.second;
-            String prefix = 0 == start ? "" : contents.substring(0, start);
-            String urlContents = contents.substring(start, end);
-            String suffixIfExists = contents.length() == end ? "" : contents.substring(end, contents.length());
-            contents = String.format("%s<a href=\"%s\">%s</a>%s", prefix, urlContents, urlContents, suffixIfExists);
-        }
-
-        body.setText(Html.fromHtml(contents));
-        body.setMovementMethod(LinkMovementMethod.getInstance());
-    }
-
-    void setupTextviewContents(View parentView, int textViewID, String textValue) {
-        TextView tvUserName = (TextView) parentView.findViewById(textViewID);
-        tvUserName.setText(textValue);
     }
 
     void setupRetweetBanner(View v, Tweet tweet) {

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -40,6 +41,8 @@ public class TimelineActivity extends Activity {
 
     private long lastTweetID = -1;
 
+    public boolean mIsRunning = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +61,12 @@ public class TimelineActivity extends Activity {
                 loadAdditionalTweets(page, totalItemsCount);
             }
         });
+        lvTweets.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                onTweetClicked(aTweets.getItem(position));
+            }
+        });
         tweets = new ArrayList<Tweet>();
         aTweets = new TweetArrayAdapter(this, tweets);
         lvTweets.setAdapter(aTweets);
@@ -73,6 +82,28 @@ public class TimelineActivity extends Activity {
                 .setup(mPullToRefreshLayout);
 
         checkForInternetConnectivity();
+    }
+
+    void launchTweetDetails(Tweet tweet) {
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mIsRunning = true;
+    }
+
+    @Override
+    protected void onPause() {
+        mIsRunning = false;
+        super.onPause();
+    }
+
+    public void onTweetClicked(Tweet tweet) {
+        Intent i = new Intent(this, TweetDetailsActivity.class);
+        i.putExtra("tweet", tweet);
+        startActivity(i);
     }
 
     void checkForInternetConnectivity() {
@@ -101,7 +132,6 @@ public class TimelineActivity extends Activity {
                 .setMessage("Until then we've saved some old Tweets for you.").show();
 
         dimActionBar();
-
     }
 
     void dimActionBar() {

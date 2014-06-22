@@ -7,5 +7,6 @@
     <string name="title_activity_photos">Flickr Photos</string>
     <string name="login_label">Connect to Twitter</string>
     <string name="title_activity_timeline">TimelineActivity</string>
+    <string name="title_activity_tweet_details">Tweet Details</string>
 
 </resources>
