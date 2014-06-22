@@ -6,13 +6,30 @@
     android:layout_height="match_parent"
     android:paddingBottom="6dp">
 
+    <!-- Retweet bar is shown only for retweets. -->
+    <LinearLayout
+        android:id="@+id/llRetweetContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_retweet"/>
+        <TextView
+            android:id="@+id/tvRetweeterLabel"
+            android:text="WIRED retweeted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/ivProfileImage"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_margin="10dp"
         android:src="@drawable/ic_launcher"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/llRetweetContainer"
         android:layout_alignParentStart="true" />
 
     <TextView
@@ -22,7 +39,7 @@
         android:text="Firstname Lastname"
         android:layout_marginTop="5dp"
         style="@style/UserNameText"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/llRetweetContainer"
         android:layout_toRightOf="@+id/ivProfileImage" />
 
     <TextView
@@ -32,7 +49,7 @@
         android:text="\@Screen_name"
         android:layout_alignBaseline="@id/tvUserName"
         android:layout_toRightOf="@id/tvUserName"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/llRetweetContainer"
         android:layout_marginLeft="4dp"
         style="@style/ScreenNameText" />
 

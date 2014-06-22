@@ -100,7 +100,6 @@ public class TimelineActivity extends Activity {
                 .setPositiveButton("OK", null)
                 .setMessage("Until then we've saved some old Tweets for you.").show();
 
-
         dimActionBar();
 
     }

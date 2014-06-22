@@ -33,6 +33,11 @@ public class Tweet extends Model implements Serializable {
     @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private long ID;
 
+    @Column(name = "retweet_count")
+    private int retweetCount;
+
+    public Tweet retweeted_status;
+
     public long getID() {
         return ID;
     }
@@ -57,14 +62,25 @@ public class Tweet extends Model implements Serializable {
         super();
     }
 
+    public int getRetweetCount() {
+        return retweetCount;
+    }
+
+    public boolean retweeted;
+
     public static Tweet fromJSON(JSONObject object) {
         Tweet tweet = new Tweet();
         try {
             tweet.body = object.getString("text");
             tweet.ID = object.getLong("id");
+            tweet.retweeted = object.getBoolean("retweeted");
+            tweet.retweetCount = object.getInt("retweet_count");
             tweet.createdAt = object.getString("created_at");
             tweet.user = User.fromJSON(object.getJSONObject("user"));
             tweet.relativeDate = Tweet.getRelativeTimeAgo(tweet.createdAt);
+
+            tweet.retweeted_status = attemptGetRetweet(object);
+
             tweet.user.save();
             tweet.save();
         }
@@ -74,6 +90,17 @@ public class Tweet extends Model implements Serializable {
         }
         return tweet;
     }
+
+    public static Tweet attemptGetRetweet(JSONObject tweet) throws JSONException{
+        if (tweet.has("retweeted_status")) {
+            Tweet retweetedStatus = Tweet.fromJSON(tweet.getJSONObject("retweeted_status"));
+            int x = 0;
+            x++;
+            return retweetedStatus;
+        }
+        return null;
+    }
+
 
     public static ArrayList<Tweet> fromJSONArray(JSONArray array) {
         ArrayList<Tweet> tweets = new ArrayList<Tweet>(array.length());

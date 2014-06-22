@@ -45,12 +45,28 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         setupTextviewContents(v, R.id.tvBody, tweet.getBody());
         setupTextviewContents(v, R.id.tvRelativeTimestamp, tweet.getRelativeDate());
 
+        setupRetweetBanner(v, tweet);
+
         return v;
     }
 
     void setupTextviewContents(View parentView, int textViewID, String textValue) {
         TextView tvUserName = (TextView) parentView.findViewById(textViewID);
         tvUserName.setText(textValue);
+    }
+
+    void setupRetweetBanner(View v, Tweet tweet) {
+        ViewGroup retweetBanner = (ViewGroup)v.findViewById(R.id.llRetweetContainer);
+        if (tweet.retweeted_status != null) {
+            retweetBanner.setVisibility(View.VISIBLE);
+            TextView tvRetweeter = (TextView)v.findViewById(R.id.tvRetweeterLabel);
+            User originalTweeter = tweet.retweeted_status.getUser();
+            tvRetweeter.setText(String.format("%s retweeted", originalTweeter .getScreenName()));
+        }
+        else {
+            retweetBanner.setVisibility(View.GONE);
+        }
+
     }
 
     void setupProfileImage(View v, Tweet tweet) {
