@@ -2,6 +2,8 @@ package com.codepath.apps.RKTwitterClient;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.RKTwitterClient.models.Tweet;
+import com.codepath.apps.RKTwitterClient.models.TwitterURL;
 import com.codepath.apps.RKTwitterClient.models.User;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -43,11 +46,27 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         setupTextviewContents(v, R.id.tvUserName, tweet.getUser().getName());
         setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", tweet.getUser().getScreenName(), "@"));
         setupTextviewContents(v, R.id.tvBody, tweet.getBody());
+        setupBodyContents((TextView) v.findViewById(R.id.tvBody), tweet);
         setupTextviewContents(v, R.id.tvRelativeTimestamp, tweet.getRelativeDate());
 
         setupRetweetBanner(v, tweet);
 
         return v;
+    }
+
+    void setupBodyContents(TextView body, Tweet tweet) {
+        String contents = tweet.getBody();
+        for (TwitterURL url : tweet.urls) {
+            int start = url.inlineIndices.first;
+            int end = url.inlineIndices.second;
+            String prefix = 0 == start ? "" : contents.substring(0, start);
+            String urlContents = contents.substring(start, end);
+            String suffixIfExists = contents.length() == end ? "" : contents.substring(end, contents.length());
+            contents = String.format("%s<a href=\"%s\">%s</a>%s", prefix, urlContents, urlContents, suffixIfExists);
+        }
+
+        body.setText(Html.fromHtml(contents));
+        body.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     void setupTextviewContents(View parentView, int textViewID, String textValue) {

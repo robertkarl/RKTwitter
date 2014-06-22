@@ -66,7 +66,11 @@ public class Tweet extends Model implements Serializable {
         return retweetCount;
     }
 
+    @Column
     public boolean retweeted;
+
+    @Column(name = "urls")
+    public ArrayList<TwitterURL> urls;
 
     public static Tweet fromJSON(JSONObject object) {
         Tweet tweet = new Tweet();
@@ -80,6 +84,7 @@ public class Tweet extends Model implements Serializable {
             tweet.relativeDate = Tweet.getRelativeTimeAgo(tweet.createdAt);
 
             tweet.retweeted_status = attemptGetRetweet(object);
+            tweet.urls = Tweet.attemptLoadURLs(object);
 
             tweet.user.save();
             tweet.save();
@@ -123,6 +128,21 @@ public class Tweet extends Model implements Serializable {
         return tweets;
     }
 
+    public static ArrayList<TwitterURL> attemptLoadURLs(JSONObject object) throws JSONException {
+        ArrayList<TwitterURL> result = new ArrayList<TwitterURL>();
+        if (!object.getJSONObject("entities").has("urls")) {
+            return null;
+        }
+
+        JSONArray urls = object.getJSONObject("entities").getJSONArray("urls");
+        for (int i = 0; i < urls.length(); i++) {
+            JSONObject urlJSON = urls.getJSONObject(i);
+            TwitterURL url = TwitterURL.fromJSON(urlJSON);
+            result.add(url);
+        }
+        return result;
+    }
+
     @Override
     public String toString() {
         return  String.format("%s - %s", getBody(), getUser());
@@ -146,7 +166,7 @@ public class Tweet extends Model implements Serializable {
         replaceMappings.put(" hours ago", "h");
         replaceMappings.put(" hour ago", "h");
         replaceMappings.put(" minutes ago", "m");
-        replaceMappings.put(" minutes ago", "m");
+        replaceMappings.put(" minute ago", "m");
         replaceMappings.put(" seconds ago", "s");
         replaceMappings.put(" second ago", "s");
         replaceMappings.put(" day ago", "d");

@@ -7,7 +7,7 @@ README!
 - [x] User can view the tweets from their home timeline
 - [x] User should be displayed the relative timestamp for a tweet "8m", "7h"
 - [x] User can view more tweets as they scroll with infinite pagination
-- [ ] autolink
+- [x] autolink
 
 #### Compose
 - [x] User can compose a new tweet
