@@ -9,16 +9,21 @@
     <!-- Retweet bar is shown only for retweets. -->
     <LinearLayout
         android:id="@+id/llRetweetContainer"
+        android:layout_marginTop="6dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="40dp"
             android:src="@drawable/ic_retweet"/>
         <TextView
             android:id="@+id/tvRetweeterLabel"
             android:text="WIRED retweeted"
+            style="@style/ScreenNameText"
+            android:layout_marginLeft="5dp"
+            android:includeFontPadding="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
