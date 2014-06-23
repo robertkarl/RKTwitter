@@ -250,4 +250,10 @@ public class TimelineActivity extends Activity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    public void onReplyToTweet(Tweet tweet) {
+        Intent i = new Intent(this, ComposeActivity.class);
+        i.putExtra(ComposeActivity.TWEET_EXTRA_KEY, tweet);
+        startActivityForResult(i, COMPOSE_REQUEST);
+    }
 }

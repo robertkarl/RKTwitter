@@ -75,6 +75,9 @@ public class Tweet extends Model implements Serializable {
     @Column(name = "urls")
     public ArrayList<TwitterURL> urls;
 
+    @Column(name = "urls")
+    public ArrayList<User> mentions;
+
     @Column
     public String mediaURL;
 
@@ -92,6 +95,7 @@ public class Tweet extends Model implements Serializable {
             tweet.absoluteDate = Tweet.getAbsoluteTime(tweet.createdAt);
 
             tweet.retweeted_status = attemptGetRetweet(object);
+            tweet.mentions = attemptLoadMentions(object);
             tweet.urls = Tweet.attemptLoadURLs(object);
 
             JSONObject entities = object.getJSONObject("entities");
@@ -112,11 +116,23 @@ public class Tweet extends Model implements Serializable {
         return tweet;
     }
 
+    private static ArrayList<User> attemptLoadMentions(JSONObject object) throws JSONException{
+        if (!object.getJSONObject("entities").has("mentions")) {
+            return  null;
+        }
+
+        ArrayList<User> mentions = new ArrayList<User>();
+        JSONArray mentionsJSON = object.getJSONObject("entities").getJSONArray("mentions");
+        for (int i = 0; i < mentionsJSON.length(); i++) {
+            User user = User.fromJSON(mentionsJSON.getJSONObject(i));
+            mentions.add(user);
+        }
+        return mentions;
+    }
+
     public static Tweet attemptGetRetweet(JSONObject tweet) throws JSONException{
         if (tweet.has("retweeted_status")) {
             Tweet retweetedStatus = Tweet.fromJSON(tweet.getJSONObject("retweeted_status"));
-            int x = 0;
-            x++;
             return retweetedStatus;
         }
         return null;

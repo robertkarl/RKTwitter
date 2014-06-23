@@ -39,12 +39,8 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
             v = convertView;
         }
 
-        Typeface robotoMedium = Typeface.createFromAsset(getContext().getAssets(), "Roboto/Roboto-Medium.ttf");
-        TextView userName = (TextView)v.findViewById(R.id.tvUserName);
-        userName.setTypeface(robotoMedium);
-
+        setupUsername(v);
         setupProfileImage(v, tweet);
-
         setupTextviewContents(v, R.id.tvUserName, tweet.getUser().getName());
         setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", tweet.getUser().getScreenName(), "@"));
         setupTextviewContents(v, R.id.tvBody, tweet.getBody());
@@ -55,8 +51,30 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         if (tweet.retweetCount != 0) {
             setupTextviewContents(v, R.id.tvRetweetCount, String.format("%d", tweet.retweetCount));
         }
-        TextView body = (TextView)v.findViewById(R.id.tvBody);
 
+        ImageView replyImage = (ImageView)v.findViewById(R.id.ivReply);
+        replyImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((TimelineActivity)getContext()).onReplyToTweet(tweet);;
+            }
+        });
+
+        setupTweetBody(tweet, v);
+
+        setupRetweetBanner(v, tweet);
+
+        return v;
+    }
+
+    private void setupUsername(View v) {
+        Typeface robotoMedium = Typeface.createFromAsset(getContext().getAssets(), "Roboto/Roboto-Medium.ttf");
+        TextView userName = (TextView)v.findViewById(R.id.tvUserName);
+        userName.setTypeface(robotoMedium);
+    }
+
+    private void setupTweetBody(final Tweet tweet, View v) {
+        TextView body = (TextView)v.findViewById(R.id.tvBody);
         final TimelineActivity activity = (TimelineActivity)getContext();
         body.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,10 +100,6 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
                 }, 10);
             }
         });
-
-        setupRetweetBanner(v, tweet);
-
-        return v;
     }
 
     void setupRetweetBanner(View v, Tweet tweet) {

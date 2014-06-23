@@ -28,16 +28,21 @@ public class ComposeActivity extends Activity {
     ImageView ivProfile;
     TextView mFreeCharacters;
     EditText mComposeEditText;
+    public static String TWEET_EXTRA_KEY = "tweet_prefix";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_compose);
-        getActionBar().hide();
-        getProgressBar().setVisibility(View.GONE);
-        ivProfile = (ImageView)findViewById(R.id.ivProfileImage);
-        mFreeCharacters = (TextView)findViewById(R.id.tvCharacterCount);
-        mComposeEditText = (EditText)findViewById(R.id.etTweetCompose);
+        initIvars();
+        setupChrome();
+        setInitialEditTextState();
+        setupListeners();
+        updateFreeCharactersLabel();
 
+        super.onCreate(savedInstanceState);
+    }
+
+    private void setupListeners() {
         mComposeEditText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -61,10 +66,30 @@ public class ComposeActivity extends Activity {
                 });
             }
         });
+    }
 
+    private void setupChrome() {
+        getActionBar().hide();
+        getProgressBar().setVisibility(View.GONE);
+    }
+
+    private void setInitialEditTextState() {
+        Intent i = getIntent();
+        if (i.hasExtra(TWEET_EXTRA_KEY)) {
+            Tweet theTweet = (Tweet)i.getSerializableExtra(TWEET_EXTRA_KEY);
+            mComposeEditText.setText(String.format("@%s ", theTweet.getUser().getScreenName()));
+            mComposeEditText.setSelection(mComposeEditText.length());
+        }
+        else {
+            mComposeEditText.setText("");
+        }
         updateFreeCharactersLabel();
+    }
 
-        super.onCreate(savedInstanceState);
+    private void initIvars() {
+        ivProfile = (ImageView)findViewById(R.id.ivProfileImage);
+        mFreeCharacters = (TextView)findViewById(R.id.tvCharacterCount);
+        mComposeEditText = (EditText)findViewById(R.id.etTweetCompose);
     }
 
     void updateFreeCharactersLabel() {
