@@ -85,10 +85,10 @@
             android:layout_marginLeft="4dp"
             style="@style/TweetTextDetails"/>
 
-        <ImageView
+        <com.loopj.android.image.SmartImageView
             android:id="@+id/ivTweetImagePreview"
-            android:layout_margin="2dp"
-            android:layout_width="wrap_content"
+            android:layout_margin="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tvBody"/>
 

@@ -14,11 +14,13 @@ import android.widget.TextView;
 import com.codepath.apps.RKTwitterClient.models.Tweet;
 import com.codepath.apps.RKTwitterClient.models.User;
 import com.codepath.apps.RKTwitterClient.util.Util;
+import com.loopj.android.image.SmartImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import static com.codepath.apps.RKTwitterClient.util.Util.setupTextviewContents;
 
 public class TweetDetailsActivity extends Activity {
+    SmartImageView mPreviewImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +37,9 @@ public class TweetDetailsActivity extends Activity {
         setupTextviewContents(v, R.id.tvBody, tweet.getBody());
         setupTextviewContents(v, R.id.tvTimestamp, tweet.absoluteDate);
 
-        ImageView previewImage = (ImageView)findViewById(R.id.ivTweetImagePreview);
+        mPreviewImage = (SmartImageView)findViewById(R.id.ivTweetImagePreview);
+        mPreviewImage.setImageUrl(tweet.mediaURL);
         ImageView profileImage= (ImageView)findViewById(R.id.ivProfileImage);
-        ImageLoader.getInstance().displayImage(tweet.mediaURL, previewImage);
         ImageLoader.getInstance().displayImage(tweet.getUser().getProfileImageURL(), profileImage);
         setupRetweetBanner(v, tweet);
 
