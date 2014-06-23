@@ -117,12 +117,12 @@ public class Tweet extends Model implements Serializable {
     }
 
     private static ArrayList<User> attemptLoadMentions(JSONObject object) throws JSONException{
-        if (!object.getJSONObject("entities").has("mentions")) {
+        if (!object.getJSONObject("entities").has("user_mentions")) {
             return  null;
         }
 
         ArrayList<User> mentions = new ArrayList<User>();
-        JSONArray mentionsJSON = object.getJSONObject("entities").getJSONArray("mentions");
+        JSONArray mentionsJSON = object.getJSONObject("entities").getJSONArray("user_mentions");
         for (int i = 0; i < mentionsJSON.length(); i++) {
             User user = User.fromJSON(mentionsJSON.getJSONObject(i));
             mentions.add(user);
