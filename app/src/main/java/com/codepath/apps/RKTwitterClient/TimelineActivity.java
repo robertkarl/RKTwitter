@@ -1,9 +1,7 @@
 package com.codepath.apps.RKTwitterClient;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +16,6 @@ import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.codepath.apps.RKTwitterClient.models.Tweet;
-import com.codepath.apps.RKTwitterClient.models.User;
 import com.codepath.apps.RKTwitterClient.util.Connectivity;
 import com.codepath.apps.RKTwitterClient.util.EndlessScrollListener;
 import com.codepath.apps.RKTwitterClient.util.Util;
@@ -130,27 +127,15 @@ public class TimelineActivity extends Activity {
         getProgressBar().setVisibility(View.GONE);
         aTweets.clear();
         List<Tweet> storedTweets = new Select().from(Tweet.class).execute();
-        List<User> users = new Select().from(User.class).execute();
         aTweets.addAll(storedTweets);
         aTweets.notifyDataSetChanged();
 
-        new AlertDialog.Builder(this)
-                .setTitle("Please reconnect!")
-                .setPositiveButton("OK", null)
-                .setMessage("Until then we've saved some old Tweets for you.").show();
-
-        dimActionBar();
+        setNoNetworkBannerVisibility(View.VISIBLE);
     }
 
-    void dimActionBar() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ColorDrawable drawable = new ColorDrawable(Color.parseColor("#D52114"));
-                Log.d("DBG", "setting drawable " + drawable.toString());
-                Util.setActionBarDrawable(getActionBar(), drawable);
-            }
-        });
+    private void setNoNetworkBannerVisibility(int visibility) {
+        View v = findViewById(R.id.vgDisconnectedBanner);
+        v.setVisibility(visibility);
     }
 
     void setActionBarTwitterColor() {

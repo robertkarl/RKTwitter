@@ -79,12 +79,14 @@ public class ComposeActivity extends Activity {
         Intent intent = getIntent();
         if (intent.hasExtra(TWEET_EXTRA_KEY)) {
             Tweet theTweet = (Tweet)intent.getSerializableExtra(TWEET_EXTRA_KEY);
-            String prefix = String.format("@%s ", theTweet.getUser().getScreenName());
-            for (User user : theTweet.mentions) {
-                prefix += String.format("@%s ", user.getScreenName());
+            if (theTweet.mentions != null) {
+                String prefix = String.format("@%s ", theTweet.getUser().getScreenName());
+                for (User user : theTweet.mentions) {
+                    prefix += String.format("@%s ", user.getScreenName());
+                }
+                mComposeEditText.setText(prefix);
+                mComposeEditText.setSelection(mComposeEditText.length());
             }
-            mComposeEditText.setText(prefix);
-            mComposeEditText.setSelection(mComposeEditText.length());
         }
         else {
             mComposeEditText.setText("");
