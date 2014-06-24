@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -28,6 +29,7 @@ public class ComposeActivity extends Activity {
     ImageView ivProfile;
     TextView mFreeCharacters;
     EditText mComposeEditText;
+    Button mTweetButton;
     public static String TWEET_EXTRA_KEY = "tweet_prefix";
 
     @Override
@@ -37,7 +39,7 @@ public class ComposeActivity extends Activity {
         setupChrome();
         setInitialEditTextState();
         setupListeners();
-        updateFreeCharactersLabel();
+        onTweetBodyChanged();
 
         super.onCreate(savedInstanceState);
     }
@@ -46,7 +48,7 @@ public class ComposeActivity extends Activity {
         mComposeEditText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                updateFreeCharactersLabel();
+                onTweetBodyChanged();
                 return false;
             }
         });
@@ -87,17 +89,21 @@ public class ComposeActivity extends Activity {
         else {
             mComposeEditText.setText("");
         }
-        updateFreeCharactersLabel();
+        onTweetBodyChanged();
     }
 
     private void initIvars() {
         ivProfile = (ImageView)findViewById(R.id.ivProfileImage);
         mFreeCharacters = (TextView)findViewById(R.id.tvCharacterCount);
         mComposeEditText = (EditText)findViewById(R.id.etTweetCompose);
+        mTweetButton = (Button)findViewById(R.id.btnTweet);
     }
 
-    void updateFreeCharactersLabel() {
+    void onTweetBodyChanged() {
         mFreeCharacters.setText(String.format("%d", 140 - mComposeEditText.getText().length()));
+        int numChars = mComposeEditText.length();
+        boolean tweetButtonEnabled = numChars > 0 && numChars <= 140;
+        mTweetButton.setEnabled(tweetButtonEnabled);
     }
 
     View getRoot() {

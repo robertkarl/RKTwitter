@@ -16,15 +16,13 @@
 
     <EditText
         android:id="@+id/etTweetCompose"
-        android:text="Testing Twitter API 1"
         android:layout_width="match_parent"
-        android:singleLine="true"
+        android:layout_height="wrap_content"
+        android:text="Testing Twitter API 1"
         android:hint="What's happening?"
         android:background="@android:color/transparent"
         style="@style/ComposeText"
         android:layout_margin="10dp"
-
-        android:layout_height="wrap_content"
         android:layout_below="@id/ivProfileImage"/>
 
 

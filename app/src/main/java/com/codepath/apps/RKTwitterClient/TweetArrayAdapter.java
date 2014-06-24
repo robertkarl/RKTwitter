@@ -45,12 +45,10 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", tweet.getUser().getScreenName(), "@"));
         setupTextviewContents(v, R.id.tvBody, tweet.getBody());
         setupTextviewContents(v, R.id.tvRelativeTimestamp, tweet.getRelativeDate());
-        if (tweet.favoriteCount != 0) {
-            setupTextviewContents(v, R.id.tvFavoriteCount, String.format("%d", tweet.favoriteCount));
-        }
-        if (tweet.retweetCount != 0) {
-            setupTextviewContents(v, R.id.tvRetweetCount, String.format("%d", tweet.retweetCount));
-        }
+        String favoriteText = tweet.favoriteCount == 0 ? "" : String.format("%d", tweet.favoriteCount);
+        setupTextviewContents(v, R.id.tvFavoriteCount, favoriteText);
+        String retweetText = tweet.retweetCount == 0 ? "" : String.format("%d", tweet.retweetCount);
+        setupTextviewContents(v, R.id.tvRetweetCount, retweetText);
 
         ImageView replyImage = (ImageView)v.findViewById(R.id.ivReply);
         replyImage.setOnClickListener(new View.OnClickListener() {

@@ -19,7 +19,7 @@ README!
 - [x] Pull to refresh
 - [x] Offline, persisted tweets
 - [x] Detail view for a tweet
-- [ ] reply to respond to a tweet
+- [x] reply to respond to a tweet
 - [x] Brand the app like twitter
   - [x] Tweets list branding
   - [x] Compose branding

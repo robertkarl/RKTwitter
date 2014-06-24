@@ -4,4 +4,5 @@
     <color name="twitterBlue">#4099FF</color>
     <color name="tweetButtonDisabled">#BCDDF4</color>
     <color name="tweetButtonEnabled">#55ACEE</color>
+    <color name="tweetButtonEnabledSelected">#2795e9</color>
 </resources>
