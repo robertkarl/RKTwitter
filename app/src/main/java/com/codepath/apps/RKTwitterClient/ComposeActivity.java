@@ -35,6 +35,8 @@ public class ComposeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_compose);
+        setupTextviewContents(getRoot(), R.id.tvUserName, "");
+        setupTextviewContents(getRoot(), R.id.tvUserScreenName, "");
         initIvars();
         setupChrome();
         setInitialEditTextState();
@@ -67,6 +69,12 @@ public class ComposeActivity extends Activity {
                     }
                 });
             }
+
+            @Override
+            public void onFailure(Throwable throwable, String s) {
+                Toast.makeText(ComposeActivity.this, "Something went wrong! Please reconnect and try again", Toast.LENGTH_SHORT).show();
+                getProgressBar().setVisibility(View.VISIBLE);
+            }
         });
     }
 
@@ -86,6 +94,9 @@ public class ComposeActivity extends Activity {
                 }
                 mComposeEditText.setText(prefix);
                 mComposeEditText.setSelection(mComposeEditText.length());
+            }
+            else {
+                mComposeEditText.setText("");
             }
         }
         else {
