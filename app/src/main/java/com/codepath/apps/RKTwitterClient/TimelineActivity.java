@@ -136,6 +136,9 @@ public class TimelineActivity extends Activity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                if (!mConnecting) {
+                    return;
+                }
                 if (Connectivity.isOnline(TimelineActivity.this)) {
                     setNoNetworkBannerVisibility(View.GONE);
                     if (delay != 0) {
@@ -219,6 +222,7 @@ public class TimelineActivity extends Activity {
                 completeRefreshIfNeeded(true);
                 setActionBarTwitterColor();
                 setNoNetworkBannerVisibility(View.GONE);
+                mConnecting = false; // Stops any retrying that's in progress
             }
 
             @Override
