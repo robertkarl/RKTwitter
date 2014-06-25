@@ -1,7 +1,4 @@
 CodePath - Week 3 - Twitter client - Robert Karl
-# Time spent
-Upwards of 30 hours
-
 # User Stories
 #### Timeline
 - [x] User should be able to see the username, name, body and timestamp for each tweet
@@ -33,3 +30,7 @@ Upwards of 30 hours
 
 # GIF Walkthrough
 ![Walkthrough](https://raw.githubusercontent.com/robertkarl/secret-wookie/master/RKTwitterClient.gif)
+
+# Time spent
+~30 hours
+

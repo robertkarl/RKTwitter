@@ -3,6 +3,7 @@ package com.codepath.apps.RKTwitterClient;
 import android.content.Context;
 import android.util.Log;
 
+import com.codepath.apps.RKTwitterClient.models.Tweet;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -68,6 +69,13 @@ public class TwitterClient extends OAuthBaseClient {
 
     public void getUser(AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("account/verify_credentials.json");
+        client.get(apiUrl, handler);
+    }
+
+    public void performFavoriteTweet(Tweet tweet, AsyncHttpResponseHandler handler) {
+        RequestParams params = new RequestParams();
+        params.put("id", String.format("%d", tweet.getID()));
+        String apiUrl = getApiUrl("favorites/create.json");
         client.get(apiUrl, handler);
     }
 

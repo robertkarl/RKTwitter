@@ -22,6 +22,7 @@ import com.codepath.apps.RKTwitterClient.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -221,6 +222,7 @@ public class TimelineActivity extends Activity {
                 setNoNetworkBannerVisibility(View.VISIBLE);
                 completeRefreshIfNeeded(false);
                 checkBackForAConnection(0);
+                Log.e("DBG", String.format("Timeline populate failed %s %s", throwable.toString(), s));
             }
         });
     }
@@ -262,5 +264,23 @@ public class TimelineActivity extends Activity {
         Intent i = new Intent(this, ComposeActivity.class);
         i.putExtra(ComposeActivity.TWEET_EXTRA_KEY, tweet);
         startActivityForResult(i, COMPOSE_REQUEST);
+    }
+
+    public void onFavoriteTweet(Tweet tweet) {
+        client.performFavoriteTweet(tweet, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+                Log.d("DBG", "Favorite was successful");
+                Tweet t = Tweet.fromJSON(jsonObject);
+                String toastMsg = String.format("Successfully favorited @%'s tweet", t.getUser().getScreenName());
+                Toast.makeText(TimelineActivity.this, toastMsg, Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable, String s) {
+                Toast.makeText(TimelineActivity.this, "Could not favorite tweet.", Toast.LENGTH_SHORT);
+            }
+        });
     }
 }
