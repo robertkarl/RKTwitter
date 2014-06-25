@@ -152,7 +152,6 @@ public class TimelineActivity extends Activity {
         }, delay);
     }
 
-
     private void setNoNetworkBannerVisibility(int visibility) {
         View v = findViewById(R.id.vgDisconnectedBanner);
         v.setVisibility(visibility);
@@ -267,6 +266,7 @@ public class TimelineActivity extends Activity {
     }
 
     public void onFavoriteTweet(final Tweet tweet, final View tweetContainer) {
+        Log.d("DBG", "Beginning favorite operation");
         client.performFavoriteTweet(tweet, new JsonHttpResponseHandler() {
 
             @Override
@@ -278,7 +278,7 @@ public class TimelineActivity extends Activity {
                     public void run() {
                         String toastMsg = String.format("Successfully favorited @%s's tweet", t.getUser().getScreenName());
                         Toast.makeText(TimelineActivity.this, toastMsg, Toast.LENGTH_SHORT).show();
-                        TweetArrayAdapter.setListItemFavoritedState(tweetContainer, true, true);
+                        TweetArrayAdapter.setListItemFavoritedState(tweetContainer, true);
                         tweet.favorited = true;
                         tweet.save();
                     }
@@ -297,5 +297,40 @@ public class TimelineActivity extends Activity {
                 });
             }
         });
+    }
+
+    public void onRetweetClicked(final Tweet tweet, final View tweetContainerView) {
+        Log.d("DBG", "Beginning retweet operation");
+        client.performRetweet(tweet, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+                Log.d("DBG", "Retweet was successful");
+                final Tweet t = Tweet.fromJSON(jsonObject);
+                TimelineActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String toastMsg = String.format("Successfully retweeted @%s's tweet", t.getUser().getScreenName());
+                        Toast.makeText(TimelineActivity.this, toastMsg, Toast.LENGTH_SHORT).show();
+                        TweetArrayAdapter.setListItemRetweeted(tweetContainerView, true);
+                        tweet.retweeted = true;
+                        tweet.save();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Throwable throwable, String s) {
+                final String failure = s;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("DBG", String.format("Failed to favorite. %s", failure));
+                        Toast.makeText(TimelineActivity.this, "Could not favorite tweet.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
     }
 }

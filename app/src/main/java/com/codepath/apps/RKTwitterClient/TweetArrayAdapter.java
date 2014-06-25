@@ -57,7 +57,8 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         setupTextviewContents(v, R.id.tvFavoriteCount, favoriteText);
         String retweetText = tweet.retweetCount == 0 ? "" : String.format("%d", tweet.retweetCount);
         setupTextviewContents(v, R.id.tvRetweetCount, retweetText);
-        setListItemFavoritedState(v, tweet.favorited, false);
+        setListItemFavoritedState(v, tweet.favorited);
+        setListItemRetweeted(v, tweet.retweeted);
 
         ImageView replyImage = (ImageView)v.findViewById(R.id.ivReply);
         replyImage.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +77,15 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
             }
         });
 
+        ImageView retweetedImage = (ImageView)v.findViewById(R.id.ivRetweet);
+        retweetedImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimelineActivity activity = (TimelineActivity)getContext();
+                activity.onRetweetClicked(tweet, tweetContainerView);
+            }
+        });
+
         setupTweetBody(tweet, v);
 
         setupRetweetBanner(v, tweet);
@@ -86,13 +96,21 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
     /**
      * Show a given list item as favorited. Don't allow for unfavoriting at all yet.
      */
-    public static void setListItemFavoritedState(View tweetContainer, boolean favorited, boolean disableInteractionAfterwards) {
+    public static void setListItemFavoritedState(View tweetContainer, boolean favorited) {
         ImageView iv = (ImageView)tweetContainer.findViewById(R.id.ivFavorite);
         int starID = favorited ? R.drawable.ic_star_gold : R.drawable.ic_star;
         iv.setImageResource(starID);
-        if (disableInteractionAfterwards || favorited) {
-            iv.setEnabled(false);
-        }
+        iv.setEnabled(!favorited);
+    }
+
+    /**
+     * Show a given list item as having been retweeted by the current user.
+     */
+    public static void setListItemRetweeted(View tweetContainer, boolean retweeted) {
+        ImageView iv = (ImageView)tweetContainer.findViewById(R.id.ivRetweet);
+        int retweetIconID = retweeted ? R.drawable.ic_retweet_blue: R.drawable.ic_retweet;
+        iv.setImageResource(retweetIconID);
+        iv.setEnabled(!retweeted);
     }
 
     private void setupUsername(View v) {
