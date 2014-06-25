@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -266,20 +267,35 @@ public class TimelineActivity extends Activity {
         startActivityForResult(i, COMPOSE_REQUEST);
     }
 
-    public void onFavoriteTweet(Tweet tweet) {
+    public void onFavoriteTweet(Tweet tweet, final View tweetContainer) {
         client.performFavoriteTweet(tweet, new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(JSONObject jsonObject) {
                 Log.d("DBG", "Favorite was successful");
-                Tweet t = Tweet.fromJSON(jsonObject);
-                String toastMsg = String.format("Successfully favorited @%'s tweet", t.getUser().getScreenName());
-                Toast.makeText(TimelineActivity.this, toastMsg, Toast.LENGTH_SHORT);
+                final Tweet t = Tweet.fromJSON(jsonObject);
+                TimelineActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ImageView iv = (ImageView)tweetContainer.findViewById(R.id.ivFavorite);
+                        iv.setImageResource(R.drawable.ic_star_gold);
+                        iv.setEnabled(false);
+                        String toastMsg = String.format("Successfully favorited @%s's tweet", t.getUser().getScreenName());
+                        Toast.makeText(TimelineActivity.this, toastMsg, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
             public void onFailure(Throwable throwable, String s) {
-                Toast.makeText(TimelineActivity.this, "Could not favorite tweet.", Toast.LENGTH_SHORT);
+                final String failure = s;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("DBG", String.format("Failed to favorite. %s", failure));
+                        Toast.makeText(TimelineActivity.this, "Could not favorite tweet.", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }

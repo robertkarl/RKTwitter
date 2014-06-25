@@ -38,6 +38,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         else {
             v = convertView;
         }
+        final View tweetContainerView = v;
 
         setupUsername(v);
         setupProfileImage(v, tweet);
@@ -71,7 +72,8 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
             public void onClick(View v) {
                 int x = 0;
                 x++;
-                ((TimelineActivity)getContext()).onFavoriteTweet(tweet);
+                TimelineActivity activity = (TimelineActivity)getContext();
+                activity.onFavoriteTweet(tweet, tweetContainerView);
             }
         });
 

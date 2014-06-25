@@ -76,7 +76,7 @@ public class TwitterClient extends OAuthBaseClient {
         RequestParams params = new RequestParams();
         params.put("id", String.format("%d", tweet.getID()));
         String apiUrl = getApiUrl("favorites/create.json");
-        client.get(apiUrl, handler);
+        client.post(apiUrl, params, handler);
     }
 
     /* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
