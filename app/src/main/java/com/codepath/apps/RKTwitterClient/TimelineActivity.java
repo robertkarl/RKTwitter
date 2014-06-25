@@ -41,6 +41,8 @@ public class TimelineActivity extends Activity {
 
     private long lastTweetID = -1;
 
+    private boolean mConnecting = false;
+
     public boolean mIsRunning = false;
 
     @Override
@@ -122,6 +124,11 @@ public class TimelineActivity extends Activity {
      * @param delay milliseconds later for initial check.
      */
     private void checkBackForAConnection(final int delay) {
+        if (mConnecting && delay == 0) {
+            // Don't spawn off multiple threads trying to check back
+            return;
+        }
+        mConnecting = true;
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -132,6 +139,7 @@ public class TimelineActivity extends Activity {
                         Toast.makeText(TimelineActivity.this, "Welcome back", Toast.LENGTH_SHORT).show();
                     }
                     Log.d("DBG", String.format("found a connection again! delay would have been %d", delay));
+                    mConnecting = false;
                 }
                 else {
                     Log.d("DBG", String.format("Checking server connection in %d millis", delay * 2));
@@ -183,7 +191,7 @@ public class TimelineActivity extends Activity {
             @Override
             public void onFailure(Throwable throwable, String s) {
                 setNoNetworkBannerVisibility(View.VISIBLE);
-                checkBackForAConnection(500);
+                checkBackForAConnection(0);
             }
         }, lastTweetID - 1);
     }
@@ -212,7 +220,7 @@ public class TimelineActivity extends Activity {
             public void onFailure(Throwable throwable, String s) {
                 setNoNetworkBannerVisibility(View.VISIBLE);
                 completeRefreshIfNeeded(false);
-                checkBackForAConnection(500);
+                checkBackForAConnection(0);
             }
         });
     }
