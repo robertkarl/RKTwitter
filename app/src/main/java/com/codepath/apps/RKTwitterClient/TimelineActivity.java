@@ -273,7 +273,7 @@ public class TimelineActivity extends Activity {
     public void onFavoriteTweet(final Tweet tweet, final View tweetContainer) {
         Log.d("DBG", "Beginning favorite operation");
         mRefreshItem.setVisible(true);
-        client.performFavoriteTweet(tweet, new JsonHttpResponseHandler() {
+        client.performFavorite(tweet, new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(JSONObject jsonObject) {
@@ -331,12 +331,13 @@ public class TimelineActivity extends Activity {
 
             @Override
             public void onFailure(Throwable throwable, String s) {
+                Log.e("DBG", String.format("Failed to retweet. %s", s));
                 final String failure = s;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("DBG", String.format("Failed to favorite. %s", failure));
-                        Toast.makeText(TimelineActivity.this, "Could not favorite tweet.", Toast.LENGTH_SHORT).show();
+                        Log.e("DBG", String.format("Failed to retweet. %s", failure));
+                        Toast.makeText(TimelineActivity.this, "Could not retweet tweet.", Toast.LENGTH_SHORT).show();
                         mRefreshItem.setVisible(false);
                     }
                 });
