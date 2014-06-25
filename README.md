@@ -28,9 +28,14 @@ CodePath - Week 3 - Twitter client - Robert Karl
 #### Extras
 - [x] Automatically check back periodically after failures and refresh UI when internet is reconnected
 
-# GIF Walkthrough
-![Walkthrough](https://raw.githubusercontent.com/robertkarl/secret-wookie/master/RKTwitterClient.gif)
+# GIF Walkthroughs
+
+#### Login, infinite scroll, Favorite, Tweet details and images
+![Walkthrough 1](https://raw.githubusercontent.com/robertkarl/secret-wookie/master/RKTwitterDemoPart1.gif)
+
+#### Offline state, auto-retry, compose and reply 
+![Walkthrough 2](https://raw.githubusercontent.com/robertkarl/secret-wookie/master/RKTwitterDemoPart2.gif)
 
 # Time spent
-~30 hours
+~25 hours
 
