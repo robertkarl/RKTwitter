@@ -42,6 +42,8 @@ public class TimelineActivity extends Activity {
 
     private long lastTweetID = -1;
 
+    private MenuItem mRefreshItem;
+
     private boolean mConnecting = false;
 
     public boolean mIsRunning = false;
@@ -170,6 +172,9 @@ public class TimelineActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.timeline, menu);
+        mRefreshItem = menu.findItem(R.id.action_loading);
+        mRefreshItem.setActionView(R.layout.actionbar_progress);
+        mRefreshItem.setVisible(false);
         return true;
     }
 
@@ -267,6 +272,7 @@ public class TimelineActivity extends Activity {
 
     public void onFavoriteTweet(final Tweet tweet, final View tweetContainer) {
         Log.d("DBG", "Beginning favorite operation");
+        mRefreshItem.setVisible(true);
         client.performFavoriteTweet(tweet, new JsonHttpResponseHandler() {
 
             @Override
@@ -281,6 +287,7 @@ public class TimelineActivity extends Activity {
                         TweetArrayAdapter.setListItemFavoritedState(tweetContainer, true);
                         tweet.favorited = true;
                         tweet.save();
+                        mRefreshItem.setVisible(false);
                     }
                 });
             }
@@ -293,6 +300,7 @@ public class TimelineActivity extends Activity {
                     public void run() {
                         Log.e("DBG", String.format("Failed to favorite. %s", failure));
                         Toast.makeText(TimelineActivity.this, "Could not favorite tweet.", Toast.LENGTH_SHORT).show();
+                        mRefreshItem.setVisible(false);
                     }
                 });
             }
@@ -301,6 +309,7 @@ public class TimelineActivity extends Activity {
 
     public void onRetweetClicked(final Tweet tweet, final View tweetContainerView) {
         Log.d("DBG", "Beginning retweet operation");
+        mRefreshItem.setVisible(true);
         client.performRetweet(tweet, new JsonHttpResponseHandler() {
 
             @Override
@@ -315,6 +324,7 @@ public class TimelineActivity extends Activity {
                         TweetArrayAdapter.setListItemRetweeted(tweetContainerView, true);
                         tweet.retweeted = true;
                         tweet.save();
+                        mRefreshItem.setVisible(false);
                     }
                 });
             }
@@ -327,6 +337,7 @@ public class TimelineActivity extends Activity {
                     public void run() {
                         Log.e("DBG", String.format("Failed to favorite. %s", failure));
                         Toast.makeText(TimelineActivity.this, "Could not favorite tweet.", Toast.LENGTH_SHORT).show();
+                        mRefreshItem.setVisible(false);
                     }
                 });
             }
