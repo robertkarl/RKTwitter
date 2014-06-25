@@ -27,6 +27,8 @@ CodePath - Week 3 - Twitter client - Robert Karl
 
 #### Extras
 - [x] Automatically check back periodically after failures and refresh UI when internet is reconnected
+- [x] User can favorite a tweet
+- [x] user can view all their favorites in the timeline
 
 # GIF Walkthroughs
 
