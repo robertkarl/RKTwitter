@@ -184,7 +184,6 @@ public class TimelineActivity extends Activity {
             public void onFailure(Throwable throwable, String s) {
                 setNoNetworkBannerVisibility(View.VISIBLE);
                 checkBackForAConnection(500);
-                Log.d("DBG", s);
             }
         }, lastTweetID - 1);
     }
@@ -206,12 +205,14 @@ public class TimelineActivity extends Activity {
                 getProgressBar().setVisibility(View.GONE);
                 completeRefreshIfNeeded(true);
                 setActionBarTwitterColor();
+                setNoNetworkBannerVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Throwable throwable, String s) {
                 setNoNetworkBannerVisibility(View.VISIBLE);
                 completeRefreshIfNeeded(false);
+                checkBackForAConnection(500);
             }
         });
     }

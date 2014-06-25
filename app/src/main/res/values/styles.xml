@@ -27,7 +27,7 @@
     <style name="TweetTextDetails">
         <item name="android:textColor">#232323</item>
         <item name="android:fontFamily">sans-serif-light</item>asdf
-        <item name="android:textSize">14dp</item>
+        <item name="android:textSize">13dp</item>
     </style>
 
     <style name="RelativeTimeText">

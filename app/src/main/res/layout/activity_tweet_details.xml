@@ -57,8 +57,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/llRetweetContainer"
                 android:layout_toRightOf="@+id/ivProfileImage"
-                android:layout_marginTop="10dp"
-
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="10dp"
                 android:text="Firstname Lastname"
                 style="@style/UserNameText" />
 
@@ -82,12 +82,13 @@
             android:autoLink="all"
             android:linksClickable="true"
             android:layout_below="@id/ivProfileImage"
-            android:layout_marginLeft="4dp"
+            android:layout_marginLeft="10dp"
             style="@style/TweetTextDetails"/>
 
         <com.loopj.android.image.SmartImageView
             android:id="@+id/ivTweetImagePreview"
             android:layout_margin="0dp"
+            android:background="@android:color/holo_red_dark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tvBody"/>
@@ -98,7 +99,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/ivTweetImagePreview"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
             android:text="12:42 PM • 22 Jun 2014"
             style="@style/RelativeTimeText"/>
     </RelativeLayout>
