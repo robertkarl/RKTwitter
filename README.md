@@ -30,3 +30,6 @@ Upwards of 30 hours
 
 #### Extras
 - [x] Automatically check back periodically after failures and refresh UI when internet is reconnected
+
+# GIF Walkthrough
+![Walkthrough](https://raw.githubusercontent.com/robertkarl/secret-wookie/master/RKTwitterClient.gif)
