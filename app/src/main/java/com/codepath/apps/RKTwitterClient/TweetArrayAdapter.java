@@ -52,7 +52,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         }
         setupTextviewContents(v, R.id.tvBody, tweetText);
         setupTextviewContents(v, R.id.tvRelativeTimestamp, tweet.getRelativeDate());
-        String favoriteText = tweet.favoriteCount == 0 ? "" : String.format("%d", tweet.favoriteCount);
+        String favoriteText = tweet.favoriteCount == 0 ? "-1" : String.format("%d", tweet.favoriteCount);
         setupTextviewContents(v, R.id.tvFavoriteCount, favoriteText);
         String retweetText = tweet.retweetCount == 0 ? "" : String.format("%d", tweet.retweetCount);
         setupTextviewContents(v, R.id.tvRetweetCount, retweetText);

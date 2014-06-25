@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
-    android:paddingBottom="6dp">
+    android:paddingBottom="6dp"
+    android:paddingRight="10dp">
 
     <!-- Retweet bar is hidden if a status is not a retweet. -->
     <LinearLayout
@@ -76,13 +77,12 @@
         android:id="@+id/tvRelativeTimestamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/tvUserName"
+        style="@style/RelativeTimeText"
 
         android:text="7 mins ago"
-        style="@style/RelativeTimeText"
-        android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"/>
+        android:layout_marginTop="10dp"
+        android:layout_alignBaseline="@id/tvUserName"/>
 
 
     <RelativeLayout
