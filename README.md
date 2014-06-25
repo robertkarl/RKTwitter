@@ -1,5 +1,6 @@
-README!
-
+CodePath - Week 3 - Twitter client - Robert Karl
+# Time spent
+Upwards of 30 hours
 
 # User Stories
 #### Timeline
@@ -27,3 +28,5 @@ README!
 - [x] User can see embedded image media within the tweet detail view
 - [ ] Compose is replaced with a modal overlay (tried this, not the correct U/X if you ask me)
 
+#### Extras
+- [x] Automatically check back periodically after failures and refresh when internet is reconnected
