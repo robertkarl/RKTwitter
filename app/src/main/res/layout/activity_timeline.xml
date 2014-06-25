@@ -11,14 +11,26 @@
     <LinearLayout
         android:id="@+id/vgDisconnectedBanner"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:background="#eee455"
-        android:visibility="gone">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#232323"
-            android:text="Please reconnect! We've saved a few tweets."/>
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="#fcfae0">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                style="@style/RelativeTimeText"
+                android:textStyle="italic"
+                android:textColor="#607381"
+                android:text="Please reconnect! In the meantime we'll display what we have saved."/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/textGray" />
     </LinearLayout>
 
     <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout

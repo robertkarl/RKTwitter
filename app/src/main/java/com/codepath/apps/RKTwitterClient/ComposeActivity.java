@@ -42,12 +42,18 @@ public class ComposeActivity extends Activity {
         setInitialEditTextState();
         setupListeners();
         onTweetBodyChanged();
+        mTweetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onTweet();
+            }
+        });
 
         super.onCreate(savedInstanceState);
     }
 
     private void setupListeners() {
-        mComposeEditText.setOnKeyListener(new View.OnKeyListener() {
+        mComposeEditText.setOnKeyListener(new EditText.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 onTweetBodyChanged();

@@ -81,16 +81,12 @@ public class TimelineActivity extends Activity {
                 })
                 .setup(mPullToRefreshLayout);
 
-        checkForInternetConnectivity();
+        checkBackForAConnection(0);
 
     }
 
     View getView() {
         return findViewById(R.id.rlDetailsRoot);
-    }
-
-    void launchTweetDetails(Tweet tweet) {
-
     }
 
     @Override
@@ -111,18 +107,6 @@ public class TimelineActivity extends Activity {
         startActivity(i);
     }
 
-    void checkForInternetConnectivity() {
-        Handler handler = new Handler();
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (!Connectivity.isOnline(TimelineActivity.this)) {
-                    showSavedTweets();
-                }
-            }
-        });
-    }
-
     void showSavedTweets() {
         getProgressBar().setVisibility(View.GONE);
         aTweets.clear();
@@ -132,6 +116,33 @@ public class TimelineActivity extends Activity {
 
         setNoNetworkBannerVisibility(View.VISIBLE);
     }
+
+    /**
+     * Perform exponential backoff checking for internet connectivity
+     * @param delay milliseconds later for initial check.
+     */
+    private void checkBackForAConnection(final int delay) {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (Connectivity.isOnline(TimelineActivity.this)) {
+                    setNoNetworkBannerVisibility(View.GONE);
+                    if (delay != 0) {
+                        Toast.makeText(TimelineActivity.this, "Welcome back", Toast.LENGTH_SHORT).show();
+                    }
+                    Log.d("DBG", String.format("found a connection again! delay would have been %d", delay));
+                }
+                else {
+                    Log.d("DBG", String.format("Checking server connection in %d millis", delay * 2));
+                    checkBackForAConnection(delay == 0 ? 500 : delay * 2);
+                    setNoNetworkBannerVisibility(View.VISIBLE);
+                    showSavedTweets();
+                }
+            }
+        }, delay);
+    }
+
 
     private void setNoNetworkBannerVisibility(int visibility) {
         View v = findViewById(R.id.vgDisconnectedBanner);
@@ -166,12 +177,13 @@ public class TimelineActivity extends Activity {
             @Override
             public void onSuccess(JSONArray jsonArray) {
                 unpackTweetsFromJSON(jsonArray);
-                Log.d("DBG", jsonArray.toString());
+                setNoNetworkBannerVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Throwable throwable, String s) {
-                super.onFailure(throwable, s);
+                setNoNetworkBannerVisibility(View.VISIBLE);
+                checkBackForAConnection(500);
                 Log.d("DBG", s);
             }
         }, lastTweetID - 1);
@@ -198,6 +210,7 @@ public class TimelineActivity extends Activity {
 
             @Override
             public void onFailure(Throwable throwable, String s) {
+                setNoNetworkBannerVisibility(View.VISIBLE);
                 completeRefreshIfNeeded(false);
             }
         });

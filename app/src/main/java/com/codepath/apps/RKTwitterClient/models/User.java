@@ -1,5 +1,7 @@
 package com.codepath.apps.RKTwitterClient.models;
 
+import android.util.Log;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -12,6 +14,7 @@ import java.io.Serializable;
 
 @Table(name = "User")
 public class User extends Model implements Serializable {
+    static String PROFILE_IMAGE_KEY = "profile_image_url";
 
     @Column(name="name")
     private String name;
@@ -44,9 +47,17 @@ public class User extends Model implements Serializable {
             user.name = object.getString("name");
             user.uid = object.getLong("id");
             user.screenName = object.getString("screen_name");
-            user.profileImageURL = object.getString("profile_image_url");
+            if (object.has(PROFILE_IMAGE_KEY)) {
+                user.profileImageURL = object.getString(PROFILE_IMAGE_KEY);
+            }
         }
         catch (JSONException e) {
+            try {
+                Log.e("dbg", object.toString(2));
+            }
+            catch (Exception exception) {
+                Log.e("dbg", "couldn't print exception.");
+            }
             e.printStackTrace();
         }
         return user;
