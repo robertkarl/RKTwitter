@@ -34,7 +34,14 @@ public class TweetDetailsActivity extends Activity {
         View v = findViewById(R.id.rlDetailsRoot);
         setupTextviewContents(v, R.id.tvUserName, tweet.getUser().getName());
         setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", tweet.getUser().getScreenName(), "@"));
-        setupTextviewContents(v, R.id.tvBody, tweet.getBody());
+        String tweetText;
+        if (tweet.retweeted_status != null) {
+            tweetText = tweet.getRetweetedText();
+        }
+        else {
+            tweetText = tweet.getBody();
+        }
+        setupTextviewContents(v, R.id.tvBody, tweetText);
         setupTextviewContents(v, R.id.tvTimestamp, tweet.absoluteDate);
 
         mPreviewImage = (SmartImageView)findViewById(R.id.ivTweetImagePreview);
