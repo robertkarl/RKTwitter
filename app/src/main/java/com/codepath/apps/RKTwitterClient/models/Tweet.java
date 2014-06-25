@@ -40,8 +40,11 @@ public class Tweet extends Model implements Serializable {
     @Column(name = "retweet_count")
     public int retweetCount;
 
-    @Column
+    @Column(name="favorite_count")
     public int favoriteCount;
+
+    @Column(name="favorited")
+    public boolean favorited;
 
     public Tweet retweeted_status;
 
@@ -97,6 +100,9 @@ public class Tweet extends Model implements Serializable {
             tweet.retweetCount = object.getInt("retweet_count");
             tweet.favoriteCount= object.getInt("favorite_count");
             tweet.createdAt = object.getString("created_at");
+            if (object.has("favorited")) {
+                tweet.favorited = object.getBoolean("favorited");
+            }
             tweet.user = User.fromJSON(object.getJSONObject("user"));
             tweet.relativeDate = Tweet.getRelativeTimeAgo(tweet.createdAt);
             tweet.absoluteDate = Tweet.getAbsoluteTime(tweet.createdAt);

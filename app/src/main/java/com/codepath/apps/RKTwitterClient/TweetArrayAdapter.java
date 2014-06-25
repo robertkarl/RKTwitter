@@ -57,6 +57,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         setupTextviewContents(v, R.id.tvFavoriteCount, favoriteText);
         String retweetText = tweet.retweetCount == 0 ? "" : String.format("%d", tweet.retweetCount);
         setupTextviewContents(v, R.id.tvRetweetCount, retweetText);
+        setListItemFavoritedState(v, tweet.favorited, false);
 
         ImageView replyImage = (ImageView)v.findViewById(R.id.ivReply);
         replyImage.setOnClickListener(new View.OnClickListener() {
@@ -70,8 +71,6 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         favoriteImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int x = 0;
-                x++;
                 TimelineActivity activity = (TimelineActivity)getContext();
                 activity.onFavoriteTweet(tweet, tweetContainerView);
             }
@@ -82,6 +81,18 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         setupRetweetBanner(v, tweet);
 
         return v;
+    }
+
+    /**
+     * Show a given list item as favorited. Don't allow for unfavoriting at all yet.
+     */
+    public static void setListItemFavoritedState(View tweetContainer, boolean favorited, boolean disableInteractionAfterwards) {
+        ImageView iv = (ImageView)tweetContainer.findViewById(R.id.ivFavorite);
+        int starID = favorited ? R.drawable.ic_star_gold : R.drawable.ic_star;
+        iv.setImageResource(starID);
+        if (disableInteractionAfterwards || favorited) {
+            iv.setEnabled(false);
+        }
     }
 
     private void setupUsername(View v) {

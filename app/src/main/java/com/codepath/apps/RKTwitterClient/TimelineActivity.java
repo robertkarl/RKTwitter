@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -139,8 +138,8 @@ public class TimelineActivity extends Activity {
                     setNoNetworkBannerVisibility(View.GONE);
                     if (delay != 0) {
                         Toast.makeText(TimelineActivity.this, "Welcome back", Toast.LENGTH_SHORT).show();
+                        Log.d("DBG", String.format("found a connection again! delay would have been %d", delay));
                     }
-                    Log.d("DBG", String.format("found a connection again! delay would have been %d", delay));
                     mConnecting = false;
                 }
                 else {
@@ -267,7 +266,7 @@ public class TimelineActivity extends Activity {
         startActivityForResult(i, COMPOSE_REQUEST);
     }
 
-    public void onFavoriteTweet(Tweet tweet, final View tweetContainer) {
+    public void onFavoriteTweet(final Tweet tweet, final View tweetContainer) {
         client.performFavoriteTweet(tweet, new JsonHttpResponseHandler() {
 
             @Override
@@ -277,11 +276,11 @@ public class TimelineActivity extends Activity {
                 TimelineActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ImageView iv = (ImageView)tweetContainer.findViewById(R.id.ivFavorite);
-                        iv.setImageResource(R.drawable.ic_star_gold);
-                        iv.setEnabled(false);
                         String toastMsg = String.format("Successfully favorited @%s's tweet", t.getUser().getScreenName());
                         Toast.makeText(TimelineActivity.this, toastMsg, Toast.LENGTH_SHORT).show();
+                        TweetArrayAdapter.setListItemFavoritedState(tweetContainer, true, true);
+                        tweet.favorited = true;
+                        tweet.save();
                     }
                 });
             }
