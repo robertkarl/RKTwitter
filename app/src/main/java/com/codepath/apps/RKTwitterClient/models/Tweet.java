@@ -81,6 +81,13 @@ public class Tweet extends Model implements Serializable {
     @Column
     public String mediaURL;
 
+    public String getRetweetedText() {
+        if (retweeted_status != null) {
+            return String.format("RT @%s %s", retweeted_status.getUser().getScreenName(), retweeted_status.getBody());
+        }
+        return null;
+    }
+
     public static Tweet fromJSON(JSONObject object) {
         Tweet tweet = new Tweet();
         try {

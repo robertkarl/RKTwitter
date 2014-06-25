@@ -43,7 +43,14 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         setupProfileImage(v, tweet);
         setupTextviewContents(v, R.id.tvUserName, tweet.getUser().getName());
         setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", tweet.getUser().getScreenName(), "@"));
-        setupTextviewContents(v, R.id.tvBody, tweet.getBody());
+        String tweetText = null;
+        if (tweet.retweeted_status != null) {
+            tweetText = tweet.getRetweetedText();
+        }
+        else {
+            tweetText = tweet.getBody();
+        }
+        setupTextviewContents(v, R.id.tvBody, tweetText);
         setupTextviewContents(v, R.id.tvRelativeTimestamp, tweet.getRelativeDate());
         String favoriteText = tweet.favoriteCount == 0 ? "" : String.format("%d", tweet.favoriteCount);
         setupTextviewContents(v, R.id.tvFavoriteCount, favoriteText);
@@ -54,7 +61,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         replyImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((TimelineActivity)getContext()).onReplyToTweet(tweet);;
+                ((TimelineActivity)getContext()).onReplyToTweet(tweet);
             }
         });
 

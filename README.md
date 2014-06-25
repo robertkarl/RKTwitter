@@ -29,4 +29,4 @@ Upwards of 30 hours
 - [ ] Compose is replaced with a modal overlay (tried this, not the correct U/X if you ask me)
 
 #### Extras
-- [x] Automatically check back periodically after failures and refresh when internet is reconnected
+- [x] Automatically check back periodically after failures and refresh UI when internet is reconnected
