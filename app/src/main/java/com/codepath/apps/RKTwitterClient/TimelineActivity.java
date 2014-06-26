@@ -323,7 +323,7 @@ public class TimelineActivity extends Activity {
                 TimelineActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        String toastMsg = String.format("Successfully retweeted @%s's tweet", t.getUser().getScreenName());
+                        String toastMsg = String.format("Successfully retweeted @%s's tweet", t.retweeted_status.getUser().getScreenName());
                         Toast.makeText(TimelineActivity.this, toastMsg, Toast.LENGTH_SHORT).show();
                         TweetArrayAdapter.setListItemRetweeted(tweetContainerView, true);
                         tweet.retweeted = true;

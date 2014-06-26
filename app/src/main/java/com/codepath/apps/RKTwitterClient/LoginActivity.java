@@ -18,16 +18,12 @@ public class LoginActivity extends OAuthLoginActivity<TwitterClient> {
         Util.setActionBarDrawable(getActionBar(), new ColorDrawable(getResources().getColor(R.color.twitterBlue)));
 	}
 
-	// OAuth authenticated successfully, launch primary authenticated activity
-	// i.e Display application "homepage"
     @Override
     public void onLoginSuccess() {
     	Intent i = new Intent(this, TimelineActivity.class);
     	startActivity(i);
     }
     
-    // OAuth authentication flow failed, handle the error
-    // i.e Display an error dialog or toast
     @Override
     public void onLoginFailure(Exception e) {
         e.printStackTrace();
