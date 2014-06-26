@@ -43,8 +43,9 @@
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:background="@color/textGray" />
-    </LinearLayout>
-    <RelativeLayout
+    </LinearLayout>vgTimelineFragmentContainer
+    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/vgTimelineFragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -54,7 +55,7 @@
             android:id="@+id/fMainTimeline"
             android:name="com.codepath.apps.RKTwitterClient.fragments.TweetsListFragment"
             tools:layout="@layout/fragment_tweets_list" />
-    </RelativeLayout>
+    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="match_parent"

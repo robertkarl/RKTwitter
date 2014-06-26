@@ -1,9 +1,11 @@
 package com.codepath.apps.RKTwitterClient;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,8 +13,10 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.activeandroid.query.Select;
 import com.codepath.apps.RKTwitterClient.fragments.TweetsListFragment;
 import com.codepath.apps.RKTwitterClient.models.Tweet;
+import com.codepath.apps.RKTwitterClient.util.Connectivity;
 import com.codepath.apps.RKTwitterClient.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -20,14 +24,17 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 public class TimelineActivity extends Activity implements TweetsListFragment.TweetsListListener {
     public static int COMPOSE_REQUEST = 1234;
     private TwitterClient client;
-
-    private PullToRefreshLayout mPullToRefreshLayout;
+    private boolean mConnecting = false;
+    private PullToRefreshLayout pullToRefreshLayout;
 
     private MenuItem mRefreshItem;
 
@@ -40,6 +47,11 @@ public class TimelineActivity extends Activity implements TweetsListFragment.Twe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getFragmentManager().getFragment()
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.get
+
         setContentView(R.layout.activity_timeline);
         setTitle("Home");
 
@@ -48,6 +60,18 @@ public class TimelineActivity extends Activity implements TweetsListFragment.Twe
         client = TwitterApplication.getRestClient();
 
         homeTweetsListFragment = (TweetsListFragment)getFragmentManager().findFragmentById(R.id.fMainTimeline);
+
+        checkBackForAConnection(0);
+
+        pullToRefreshLayout = (PullToRefreshLayout)findViewById(R.id.vgTimelineFragmentContainer);
+        ActionBarPullToRefresh.from(this).allChildrenArePullable()
+                .listener(new OnRefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        onClearAndPopulate();
+                    }
+                })
+                .setup(pullToRefreshLayout);
 
     }
 
@@ -213,6 +237,39 @@ public class TimelineActivity extends Activity implements TweetsListFragment.Twe
             }
         }, lastTweetID - 1);
     }
+    /**
+     * Perform exponential backoff checking for internet connectivity
+     * @param delay milliseconds later for initial check.
+     */
+    private void checkBackForAConnection(final int delay) {
+        if (mConnecting && delay == 0) {
+            // Don't spawn off multiple threads trying to check back
+            return;
+        }
+        mConnecting = true;
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!mConnecting) {
+                    return;
+                }
+                if (Connectivity.isOnline(TimelineActivity.this)) {
+                    setNoNetworkBannerVisibility(View.GONE);
+                    if (delay != 0) {
+                        Toast.makeText(TimelineActivity.this, "Welcome back", Toast.LENGTH_SHORT).show();
+                        Log.d("DBG", String.format("found a connection again! delay would have been %d", delay));
+                    }
+                    mConnecting = false;
+                } else {
+                    Log.d("DBG", String.format("Checking server connection in %d millis", delay * 2));
+                    checkBackForAConnection(delay == 0 ? 500 : delay * 2);
+                    setNoNetworkBannerVisibility(View.VISIBLE);
+                    showSavedTweets();
+                }
+            }
+        }, delay);
+    }
 
     void unpackTweetsFromJSON(JSONArray jsonArray) {
         ArrayList<Tweet> receivedTweets = Tweet.fromJSONArray(jsonArray);
@@ -220,8 +277,7 @@ public class TimelineActivity extends Activity implements TweetsListFragment.Twe
         homeTweetsListFragment.addAll(receivedTweets);
     }
 
-
-    public void clearAndPopulateTimeline() {
+    public void onClearAndPopulate() {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
 
             @Override
@@ -244,6 +300,24 @@ public class TimelineActivity extends Activity implements TweetsListFragment.Twe
                 Log.e("DBG", String.format("Timeline populate failed %s %s", throwable.toString(), s));
             }
         });
+    }
+
+    private void completeRefreshIfNeeded(boolean refreshSucceeded) {
+        if (pullToRefreshLayout.isRefreshing()) {
+            pullToRefreshLayout.setRefreshComplete();
+            String message = refreshSucceeded ? "Refresh completed!" : "Please reconnect and try again";
+            Toast.makeText(this, message , Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    void showSavedTweets() {
+        getProgressBar().setVisibility(View.GONE);
+        homeTweetsListFragment.clearTweets();
+        List<Tweet> storedTweets = new Select().from(Tweet.class).execute();
+        homeTweetsListFragment.addAll(storedTweets);
+
+        setNoNetworkBannerVisibility(View.VISIBLE);
     }
 
 
