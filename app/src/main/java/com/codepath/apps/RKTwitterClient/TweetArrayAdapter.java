@@ -24,7 +24,6 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 
     public TweetArrayAdapter(Context context, List<Tweet> tweets) {
         super(context, 0, tweets);
-
     }
 
     @Override

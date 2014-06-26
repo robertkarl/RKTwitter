@@ -8,5 +8,6 @@
     <string name="login_label">Connect to Twitter</string>
     <string name="title_activity_timeline">TimelineActivity</string>
     <string name="title_activity_tweet_details">Tweet Details</string>
+    <string name="title_activity_basic_timeline">BasicTimelineActivity</string>
 
 </resources>
