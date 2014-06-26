@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.codepath.apps.RKTwitterClient.fragments.TweetsListFragment;
@@ -15,7 +16,10 @@ import com.codepath.apps.RKTwitterClient.models.Tweet;
 import com.codepath.apps.RKTwitterClient.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
@@ -26,6 +30,9 @@ public class TimelineActivity extends Activity implements TweetsListFragment.Twe
     private PullToRefreshLayout mPullToRefreshLayout;
 
     private MenuItem mRefreshItem;
+
+    private long lastTweetID = -1;
+    private TweetsListFragment homeTweetsListFragment;
 
 
     public boolean mIsRunning = false;
@@ -39,6 +46,8 @@ public class TimelineActivity extends Activity implements TweetsListFragment.Twe
         setActionBarTwitterColor();
 
         client = TwitterApplication.getRestClient();
+
+        homeTweetsListFragment = (TweetsListFragment)getFragmentManager().findFragmentById(R.id.fMainTimeline);
 
     }
 
@@ -90,13 +99,6 @@ public class TimelineActivity extends Activity implements TweetsListFragment.Twe
         return true;
     }
 
-    private void completeRefreshIfNeeded(boolean refreshSucceeded) {
-        if (mPullToRefreshLayout.isRefreshing()) {
-            mPullToRefreshLayout.setRefreshComplete();
-            String message = refreshSucceeded ? "Refresh completed!" : "Please reconnect and try again";
-            Toast.makeText(this, message , Toast.LENGTH_SHORT).show();
-        }
-    }
 
     public void onReplyToTweet(Tweet tweet) {
         Intent i = new Intent(this, ComposeActivity.class);
@@ -179,4 +181,75 @@ public class TimelineActivity extends Activity implements TweetsListFragment.Twe
         });
 
     }
+
+    private void setNoNetworkBannerVisibility(int visibility) {
+        View v = findViewById(R.id.vgDisconnectedBanner);
+        v.setVisibility(visibility);
+    }
+
+    long getOldestTweetId(ArrayList<Tweet> tweets) {
+        long oldest = Tweet.OLDEST_TWEET;
+        for (Tweet tweet: tweets) {
+            if (tweet.getID() < oldest) {
+                oldest = tweet.getID();
+            }
+        }
+        return oldest;
+    }
+
+    public void onTriggerInfiniteScroll() {
+        client.fetchOlderTweets(new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(JSONArray jsonArray) {
+                unpackTweetsFromJSON(jsonArray);
+                setNoNetworkBannerVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable, String s) {
+                setNoNetworkBannerVisibility(View.VISIBLE);
+                checkBackForAConnection(0);
+            }
+        }, lastTweetID - 1);
+    }
+
+    void unpackTweetsFromJSON(JSONArray jsonArray) {
+        ArrayList<Tweet> receivedTweets = Tweet.fromJSONArray(jsonArray);
+        lastTweetID = getOldestTweetId(receivedTweets);
+        homeTweetsListFragment.addAll(receivedTweets);
+    }
+
+
+    public void clearAndPopulateTimeline() {
+        client.getHomeTimeline(new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(JSONArray jsonArray) {
+                Log.d("DBG", jsonArray.toString());
+                homeTweetsListFragment.clearTweets();
+                unpackTweetsFromJSON(jsonArray);
+                getProgressBar().setVisibility(View.GONE);
+                completeRefreshIfNeeded(true);
+                setActionBarTwitterColor();
+                setNoNetworkBannerVisibility(View.GONE);
+                mConnecting = false; // Stops any retrying that's in progress
+            }
+
+            @Override
+            public void onFailure(Throwable throwable, String s) {
+                setNoNetworkBannerVisibility(View.VISIBLE);
+                completeRefreshIfNeeded(false);
+                checkBackForAConnection(0);
+                Log.e("DBG", String.format("Timeline populate failed %s %s", throwable.toString(), s));
+            }
+        });
+    }
+
+
+    ProgressBar getProgressBar() {
+        return (ProgressBar)findViewById(R.id.progressBar);
+    }
+
+
 }

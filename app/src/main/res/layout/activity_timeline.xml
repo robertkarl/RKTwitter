@@ -51,6 +51,7 @@
         <fragment
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/fMainTimeline"
             android:name="com.codepath.apps.RKTwitterClient.fragments.TweetsListFragment"
             tools:layout="@layout/fragment_tweets_list" />
     </RelativeLayout>

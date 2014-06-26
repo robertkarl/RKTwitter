@@ -38,12 +38,8 @@ public class TweetsListFragment extends Fragment {
     private ArrayList<Tweet> tweets;
     private TweetArrayAdapter tweetsAdapter;
     private ListView lvTweets;
-    private TwitterClient client;
-
     TweetsListListener listener;
     private PullToRefreshLayout pullToRefreshLayout;
-
-    private long lastTweetID = -1;
 
     private boolean mConnecting = false;
 
@@ -51,22 +47,23 @@ public class TweetsListFragment extends Fragment {
 
     }
 
-    private void setNoNetworkBannerVisibility(int visibility) {
-        View v = getActivity().findViewById(R.id.vgDisconnectedBanner);
-        v.setVisibility(visibility);
+    public void addAll(List<Tweet> tweets) {
+        tweetsAdapter.addAll(tweets);
     }
 
+    public void clearTweets() {
+        tweetsAdapter.clear();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        client = TwitterApplication.getRestClient();
 
         View v = inflater.inflate(R.layout.fragment_tweets_list, container, false);
         lvTweets = (ListView)v.findViewById(R.id.lvTweetsFragmentList);
         lvTweets.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                loadAdditionalTweets(page, totalItemsCount);
+                listener.onTriggerInfiniteScroll();
             }
         });
         lvTweets.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -79,15 +76,14 @@ public class TweetsListFragment extends Fragment {
         tweetsAdapter = new TweetArrayAdapter(getActivity(), tweets);
         lvTweets.setAdapter(tweetsAdapter);
 
-        clearAndPopulateTimeline();
-
+        listener.onClearAndPopulate();
 
         pullToRefreshLayout = (PullToRefreshLayout)v.findViewById(R.id.ptr_layout);
         ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable()
                 .listener(new OnRefreshListener() {
                     @Override
                     public void onRefreshStarted(View view) {
-                        clearAndPopulateTimeline();
+                        listener.onClearAndPopulate();
                     }
                 })
                 .setup(pullToRefreshLayout);
@@ -97,67 +93,6 @@ public class TweetsListFragment extends Fragment {
         return v;
     }
 
-    private void loadAdditionalTweets(int page, int totalItemsCount) {
-        client.fetchOlderTweets(new JsonHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(JSONArray jsonArray) {
-                unpackTweetsFromJSON(jsonArray);
-                setNoNetworkBannerVisibility(View.GONE);
-            }
-
-            @Override
-            public void onFailure(Throwable throwable, String s) {
-                setNoNetworkBannerVisibility(View.VISIBLE);
-                checkBackForAConnection(0);
-            }
-        }, lastTweetID - 1);
-    }
-
-    void unpackTweetsFromJSON(JSONArray jsonArray) {
-        ArrayList<Tweet> receivedTweets = Tweet.fromJSONArray(jsonArray);
-        lastTweetID = getOldestTweetId(receivedTweets);
-        tweetsAdapter.addAll(receivedTweets);
-    }
-
-    long getOldestTweetId(ArrayList<Tweet> tweets) {
-        long oldest = Tweet.OLDEST_TWEET;
-        for (Tweet tweet: tweets) {
-            if (tweet.getID() < oldest) {
-                oldest = tweet.getID();
-            }
-        }
-        return oldest;
-    }
-
-    ProgressBar getProgressBar() {
-        return (ProgressBar)getActivity().findViewById(R.id.progressBar);
-    }
-
-    public void clearAndPopulateTimeline() {
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(JSONArray jsonArray) {
-                Log.d("DBG", jsonArray.toString());
-                tweetsAdapter.clear();
-                unpackTweetsFromJSON(jsonArray);
-                getProgressBar().setVisibility(View.GONE);
-                completeRefreshIfNeeded(true);
-                setActionBarTwitterColor();
-                setNoNetworkBannerVisibility(View.GONE);
-                mConnecting = false; // Stops any retrying that's in progress
-            }
-
-            @Override
-            public void onFailure(Throwable throwable, String s) {
-                setNoNetworkBannerVisibility(View.VISIBLE);
-                completeRefreshIfNeeded(false);
-                checkBackForAConnection(0);
-                Log.e("DBG", String.format("Timeline populate failed %s %s", throwable.toString(), s));
-            }
-        });
-    }
 
     void setActionBarTwitterColor() {
         getActivity().runOnUiThread(new Runnable() {
@@ -175,11 +110,6 @@ public class TweetsListFragment extends Fragment {
             String message = refreshSucceeded ? "Refresh completed!" : "Please reconnect and try again";
             Toast.makeText(getActivity(), message , Toast.LENGTH_SHORT).show();
         }
-    }
-
-
-    public interface TweetsListListener {
-        void onTweetClicked(Tweet tweet);
     }
 
     /**
@@ -226,6 +156,14 @@ public class TweetsListFragment extends Fragment {
 
         setNoNetworkBannerVisibility(View.VISIBLE);
     }
+
+
+    public interface TweetsListListener {
+        void onTweetClicked(Tweet tweet);
+        void onTriggerInfiniteScroll();
+        void onClearAndPopulate();
+    }
+
 
 
 }
