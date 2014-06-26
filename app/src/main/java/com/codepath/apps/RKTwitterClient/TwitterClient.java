@@ -34,10 +34,6 @@ public class TwitterClient extends OAuthBaseClient {
         super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
     }
 
-    public void getProfile(AsyncHttpResponseHandler handler) {
-        fetchOlderTweets(handler, 0);
-    }
-
     public void getHomeTimeline(AsyncHttpResponseHandler handler) {
         fetchOlderTweets(handler, 0);
     }
@@ -75,9 +71,11 @@ public class TwitterClient extends OAuthBaseClient {
     }
 
     public void performRetweet(Tweet tweet, AsyncHttpResponseHandler handler) {
-        String apiUrl = getApiUrl(String.format("status/retweet/%d.json", tweet.getID()));
+        String apiUrl = getApiUrl(String.format("statuses/retweet/%d.json", tweet.getID()));
+        RequestParams params = new RequestParams();
+        params.put("id", String.format("%d", tweet.getID()));
         Log.i("DBG", String.format("Requesting %s ", apiUrl));
-        client.post(apiUrl, handler);
+        client.post(apiUrl, params, handler);
     }
 
     public void performFavorite(Tweet tweet, AsyncHttpResponseHandler handler) {
@@ -88,12 +86,4 @@ public class TwitterClient extends OAuthBaseClient {
         client.post(apiUrl, params, handler);
     }
 
-    /* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
-     * 	  i.e getApiUrl("statuses/home_timeline.json");
-     * 2. Define the parameters to pass to the request (query or body)
-     *    i.e RequestParams params = new RequestParams("foo", "bar");
-     * 3. Define the request method and make a call to the client
-     *    i.e client.get(apiUrl, params, handler);
-     *    i.e client.post(apiUrl, params, handler);
-     */
 }

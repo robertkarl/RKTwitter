@@ -3,6 +3,7 @@ package com.codepath.apps.RKTwitterClient;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.codepath.apps.RKTwitterClient.util.Util;
@@ -36,6 +37,7 @@ public class LoginActivity extends OAuthLoginActivity<TwitterClient> {
     // Uses the client to initiate OAuth authorization
     // This should be tied to a button used to timeline
     public void onLoginClicked(View v) {
+        Log.d("DBG", "Attemping to connect to client.");
         getClient().connect();
     }
 
