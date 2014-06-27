@@ -1,7 +1,6 @@
 package com.codepath.apps.RKTwitterClient;
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -47,10 +46,6 @@ public class TimelineActivity extends Activity implements TweetsListFragment.Twe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        getFragmentManager().getFragment()
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.get
 
         setContentView(R.layout.activity_timeline);
         setTitle("Home");
