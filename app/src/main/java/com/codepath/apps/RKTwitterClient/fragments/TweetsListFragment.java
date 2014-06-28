@@ -70,13 +70,18 @@ public class TweetsListFragment extends Fragment {
     }
 
     public void addAll(List<Tweet> tweets) {
-        Log.d("DBG", String.format("Adding %d tweets to adapter", tweets.size()));
+        Log.d("DBG", String.format("%s: Adding %d tweets to adapter", getTitle(), tweets.size()));
         tweetsAdapter.addAll(tweets);
         tweetsAdapter.notifyDataSetChanged();
     }
     public void clearTweets() {
-        Log.d("DBG", String.format("Clearing the adapter", tweets.size()));
-        tweetsAdapter.clear();
+        if (tweetsAdapter.isEmpty()) {
+            Log.d("DBG", String.format("Not clearing an empty adapter"));
+        }
+        else {
+            Log.d("DBG", String.format("%s: clearing the adapter with %d items", getTitle(), tweets.size()));
+            tweetsAdapter.clear();
+        }
     }
 
     public String getTitle() {
