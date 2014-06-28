@@ -6,5 +6,6 @@
     <color name="tweetButtonEnabled">#55ACEE</color>8899a6
     <color name="tweetButtonEnabledSelected">#2795e9</color>
     <color name="textGray">#8899a6</color>
+    <color name="white">#ffffff</color>
     <color name="lightBlueGray">#e0e4e8</color>
 </resources>

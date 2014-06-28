@@ -2,18 +2,23 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion "android-L"
-    buildToolsVersion "20"
-
+    buildToolsVersion "19.1.0"
     defaultConfig {
-        applicationId "com.codepath.apps.restclienttemplate"
         minSdkVersion 14
-        targetSdkVersion "android-L"
+        targetSdkVersion 21
     }
 
     buildTypes {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+    productFlavors {
+        releaseanddebug {
+            minSdkVersion 21
+            applicationId 'com.codepath.apps.restclienttemplate'
+            targetSdkVersion 21
         }
     }
 }
@@ -24,8 +29,10 @@ dependencies {
     compile files('libs/codepath-oauth-0.3.0.jar')
     compile files('libs/codepath-utils.jar')
     compile files('libs/scribe-codepath.jar')
+    compile 'com.android.support:recyclerview-v7:+'
+    compile 'com.android.support:cardview-v7:+'
+    compile 'com.android.support:palette-v7:+'
     compile files('libs/universal-image-loader-1.8.4.jar')
-    compile 'com.android.support:support-v4:+'
-    compile 'com.android.support:appcompat-v7:19.+'
+    compile 'com.android.support:support-v4:21+'
     compile 'com.github.chrisbanes.actionbarpulltorefresh:library:+'
 }

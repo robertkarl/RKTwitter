@@ -1,8 +1,11 @@
 package com.codepath.apps.RKTwitterClient.fragments;
 
-import android.support.v4.app.Fragment;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +15,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import android.view.ViewAnimationUtils;
+
 import com.activeandroid.query.Select;
 import com.codepath.apps.RKTwitterClient.R;
-
 import com.codepath.apps.RKTwitterClient.TweetArrayAdapter;
 import com.codepath.apps.RKTwitterClient.TwitterApplication;
 import com.codepath.apps.RKTwitterClient.TwitterClient;
@@ -152,7 +156,7 @@ public class TweetsListFragment extends Fragment {
                 Log.d("DBG", jsonArray.toString());
                 clearTweets();
                 unpackTweetsFromJSON(jsonArray);
-                getProgressBar().setVisibility(View.GONE);
+                toggleLoadingVisibility(false);
                 completeRefreshIfNeeded(true);
                 setActionBarTwitterColor();
                 listener.onConnectionRegained();
@@ -166,6 +170,48 @@ public class TweetsListFragment extends Fragment {
             }
         });
     }
+
+
+    private void toggleLoadingVisibility(boolean showLoading) {
+        final View loadingIndicator = getProgressBar();
+        final View listHolder = getView().findViewById(R.id.lvTweetsFragmentList);
+
+        final int cx = loadingIndicator.getRight() / 2;
+        final int cy = loadingIndicator.getBottom() / 2;
+        float radius = Math.max(loadingIndicator.getWidth(), loadingIndicator.getHeight()) * 1.2f;
+
+        if (showLoading) {
+
+            ValueAnimator reveal = ViewAnimationUtils.createCircularReveal(loadingIndicator, cx, cy, 0, radius);
+
+            reveal.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(final Animator animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(final Animator animation) {
+                    Log.v("DBG", "onAnimationEnd");
+                }
+            });
+
+            reveal.setDuration(5000);
+            reveal.start();
+        } else {
+            ValueAnimator reveal = ViewAnimationUtils.createCircularReveal(loadingIndicator, cx, cy, radius, 0);
+
+            reveal.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(final Animator animation) {
+                    loadingIndicator.setVisibility(View.INVISIBLE);
+                }
+            });
+
+            reveal.setDuration(1000);
+            reveal.start();
+        }
+    }
+
 
 
     ProgressBar getProgressBar() {

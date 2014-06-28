@@ -52,10 +52,6 @@
             android:name=".TweetDetailsActivity"
             android:label="@string/title_activity_tweet_details" >
         </activity>
-        <activity
-            android:name=".BasicTimelineActivity"
-            android:label="@string/title_activity_basic_timeline" >
-        </activity>
     </application>
 
 </manifest>
