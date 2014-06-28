@@ -18,13 +18,29 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
-import static com.codepath.apps.RKTwitterClient.util.Util.setupTextviewContents;
-
 public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
     static int x = 0;
+    Typeface robotoMedium;
 
     public TweetArrayAdapter(Context context, List<Tweet> tweets) {
         super(context, 0, tweets);
+    }
+
+    static class TweetViewHolder {
+        TextView tvBody;
+        TextView tvRelativeTimestamp;
+        TextView tvUserName;
+        TextView tvUserScreenName;
+        TextView tvFavoriteCount;
+        TextView tvRetweetCount;
+        ImageView ivReply;
+        ImageView ivFavorite;
+        ImageView ivRetweet;
+        TextView tvRetweeterLabel;
+        ViewGroup llRetweetBanner;
+
+        ImageView ivProfile;
+
     }
 
     @Override
@@ -32,19 +48,36 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         final Tweet tweet = getItem(position);
         View v;
         Log.v("DBG", String.format("getView pos %d count = %d", position, ++x));
+        final TweetViewHolder holder;
         if (convertView == null) {
             LayoutInflater inflator = LayoutInflater.from(getContext());
             v = inflator.inflate(R.layout.tweet_item, parent, false);
+            holder = new TweetViewHolder();
+            holder.tvRelativeTimestamp = (TextView)v.findViewById(R.id.tvRelativeTimestamp);
+            holder.llRetweetBanner = (ViewGroup)v.findViewById(R.id.llRetweetContainer);
+            holder.tvUserScreenName = (TextView)v.findViewById(R.id.tvUserScreenName);
+            holder.tvRetweeterLabel = (TextView)v.findViewById(R.id.tvRetweeterLabel);
+            holder.tvFavoriteCount = (TextView)v.findViewById(R.id.tvFavoriteCount);
+            holder.tvRetweetCount = (TextView)v.findViewById(R.id.tvRetweetCount);
+            holder.ivProfile = (ImageView)v.findViewById(R.id.ivProfileImage);
+            holder.ivFavorite = (ImageView)v.findViewById(R.id.ivFavorite);
+            holder.tvUserName = (TextView)v.findViewById(R.id.tvUserName);
+            holder.ivRetweet = (ImageView)v.findViewById(R.id.ivRetweet);
+            holder.ivReply = (ImageView)v.findViewById(R.id.ivReply);
+            holder.tvBody = (TextView)v.findViewById(R.id.tvBody);
+            v.setTag(holder);
         }
         else {
             v = convertView;
+            holder = (TweetViewHolder)v.getTag();
         }
         final View tweetContainerView = v;
 
-        setupUsername(v);
-        setupProfileImage(v, tweet);
-        setupTextviewContents(v, R.id.tvUserName, tweet.user.getName());
-        setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", tweet.user.getScreenName(), "@"));
+        setupUsername(holder.tvUserName);
+        setupProfileImage(holder.ivProfile, tweet);
+
+        holder.tvUserName.setText(tweet.user.getName());
+        holder.tvUserScreenName.setText("@" + tweet.user.getScreenName());
         String tweetText;
         if (tweet.retweeted_status != null) {
             tweetText = tweet.getRetweetedText();
@@ -52,44 +85,44 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         else {
             tweetText = tweet.body;
         }
-        setupTextviewContents(v, R.id.tvBody, tweetText);
-        setupTextviewContents(v, R.id.tvRelativeTimestamp, tweet.relativeDate);
+        holder.tvBody.setText(tweetText);
+        holder.tvRelativeTimestamp.setText(tweet.relativeDate);
+
         String favoriteText = tweet.favoriteCount == 0 ? "" : String.format("%d", tweet.favoriteCount);
-        setupTextviewContents(v, R.id.tvFavoriteCount, favoriteText);
+        holder.tvFavoriteCount.setText(favoriteText);
+
         String retweetText = tweet.retweetCount == 0 ? "" : String.format("%d", tweet.retweetCount);
-        setupTextviewContents(v, R.id.tvRetweetCount, retweetText);
-        setListItemFavoritedState(v, tweet.favorited);
-        setListItemRetweeted(v, tweet.retweeted);
+        holder.tvRetweetCount.setText(retweetText);
 
-        ImageView replyImage = (ImageView)v.findViewById(R.id.ivReply);
-        replyImage.setOnClickListener(new View.OnClickListener() {
+        setListItemFavoritedState(holder.ivFavorite, tweet.favorited);
+        setListItemRetweeted(holder.ivRetweet, tweet.retweeted);
+
+        holder.ivReply .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((TimelineActivity)getContext()).onReplyToTweet(tweet);
+                ((TimelineActivity) getContext()).onReplyToTweet(tweet);
             }
         });
 
-        ImageView favoriteImage = (ImageView)v.findViewById(R.id.ivFavorite);
-        favoriteImage.setOnClickListener(new View.OnClickListener() {
+        holder.ivFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TimelineActivity activity = (TimelineActivity)getContext();
-                activity.onFavoriteTweet(tweet, tweetContainerView);
+                TimelineActivity activity = (TimelineActivity) getContext();
+                activity.onFavoriteTweet(tweet, holder.ivFavorite);
             }
         });
 
-        ImageView retweetedImage = (ImageView)v.findViewById(R.id.ivRetweet);
-        retweetedImage.setOnClickListener(new View.OnClickListener() {
+        holder.ivRetweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TimelineActivity activity = (TimelineActivity)getContext();
-                activity.onRetweetClicked(tweet, tweetContainerView);
+                TimelineActivity activity = (TimelineActivity) getContext();
+                activity.onRetweetClicked(tweet, holder.ivRetweet);
             }
         });
 
-        setupTweetBody(tweet, v);
+        setupTweetBody(tweet, holder.tvBody);
 
-        setupRetweetBanner(v, tweet);
+        setupRetweetBanner(holder.llRetweetBanner, holder.tvRetweeterLabel, tweet);
 
         return v;
     }
@@ -97,31 +130,29 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
     /**
      * Show a given list item as favorited. Don't allow for unfavoriting at all yet.
      */
-    public static void setListItemFavoritedState(View tweetContainer, boolean favorited) {
-        ImageView iv = (ImageView)tweetContainer.findViewById(R.id.ivFavorite);
+    public static void setListItemFavoritedState(ImageView favoritedImage, boolean favorited) {
         int starID = favorited ? R.drawable.ic_star_gold : R.drawable.ic_star;
-        iv.setImageResource(starID);
-        iv.setEnabled(!favorited);
+        favoritedImage.setImageResource(starID);
+        favoritedImage.setEnabled(!favorited);
     }
 
     /**
      * Show a given list item as having been retweeted by the current user.
      */
-    public static void setListItemRetweeted(View tweetContainer, boolean retweeted) {
-        ImageView iv = (ImageView)tweetContainer.findViewById(R.id.ivRetweet);
+    public static void setListItemRetweeted(ImageView retweetImage, boolean retweeted) {
         int retweetIconID = retweeted ? R.drawable.ic_retweet_blue: R.drawable.ic_retweet;
-        iv.setImageResource(retweetIconID);
-        iv.setEnabled(!retweeted);
+        retweetImage.setImageResource(retweetIconID);
+        retweetImage.setEnabled(!retweeted);
     }
 
-    private void setupUsername(View v) {
-        Typeface robotoMedium = Typeface.createFromAsset(getContext().getAssets(), "Roboto/Roboto-Medium.ttf");
-        TextView userName = (TextView)v.findViewById(R.id.tvUserName);
-        userName.setTypeface(robotoMedium);
+    private void setupUsername(TextView userNameView) {
+        if (robotoMedium == null) {
+            robotoMedium = Typeface.createFromAsset(getContext().getAssets(), "Roboto/Roboto-Medium.ttf");
+        }
+        userNameView.setTypeface(robotoMedium);
     }
 
-    private void setupTweetBody(final Tweet tweet, View v) {
-        TextView body = (TextView)v.findViewById(R.id.tvBody);
+    private void setupTweetBody(final Tweet tweet, TextView body) {
         final TimelineActivity activity = (TimelineActivity)getContext();
         body.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,25 +180,23 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         });
     }
 
-    void setupRetweetBanner(View v, Tweet tweet) {
-        ViewGroup retweetBanner = (ViewGroup)v.findViewById(R.id.llRetweetContainer);
+    void setupRetweetBanner(ViewGroup banner, TextView retweeterLabel, Tweet tweet) {
         if (tweet.retweeted_status != null) {
-            retweetBanner.setVisibility(View.VISIBLE);
-            TextView tvRetweeter = (TextView)v.findViewById(R.id.tvRetweeterLabel);
+            banner.setVisibility(View.VISIBLE);
             User originalTweeter = tweet.retweeted_status.user;
-            tvRetweeter.setText(String.format("%s retweeted", originalTweeter .getScreenName()));
+            retweeterLabel.setText(String.format("%s retweeted", originalTweeter .getScreenName()));
         }
         else {
-            retweetBanner.setVisibility(View.GONE);
+            banner.setVisibility(View.GONE);
         }
 
     }
 
-    void setupProfileImage(View v, Tweet tweet) {
-        ImageView ivProfileImage = (ImageView)v.findViewById(R.id.ivProfileImage);
-        ivProfileImage.setImageResource(getContext().getResources().getColor(android.R.color.transparent));
+    void setupProfileImage(ImageView profileImage, Tweet tweet) {
+        profileImage.setImageResource(getContext().getResources().getColor(android.R.color.transparent));
         ImageLoader imageLoader = ImageLoader.getInstance();
         User user = tweet.user;
-        imageLoader.displayImage(user.getProfileImageURL(), ivProfileImage);
+        imageLoader.displayImage(user.getProfileImageURL(), profileImage);
     }
+
 }

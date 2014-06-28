@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.codepath.apps.RKTwitterClient.fragments.TweetsListFragment;
@@ -113,7 +114,7 @@ public class TimelineActivity extends FragmentActivity implements TweetsListFrag
         startActivityForResult(i, COMPOSE_REQUEST);
     }
 
-    public void onFavoriteTweet(final Tweet tweet, final View tweetContainer) {
+    public void onFavoriteTweet(final Tweet tweet, final ImageView favoriteImage) {
         Log.d("DBG", "Beginning favorite operation");
         mRefreshItem.setVisible(true);
         client.performFavorite(tweet, new JsonHttpResponseHandler() {
@@ -127,7 +128,7 @@ public class TimelineActivity extends FragmentActivity implements TweetsListFrag
                     public void run() {
                         String toastMsg = String.format("Successfully favorited @%s's tweet", t.user.getScreenName());
                         Toast.makeText(TimelineActivity.this, toastMsg, Toast.LENGTH_SHORT).show();
-                        TweetArrayAdapter.setListItemFavoritedState(tweetContainer, true);
+                        TweetArrayAdapter.setListItemFavoritedState(favoriteImage, true);
                         tweet.favorited = true;
                         tweet.save();
                         mRefreshItem.setVisible(false);
@@ -150,7 +151,7 @@ public class TimelineActivity extends FragmentActivity implements TweetsListFrag
         });
     }
 
-    public void onRetweetClicked(final Tweet tweet, final View tweetContainerView) {
+    public void onRetweetClicked(final Tweet tweet, final ImageView retweetImage) {
         Log.d("DBG", "Beginning retweet operation");
         mRefreshItem.setVisible(true);
         client.performRetweet(tweet, new JsonHttpResponseHandler() {
@@ -164,7 +165,7 @@ public class TimelineActivity extends FragmentActivity implements TweetsListFrag
                     public void run() {
                         String toastMsg = String.format("Successfully retweeted @%s's tweet", t.retweeted_status.user.getScreenName());
                         Toast.makeText(TimelineActivity.this, toastMsg, Toast.LENGTH_SHORT).show();
-                        TweetArrayAdapter.setListItemRetweeted(tweetContainerView, true);
+                        TweetArrayAdapter.setListItemRetweeted(retweetImage, true);
                         tweet.retweeted = true;
                         tweet.save();
                         mRefreshItem.setVisible(false);
