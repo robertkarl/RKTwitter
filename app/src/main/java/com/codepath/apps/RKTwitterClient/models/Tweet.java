@@ -25,15 +25,15 @@ public class Tweet extends Model implements Serializable {
     public static long OLDEST_TWEET = Long.MAX_VALUE;
 
     @Column(name = "body")
-    private String body;
+    public String body;
     @Column(name = "created_at")
     private String createdAt;
     @Column(name = "user")
-    private User user;
+    public User user;
     @Column(name = "relative_date")
-    private String relativeDate;
+    public String relativeDate;
     @Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
-    private long ID;
+    public long ID;
 
     @Column
     public String absoluteDate;
@@ -52,26 +52,6 @@ public class Tweet extends Model implements Serializable {
 
     public Tweet retweeted_status;
 
-    public long getID() {
-        return ID;
-    }
-
-    public String getRelativeDate() {
-        return relativeDate;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
     public Tweet() {
         super();
     }
@@ -87,7 +67,7 @@ public class Tweet extends Model implements Serializable {
 
     public String getRetweetedText() {
         if (retweeted_status != null) {
-            return String.format("RT @%s %s", retweeted_status.getUser().getScreenName(), retweeted_status.getBody());
+            return String.format("RT @%s %s", retweeted_status.user.getScreenName(), retweeted_status.body);
         }
         return null;
     }
@@ -105,9 +85,7 @@ public class Tweet extends Model implements Serializable {
                 tweet.favorited = object.getBoolean("favorited");
             }
             tweet.user = User.fromJSON(object.getJSONObject("user"));
-            Log.d("DBG", String.format("%s: %s", tweet.user.getScreenName(), tweet.body));
-            Log.d("DBG", String.format("retweet %b", tweet.retweeted));
-            Log.d("DBG", String.format("favorited %b", tweet.favorited));
+            Log.d("DBG", String.format("Tweet %d from %s", tweet.ID, tweet.user.getScreenName()));
             tweet.relativeDate = Tweet.getRelativeTimeAgo(tweet.createdAt);
             tweet.absoluteDate = Tweet.getAbsoluteTime(tweet.createdAt);
 
@@ -194,7 +172,7 @@ public class Tweet extends Model implements Serializable {
 
     @Override
     public String toString() {
-        return  String.format("%s - %s", getBody(), getUser());
+        return  String.format("%s - %s", body, user);
     }
 
     public static String getAbsoluteTime(String rawJsonDate) {

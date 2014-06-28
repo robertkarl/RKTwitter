@@ -79,6 +79,18 @@ public class TweetsListFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onResume() {
+        Log.v("DBG", ((Object) this).getClass().getSimpleName() +  "onResume");
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        Log.v("DBG", ((Object) this).getClass().getSimpleName() +  "onPause");
+        super.onPause();
+    }
+
     private void setupListView(View v) {
         lvTweets = (ListView)v.findViewById(R.id.lvTweetsFragmentList);
         lvTweets.setOnScrollListener(new EndlessScrollListener() {
@@ -125,8 +137,8 @@ public class TweetsListFragment extends Fragment {
     long getOldestTweetId(ArrayList<Tweet> tweets) {
         long oldest = Tweet.OLDEST_TWEET;
         for (Tweet tweet: tweets) {
-            if (tweet.getID() < oldest) {
-                oldest = tweet.getID();
+            if (tweet.ID < oldest) {
+                oldest = tweet.ID;
             }
         }
         return oldest;

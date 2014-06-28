@@ -32,14 +32,14 @@ public class TweetDetailsActivity extends Activity {
 
 
         View v = findViewById(R.id.rlDetailsRoot);
-        setupTextviewContents(v, R.id.tvUserName, tweet.getUser().getName());
-        setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", tweet.getUser().getScreenName(), "@"));
+        setupTextviewContents(v, R.id.tvUserName, tweet.user.getName());
+        setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", tweet.user.getScreenName(), "@"));
         String tweetText;
         if (tweet.retweeted_status != null) {
             tweetText = tweet.getRetweetedText();
         }
         else {
-            tweetText = tweet.getBody();
+            tweetText = tweet.body;
         }
         setupTextviewContents(v, R.id.tvBody, tweetText);
         setupTextviewContents(v, R.id.tvTimestamp, tweet.absoluteDate);
@@ -47,7 +47,7 @@ public class TweetDetailsActivity extends Activity {
         mPreviewImage = (SmartImageView)findViewById(R.id.ivTweetImagePreview);
         mPreviewImage.setImageUrl(tweet.mediaURL);
         ImageView profileImage= (ImageView)findViewById(R.id.ivProfileImage);
-        ImageLoader.getInstance().displayImage(tweet.getUser().getProfileImageURL(), profileImage);
+        ImageLoader.getInstance().displayImage(tweet.user.getProfileImageURL(), profileImage);
         setupRetweetBanner(v, tweet);
 
         Util.setActionBarDrawable(getActionBar(), new ColorDrawable(getResources().getColor(R.color.twitterBlue)));
@@ -59,7 +59,7 @@ public class TweetDetailsActivity extends Activity {
         if (tweet.retweeted_status != null) {
             retweetBanner.setVisibility(View.VISIBLE);
             TextView tvRetweeter = (TextView)v.findViewById(R.id.tvRetweeterLabel);
-            User originalTweeter = tweet.retweeted_status.getUser();
+            User originalTweeter = tweet.retweeted_status.user;
             tvRetweeter.setText(String.format("%s retweeted", originalTweeter .getScreenName()));
         }
         else {

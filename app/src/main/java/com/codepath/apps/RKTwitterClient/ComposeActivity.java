@@ -94,7 +94,7 @@ public class ComposeActivity extends Activity {
         if (intent.hasExtra(TWEET_EXTRA_KEY)) {
             Tweet theTweet = (Tweet)intent.getSerializableExtra(TWEET_EXTRA_KEY);
             if (theTweet.mentions != null) {
-                String prefix = String.format("@%s ", theTweet.getUser().getScreenName());
+                String prefix = String.format("@%s ", theTweet.user.getScreenName());
                 for (User user : theTweet.mentions) {
                     prefix += String.format("@%s ", user.getScreenName());
                 }

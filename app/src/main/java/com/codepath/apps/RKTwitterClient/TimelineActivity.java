@@ -59,12 +59,14 @@ public class TimelineActivity extends FragmentActivity implements TweetsListFrag
 
     @Override
     protected void onResume() {
+        Log.v("DBG", ((Object) this).getClass().getSimpleName() +  "onResume");
         super.onResume();
         mIsRunning = true;
     }
 
     @Override
     protected void onPause() {
+        Log.v("DBG", ((Object) this).getClass().getSimpleName() +  "onPause");
         mIsRunning = false;
         super.onPause();
     }
@@ -120,7 +122,7 @@ public class TimelineActivity extends FragmentActivity implements TweetsListFrag
                 TimelineActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        String toastMsg = String.format("Successfully favorited @%s's tweet", t.getUser().getScreenName());
+                        String toastMsg = String.format("Successfully favorited @%s's tweet", t.user.getScreenName());
                         Toast.makeText(TimelineActivity.this, toastMsg, Toast.LENGTH_SHORT).show();
                         TweetArrayAdapter.setListItemFavoritedState(tweetContainer, true);
                         tweet.favorited = true;
@@ -157,7 +159,7 @@ public class TimelineActivity extends FragmentActivity implements TweetsListFrag
                 TimelineActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        String toastMsg = String.format("Successfully retweeted @%s's tweet", t.retweeted_status.getUser().getScreenName());
+                        String toastMsg = String.format("Successfully retweeted @%s's tweet", t.retweeted_status.user.getScreenName());
                         Toast.makeText(TimelineActivity.this, toastMsg, Toast.LENGTH_SHORT).show();
                         TweetArrayAdapter.setListItemRetweeted(tweetContainerView, true);
                         tweet.retweeted = true;

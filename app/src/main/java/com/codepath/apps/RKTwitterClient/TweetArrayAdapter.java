@@ -41,17 +41,17 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 
         setupUsername(v);
         setupProfileImage(v, tweet);
-        setupTextviewContents(v, R.id.tvUserName, tweet.getUser().getName());
-        setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", tweet.getUser().getScreenName(), "@"));
+        setupTextviewContents(v, R.id.tvUserName, tweet.user.getName());
+        setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", tweet.user.getScreenName(), "@"));
         String tweetText;
         if (tweet.retweeted_status != null) {
             tweetText = tweet.getRetweetedText();
         }
         else {
-            tweetText = tweet.getBody();
+            tweetText = tweet.body;
         }
         setupTextviewContents(v, R.id.tvBody, tweetText);
-        setupTextviewContents(v, R.id.tvRelativeTimestamp, tweet.getRelativeDate());
+        setupTextviewContents(v, R.id.tvRelativeTimestamp, tweet.relativeDate);
         String favoriteText = tweet.favoriteCount == 0 ? "" : String.format("%d", tweet.favoriteCount);
         setupTextviewContents(v, R.id.tvFavoriteCount, favoriteText);
         String retweetText = tweet.retweetCount == 0 ? "" : String.format("%d", tweet.retweetCount);
@@ -152,7 +152,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         if (tweet.retweeted_status != null) {
             retweetBanner.setVisibility(View.VISIBLE);
             TextView tvRetweeter = (TextView)v.findViewById(R.id.tvRetweeterLabel);
-            User originalTweeter = tweet.retweeted_status.getUser();
+            User originalTweeter = tweet.retweeted_status.user;
             tvRetweeter.setText(String.format("%s retweeted", originalTweeter .getScreenName()));
         }
         else {
@@ -165,7 +165,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         ImageView ivProfileImage = (ImageView)v.findViewById(R.id.ivProfileImage);
         ivProfileImage.setImageResource(getContext().getResources().getColor(android.R.color.transparent));
         ImageLoader imageLoader = ImageLoader.getInstance();
-        User user = tweet.getUser();
+        User user = tweet.user;
         imageLoader.displayImage(user.getProfileImageURL(), ivProfileImage);
     }
 }
