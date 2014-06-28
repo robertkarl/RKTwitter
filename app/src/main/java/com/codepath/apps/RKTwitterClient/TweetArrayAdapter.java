@@ -21,6 +21,7 @@ import java.util.List;
 import static com.codepath.apps.RKTwitterClient.util.Util.setupTextviewContents;
 
 public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
+    static int x = 0;
 
     public TweetArrayAdapter(Context context, List<Tweet> tweets) {
         super(context, 0, tweets);
@@ -30,6 +31,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
     public View getView(int position, View convertView, ViewGroup parent) {
         final Tweet tweet = getItem(position);
         View v;
+        Log.v("DBG", String.format("getView pos %d count = %d", position, ++x));
         if (convertView == null) {
             LayoutInflater inflator = LayoutInflater.from(getContext());
             v = inflator.inflate(R.layout.tweet_item, parent, false);

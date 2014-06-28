@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.codepath.apps.RKTwitterClient.fragments.HomeTimelineFragment;
 import com.codepath.apps.RKTwitterClient.fragments.MentionsFragment;
+import com.codepath.apps.RKTwitterClient.fragments.ProfileTimelineFragment;
 import com.codepath.apps.RKTwitterClient.fragments.TweetsListFragment;
 
 public class TimelinePagerAdapter extends FragmentPagerAdapter {
@@ -19,7 +20,7 @@ public class TimelinePagerAdapter extends FragmentPagerAdapter {
 
     public TimelinePagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
-        fragments = new TweetsListFragment[2];
+        fragments = new TweetsListFragment[3];
     }
 
     @Override
@@ -29,7 +30,7 @@ public class TimelinePagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -37,7 +38,9 @@ public class TimelinePagerAdapter extends FragmentPagerAdapter {
         if (fragments[0] == null) {
             fragments[0] = new HomeTimelineFragment();
             fragments[1] = new MentionsFragment();
-            fragments[0].listener = fragments[1].listener = listener;
+            ProfileTimelineFragment profile = new ProfileTimelineFragment();
+            fragments[2] = profile;
+            fragments[0].listener = fragments[2].listener = fragments[1].listener = listener;
         }
         return fragments[position].getTitle();
     }

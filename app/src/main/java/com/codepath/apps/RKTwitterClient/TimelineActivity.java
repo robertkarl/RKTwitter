@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.codepath.apps.RKTwitterClient.fragments.TweetsListFragment;
 import com.codepath.apps.RKTwitterClient.models.Tweet;
+import com.codepath.apps.RKTwitterClient.models.User;
 import com.codepath.apps.RKTwitterClient.util.Connectivity;
 import com.codepath.apps.RKTwitterClient.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -50,6 +51,8 @@ public class TimelineActivity extends FragmentActivity implements TweetsListFrag
         timelinePager.setAdapter(tweetsListPagerAdapter);
 
         checkBackForAConnection(0);
+
+        User.fetchCurrentUser(null);
 
     }
 

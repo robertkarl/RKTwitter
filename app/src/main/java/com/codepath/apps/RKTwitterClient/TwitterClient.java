@@ -65,7 +65,7 @@ public class TwitterClient extends OAuthBaseClient {
         Log.i("DBG", String.format("Requesting %s ", apiUrl));
         RequestParams params = new RequestParams();
         params.put("status", tweetContents);
-        client.post(apiUrl, params, handler);
+        performAndLogPost(apiUrl, params, handler);
     }
 
     public void getUser(AsyncHttpResponseHandler handler) {
@@ -78,16 +78,26 @@ public class TwitterClient extends OAuthBaseClient {
         String apiUrl = getApiUrl(String.format("statuses/retweet/%d.json", tweet.ID));
         RequestParams params = new RequestParams();
         params.put("id", String.format("%d", tweet.ID));
-        Log.i("DBG", String.format("Requesting %s ", apiUrl));
-        client.post(apiUrl, params, handler);
+        performAndLogPost(apiUrl, params, handler);
     }
 
     public void performFavorite(Tweet tweet, AsyncHttpResponseHandler handler) {
         RequestParams params = new RequestParams();
         params.put("id", String.format("%d", tweet.ID));
         String apiUrl = getApiUrl("favorites/create.json");
+        performAndLogPost(apiUrl, params, handler);
+    }
+
+    public void getProfileTimeline(long userID, AsyncHttpResponseHandler handler) {
+        RequestParams params = new RequestParams();
+        params.put("id", String.format("%d", userID));
+        String apiUrl = getApiUrl("statuses/user_timeline.json");
+        Log.i("DBG", String.format("Requesting %s", apiUrl));
+        client.get(apiUrl, params, handler);
+    }
+
+    private void performAndLogPost(String apiUrl, RequestParams params, AsyncHttpResponseHandler handler) {
         Log.i("DBG", String.format("Requesting %s ", apiUrl));
         client.post(apiUrl, params, handler);
     }
-
 }

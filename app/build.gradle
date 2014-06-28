@@ -17,7 +17,7 @@ android {
     productFlavors {
         releaseanddebug {
             minSdkVersion 21
-            applicationId 'com.codepath.apps.restclienttemplate'
+            applicationId 'net.robertkarl.twitter'
             targetSdkVersion 21
         }
     }

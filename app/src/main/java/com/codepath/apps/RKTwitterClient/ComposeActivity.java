@@ -61,25 +61,25 @@ public class ComposeActivity extends Activity {
             }
         });
 
-        TwitterApplication.getRestClient().getUser(new JsonHttpResponseHandler() {
+        User.fetchCurrentUser(new User.UserLoadedCallback() {
             @Override
-            public void onSuccess(JSONObject jsonObject) {
-                mUser = User.fromJSON(jsonObject);
-                ImageLoader.getInstance().displayImage(mUser.getProfileImageURL(), ivProfile);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        View v = getRoot();
-                        setupTextviewContents(v, R.id.tvUserName, mUser.getName());
-                        setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", mUser.getScreenName(), "@"));
-                    }
-                });
-            }
+            public void onUserLoaded(User user) {
 
-            @Override
-            public void onFailure(Throwable throwable, String s) {
-                Toast.makeText(ComposeActivity.this, "Something went wrong! Please reconnect and try again", Toast.LENGTH_SHORT).show();
-                getProgressBar().setVisibility(View.VISIBLE);
+                if (user == null) {
+                    Toast.makeText(ComposeActivity.this, "Something went wrong! Please reconnect and try again", Toast.LENGTH_SHORT).show();
+                    getProgressBar().setVisibility(View.VISIBLE);
+                }
+                else {
+                    ImageLoader.getInstance().displayImage(mUser.getProfileImageURL(), ivProfile);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            View v = getRoot();
+                            setupTextviewContents(v, R.id.tvUserName, mUser.getName());
+                            setupTextviewContents(v, R.id.tvUserScreenName, String.format("@%s", mUser.getScreenName(), "@"));
+                        }
+                    });
+                }
             }
         });
     }

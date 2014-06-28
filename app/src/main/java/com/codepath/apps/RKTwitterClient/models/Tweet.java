@@ -1,7 +1,6 @@
 package com.codepath.apps.RKTwitterClient.models;
 
 import android.text.format.DateUtils;
-import android.util.Log;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
@@ -85,7 +84,6 @@ public class Tweet extends Model implements Serializable {
                 tweet.favorited = object.getBoolean("favorited");
             }
             tweet.user = User.fromJSON(object.getJSONObject("user"));
-            Log.d("DBG", String.format("Tweet %d from %s", tweet.ID, tweet.user.getScreenName()));
             tweet.relativeDate = Tweet.getRelativeTimeAgo(tweet.createdAt);
             tweet.absoluteDate = Tweet.getAbsoluteTime(tweet.createdAt);
 

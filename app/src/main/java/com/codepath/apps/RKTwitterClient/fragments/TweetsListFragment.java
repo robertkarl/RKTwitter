@@ -44,14 +44,39 @@ public class TweetsListFragment extends Fragment {
     public TweetsListListener listener;
     PullToRefreshLayout pullToRefreshLayout;
     TwitterClient client;
+    private View rootView;
 
     long lastTweetID = -1;
 
+    JsonHttpResponseHandler makeUnpackingRefreshingJsonHandler() {
+        return new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(JSONArray jsonArray) {
+                clearTweets();
+                unpackTweetsFromJSON(jsonArray);
+                getProgressBar().setVisibility(View.GONE);
+                completeRefreshIfNeeded(true);
+                setActionBarTwitterColor();
+                listener.onConnectionRegained();
+            }
+
+            @Override
+            public void onFailure(Throwable throwable, String s) {
+                listener.onConnectionLost();
+                completeRefreshIfNeeded(false);
+                Log.e("DBG", String.format("Timeline populate failed %s %s", throwable.toString(), s));
+            }
+        };
+    }
+
     public void addAll(List<Tweet> tweets) {
+        Log.d("DBG", String.format("Adding %d tweets to adapter", tweets.size()));
         tweetsAdapter.addAll(tweets);
         tweetsAdapter.notifyDataSetChanged();
     }
     public void clearTweets() {
+        Log.d("DBG", String.format("Clearing the adapter", tweets.size()));
         tweetsAdapter.clear();
     }
 
@@ -62,10 +87,10 @@ public class TweetsListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_tweets_list, container, false);
+        rootView = inflater.inflate(R.layout.fragment_tweets_list, container, false);
         client = TwitterApplication.getRestClient();
 
-        pullToRefreshLayout = (PullToRefreshLayout)v.findViewById(R.id.pullToRefresh);
+        pullToRefreshLayout = (PullToRefreshLayout)rootView.findViewById(R.id.pullToRefresh);
 
         ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable()
                 .listener(new OnRefreshListener() {
@@ -75,12 +100,12 @@ public class TweetsListFragment extends Fragment {
                     }
                 })
                 .setup(pullToRefreshLayout);
-        setupListView(v);
+        setupListView(rootView);
 
         clearAndPopulate();
 
 
-        return v;
+        return rootView;
     }
 
     @Override
@@ -149,32 +174,13 @@ public class TweetsListFragment extends Fragment {
     }
 
     public void clearAndPopulate() {
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(JSONArray jsonArray) {
-                Log.d("DBG", jsonArray.toString());
-                clearTweets();
-                unpackTweetsFromJSON(jsonArray);
-                toggleLoadingVisibility(false);
-                completeRefreshIfNeeded(true);
-                setActionBarTwitterColor();
-                listener.onConnectionRegained();
-            }
-
-            @Override
-            public void onFailure(Throwable throwable, String s) {
-                listener.onConnectionLost();
-                completeRefreshIfNeeded(false);
-                Log.e("DBG", String.format("Timeline populate failed %s %s", throwable.toString(), s));
-            }
-        });
+        client.getHomeTimeline(makeUnpackingRefreshingJsonHandler());
     }
 
 
-    private void toggleLoadingVisibility(boolean showLoading) {
+    protected void toggleLoadingVisibility(boolean showLoading) {
         final View loadingIndicator = getProgressBar();
-        final View listHolder = getView().findViewById(R.id.lvTweetsFragmentList);
+        final View listHolder = rootView.findViewById(R.id.lvTweetsFragmentList);
 
         final int cx = loadingIndicator.getRight() / 2;
         final int cy = loadingIndicator.getBottom() / 2;
@@ -195,7 +201,7 @@ public class TweetsListFragment extends Fragment {
                 }
             });
 
-            reveal.setDuration(5000);
+            reveal.setDuration(1000);
             reveal.start();
         } else {
             ValueAnimator reveal = ViewAnimationUtils.createCircularReveal(loadingIndicator, cx, cy, radius, 0);
@@ -215,7 +221,7 @@ public class TweetsListFragment extends Fragment {
 
 
     ProgressBar getProgressBar() {
-        return (ProgressBar)getView().findViewById(R.id.progressBar);
+        return (ProgressBar)rootView.findViewById(R.id.progressBar);
     }
 
 
