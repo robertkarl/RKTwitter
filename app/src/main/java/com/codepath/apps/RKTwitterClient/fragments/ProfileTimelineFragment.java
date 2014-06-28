@@ -1,7 +1,6 @@
 package com.codepath.apps.RKTwitterClient.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,25 +21,7 @@ public class ProfileTimelineFragment extends TweetsListFragment {
     }
 
     private void fetchTheUsersTweets() {
-        client.getProfileTimeline(user.uid, new JsonHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(JSONArray jsonArray) {
-                clearTweets();
-                unpackTweetsFromJSON(jsonArray);
-                getProgressBar().setVisibility(View.GONE);
-                completeRefreshIfNeeded(true);
-                setActionBarTwitterColor();
-                listener.onConnectionRegained();
-            }
-
-            @Override
-            public void onFailure(Throwable throwable, String s) {
-                listener.onConnectionLost();
-                completeRefreshIfNeeded(false);
-                Log.e("DBG", String.format("Timeline populate failed %s %s", throwable.toString(), s));
-            }
-        });
+        client.getProfileTimeline(user.uid, makeUnpackingRefreshingJsonHandler());
     }
 
     public void clearAndPopulate() {

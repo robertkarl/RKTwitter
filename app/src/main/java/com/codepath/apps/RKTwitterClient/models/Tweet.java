@@ -51,10 +51,6 @@ public class Tweet extends Model implements Serializable {
 
     public Tweet retweeted_status;
 
-    public Tweet() {
-        super();
-    }
-
     @Column(name = "urls")
     public ArrayList<TwitterURL> urls;
 
@@ -136,10 +132,9 @@ public class Tweet extends Model implements Serializable {
         ArrayList<Tweet> tweets = new ArrayList<Tweet>(array.length());
 
         for (int i = 0; i < array.length(); i++) {
-            JSONObject tweetJson = null;
+            JSONObject tweetJson;
             try {
                 tweetJson = array.getJSONObject(i);
-
             }
             catch (Exception e) {
                 e.printStackTrace();

@@ -4,18 +4,18 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import android.view.ViewAnimationUtils;
 
 import com.activeandroid.query.Select;
 import com.codepath.apps.RKTwitterClient.R;
@@ -55,7 +55,6 @@ public class TweetsListFragment extends Fragment {
             public void onSuccess(JSONArray jsonArray) {
                 clearTweets();
                 unpackTweetsFromJSON(jsonArray);
-                getProgressBar().setVisibility(View.GONE);
                 completeRefreshIfNeeded(true);
                 setActionBarTwitterColor();
                 listener.onConnectionRegained();
@@ -157,10 +156,22 @@ public class TweetsListFragment extends Fragment {
     }
 
 
-    void unpackTweetsFromJSON(JSONArray jsonArray) {
-        ArrayList<Tweet> receivedTweets = Tweet.fromJSONArray(jsonArray);
-        lastTweetID = getOldestTweetId(receivedTweets);
-        addAll(receivedTweets);
+    void unpackTweetsFromJSON(final JSONArray jsonArray) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                final ArrayList<Tweet> receivedTweets = Tweet.fromJSONArray(jsonArray);
+                lastTweetID = getOldestTweetId(receivedTweets);
+                TweetsListFragment.this.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        addAll(receivedTweets);
+                        toggleLoadingVisibility(false);
+                    }
+                });
+                return null;
+            }
+        }.execute();
     }
 
     long getOldestTweetId(ArrayList<Tweet> tweets) {
@@ -210,10 +221,11 @@ public class TweetsListFragment extends Fragment {
                 @Override
                 public void onAnimationEnd(final Animator animation) {
                     loadingIndicator.setVisibility(View.INVISIBLE);
+                    Log.v("DBG", "onAnimationEnd");
                 }
             });
 
-            reveal.setDuration(1000);
+            reveal.setDuration(500);
             reveal.start();
         }
     }
