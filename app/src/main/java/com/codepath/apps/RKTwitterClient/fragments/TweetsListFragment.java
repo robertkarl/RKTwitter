@@ -37,33 +37,16 @@ public class TweetsListFragment extends Fragment {
     private ArrayList<Tweet> tweets;
     private TweetArrayAdapter tweetsAdapter;
     private ListView lvTweets;
-    TweetsListListener listener;
+    public TweetsListListener listener;
     PullToRefreshLayout pullToRefreshLayout;
-    private TwitterClient client;
+    TwitterClient client;
 
-    private long lastTweetID = -1;
+    long lastTweetID = -1;
 
     public void addAll(List<Tweet> tweets) {
         tweetsAdapter.addAll(tweets);
         tweetsAdapter.notifyDataSetChanged();
     }
-
-    public void onTriggerInfiniteScroll() {
-        client.fetchOlderTweets(new JsonHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(JSONArray jsonArray) {
-                unpackTweetsFromJSON(jsonArray);
-                listener.onConnectionRegained();
-            }
-
-            @Override
-            public void onFailure(Throwable throwable, String s) {
-                listener.onConnectionLost();
-            }
-        }, lastTweetID - 1);
-    }
-
     public void clearTweets() {
         tweetsAdapter.clear();
     }
@@ -84,15 +67,13 @@ public class TweetsListFragment extends Fragment {
                 .listener(new OnRefreshListener() {
                     @Override
                     public void onRefreshStarted(View view) {
-                        onClearAndPopulate();
+                        clearAndPopulate();
                     }
                 })
                 .setup(pullToRefreshLayout);
         setupListView(v);
 
-        if (listener != null) {
-            listener.onClearAndPopulate();
-        }
+        clearAndPopulate();
 
 
         return v;
@@ -130,7 +111,6 @@ public class TweetsListFragment extends Fragment {
     public interface TweetsListListener {
         void onTweetClicked(Tweet tweet);
         void onTriggerInfiniteScroll();
-        void onClearAndPopulate();
         void onConnectionLost();
         void onConnectionRegained();
     }
@@ -152,7 +132,7 @@ public class TweetsListFragment extends Fragment {
         return oldest;
     }
 
-    public void onClearAndPopulate() {
+    public void clearAndPopulate() {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
 
             @Override
@@ -181,7 +161,7 @@ public class TweetsListFragment extends Fragment {
     }
 
 
-    private void completeRefreshIfNeeded(boolean refreshSucceeded) {
+    protected void completeRefreshIfNeeded(boolean refreshSucceeded) {
         if (pullToRefreshLayout.isRefreshing()) {
             pullToRefreshLayout.setRefreshComplete();
             String message = refreshSucceeded ? "Refresh completed!" : "Please reconnect and try again";

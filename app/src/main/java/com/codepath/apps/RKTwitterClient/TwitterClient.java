@@ -34,15 +34,19 @@ public class TwitterClient extends OAuthBaseClient {
         super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
     }
 
+    public void getMentionsTimeline(AsyncHttpResponseHandler handler) {
+        fetchOlderTweets("statuses/mentions_timeline.json", handler, 0);
+    }
+
     public void getHomeTimeline(AsyncHttpResponseHandler handler) {
-        fetchOlderTweets(handler, 0);
+        fetchOlderTweets("statuses/home_timeline.json", handler, 0);
     }
 
     /**
      * @param tweetID tweets will not be returned as new or newer than this one
      */
-    public void fetchOlderTweets(AsyncHttpResponseHandler handler, long tweetID) {
-        String apiUrl = getApiUrl("statuses/home_timeline.json");
+    public void fetchOlderTweets(String endpoint, AsyncHttpResponseHandler handler, long tweetID) {
+        String apiUrl = getApiUrl(endpoint);
         RequestParams params = new RequestParams();
         params.put("since_id", "1");
         Log.i("DBG", String.format("Requesting %s ", apiUrl));

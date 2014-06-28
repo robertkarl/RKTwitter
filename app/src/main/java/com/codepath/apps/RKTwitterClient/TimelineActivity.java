@@ -36,6 +36,8 @@ public class TimelineActivity extends FragmentActivity implements TweetsListFrag
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        client = TwitterApplication.getRestClient();
+
         setContentView(R.layout.activity_timeline);
         setTitle("Home");
 
@@ -43,6 +45,7 @@ public class TimelineActivity extends FragmentActivity implements TweetsListFrag
 
 
         tweetsListPagerAdapter = new TimelinePagerAdapter(getSupportFragmentManager());
+        tweetsListPagerAdapter.listener = this;
         timelinePager = (ViewPager)findViewById(R.id.vpTimelineFragmentContainer);
         timelinePager.setAdapter(tweetsListPagerAdapter);
 
@@ -188,11 +191,6 @@ public class TimelineActivity extends FragmentActivity implements TweetsListFrag
     public void onConnectionRegained() {
         setNoNetworkBannerVisibility(View.GONE);
         mConnecting = false; // Stops any retrying that's in progress
-    }
-
-    @Override
-    public void onClearAndPopulate() {
-
     }
 
     @Override

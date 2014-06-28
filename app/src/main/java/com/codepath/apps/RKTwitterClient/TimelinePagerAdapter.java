@@ -12,8 +12,12 @@ public class TimelinePagerAdapter extends FragmentPagerAdapter {
 
     TweetsListFragment fragments[];
 
-    public TimelinePagerAdapter(FragmentManager fragmentManager) {
+    /**
+     * Passed to fragments.
+     */
+    public TweetsListFragment.TweetsListListener listener;
 
+    public TimelinePagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
         fragments = new TweetsListFragment[2];
     }
@@ -33,6 +37,7 @@ public class TimelinePagerAdapter extends FragmentPagerAdapter {
         if (fragments[0] == null) {
             fragments[0] = new HomeTimelineFragment();
             fragments[1] = new MentionsFragment();
+            fragments[0].listener = fragments[1].listener = listener;
         }
         return fragments[position].getTitle();
     }
