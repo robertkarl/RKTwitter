@@ -59,7 +59,9 @@ public class TweetsListFragment extends Fragment {
         tweetsAdapter = new TweetArrayAdapter(getActivity(), tweets);
         lvTweets.setAdapter(tweetsAdapter);
 
-        listener.onClearAndPopulate();
+        if (listener != null) {
+            listener.onClearAndPopulate();
+        }
 
 
         return v;
