@@ -1,5 +1,7 @@
 package com.codepath.apps.RKTwitterClient;
 
+import android.app.ActionBar;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.codepath.apps.RKTwitterClient.fragments.HomeTimelineFragment;
 import com.codepath.apps.RKTwitterClient.fragments.TweetsListFragment;
 import com.codepath.apps.RKTwitterClient.models.Tweet;
 import com.codepath.apps.RKTwitterClient.models.User;
@@ -46,14 +49,77 @@ public class TimelineActivity extends FragmentActivity implements TweetsListFrag
         setActionBarTwitterColor();
 
 
-        tweetsListPagerAdapter = new TimelinePagerAdapter(getSupportFragmentManager());
-        tweetsListPagerAdapter.listener = this;
+        tweetsListPagerAdapter = new TimelinePagerAdapter(getSupportFragmentManager(), this);
         timelinePager = (ViewPager)findViewById(R.id.vpTimelineFragmentContainer);
         timelinePager.setAdapter(tweetsListPagerAdapter);
+        timelinePager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i2) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                getActionBar().setSelectedNavigationItem(i);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+        setupTabs();
 
         checkBackForAConnection(0);
 
         User.fetchCurrentUser(null);
+
+    }
+
+    private void setupTabs() {
+        ActionBar actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayShowTitleEnabled(true);
+
+        ActionBar.TabListener listener = new ActionBar.TabListener() {
+            @Override
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                if (tab.getTag() == HomeTimelineFragment.FRAGMENT_NAME) {
+                    timelinePager.setCurrentItem(0, true);
+                }
+                else {
+                    timelinePager.setCurrentItem(1, true);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+            }
+
+            @Override
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+            }
+        };
+
+        /// Create tabs -- 42:53
+        ActionBar.Tab homeTab = actionBar.newTab()
+                .setText("Home")
+                .setIcon(android.R.drawable.ic_menu_today)
+                .setTag("HomeTimelineFragment")
+                .setTabListener(listener);
+
+        /// Create tabs -- 42:53
+        ActionBar.Tab mentionsTab = actionBar.newTab()
+                .setText("Mentions")
+                .setIcon(android.R.drawable.ic_menu_add)
+                .setTag("MentionsFragment")
+                .setTabListener(listener);
+
+        actionBar.addTab(homeTab);
+        actionBar.addTab(mentionsTab);
+
 
     }
 

@@ -50,12 +50,12 @@ public class ProfileTimelineFragment extends TweetsListFragment {
             @Override
             public void onSuccess(JSONArray jsonArray) {
                 unpackTweetsFromJSON(jsonArray);
-                listener.onConnectionRegained();
+                getListener().onConnectionRegained();
             }
 
             @Override
             public void onFailure(Throwable throwable, String s) {
-                listener.onConnectionLost();
+                getListener().onConnectionLost();
             }
         }, lastTweetID - 1);
     }

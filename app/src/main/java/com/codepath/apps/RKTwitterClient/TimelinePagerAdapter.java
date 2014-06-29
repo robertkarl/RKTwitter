@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.codepath.apps.RKTwitterClient.fragments.HomeTimelineFragment;
 import com.codepath.apps.RKTwitterClient.fragments.MentionsFragment;
-import com.codepath.apps.RKTwitterClient.fragments.ProfileTimelineFragment;
 import com.codepath.apps.RKTwitterClient.fragments.TweetsListFragment;
 
 public class TimelinePagerAdapter extends FragmentPagerAdapter {
@@ -18,30 +17,33 @@ public class TimelinePagerAdapter extends FragmentPagerAdapter {
      */
     public TweetsListFragment.TweetsListListener listener;
 
-    public TimelinePagerAdapter(FragmentManager fragmentManager) {
+    public TimelinePagerAdapter(FragmentManager fragmentManager, TweetsListFragment.TweetsListListener theListener) {
         super(fragmentManager);
-        fragments = new TweetsListFragment[3];
+        listener = theListener;
+        fragments = new TweetsListFragment[2];
     }
 
     @Override
     public Fragment getItem(int i) {
+        createFragmentsIfNeeded();
         return fragments[i];
+    }
+
+    private void createFragmentsIfNeeded() {
+        if (fragments[0] == null) {
+            fragments[0] = new HomeTimelineFragment();
+            fragments[1] = new MentionsFragment();
+        }
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        if (fragments[0] == null) {
-            fragments[0] = new HomeTimelineFragment();
-            fragments[1] = new MentionsFragment();
-            ProfileTimelineFragment profile = new ProfileTimelineFragment();
-            fragments[2] = profile;
-            fragments[0].listener = fragments[2].listener = fragments[1].listener = listener;
-        }
+        createFragmentsIfNeeded();
         return fragments[position].getTitle();
     }
 }

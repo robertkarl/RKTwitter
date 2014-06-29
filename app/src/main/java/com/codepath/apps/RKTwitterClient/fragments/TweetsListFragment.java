@@ -41,28 +41,33 @@ public class TweetsListFragment extends Fragment {
     private ArrayList<Tweet> tweets;
     private TweetArrayAdapter tweetsAdapter;
     private ListView lvTweets;
-    public TweetsListListener listener;
     PullToRefreshLayout pullToRefreshLayout;
     TwitterClient client;
     private View rootView;
 
     long lastTweetID = -1;
 
+    TweetsListFragment() {
+        super();
+        Log.v("DBG", String.format("Constructing %s fragment", getTitle()));
+    }
+
     JsonHttpResponseHandler makeUnpackingRefreshingJsonHandler() {
         return new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(JSONArray jsonArray) {
+                Log.v("dbg", String.format("%s onSuccess called", getTitle()));
                 clearTweets();
                 unpackTweetsFromJSON(jsonArray);
                 completeRefreshIfNeeded(true);
                 setActionBarTwitterColor();
-                listener.onConnectionRegained();
+                getListener().onConnectionRegained();
             }
 
             @Override
             public void onFailure(Throwable throwable, String s) {
-                listener.onConnectionLost();
+                getListener().onConnectionLost();
                 completeRefreshIfNeeded(false);
                 Log.e("DBG", String.format("Timeline populate failed %s %s", throwable.toString(), s));
             }
@@ -84,13 +89,16 @@ public class TweetsListFragment extends Fragment {
         }
     }
 
+    protected TweetsListListener getListener() {
+        return (TweetsListListener)getActivity();
+    }
+
     public String getTitle() {
         return "Tweets list";
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         rootView = inflater.inflate(R.layout.fragment_tweets_list, container, false);
         client = TwitterApplication.getRestClient();
 
@@ -129,13 +137,13 @@ public class TweetsListFragment extends Fragment {
         lvTweets.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                listener.onTriggerInfiniteScroll();
+                getListener().onTriggerInfiniteScroll();
             }
         });
         lvTweets.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                listener.onTweetClicked(tweetsAdapter.getItem(position));
+                getListener().onTweetClicked(tweetsAdapter.getItem(position));
             }
         });
         tweets = new ArrayList<Tweet>();
@@ -213,7 +221,6 @@ public class TweetsListFragment extends Fragment {
 
                 @Override
                 public void onAnimationEnd(final Animator animation) {
-                    Log.v("DBG", "onAnimationEnd");
                 }
             });
 
@@ -226,7 +233,6 @@ public class TweetsListFragment extends Fragment {
                 @Override
                 public void onAnimationEnd(final Animator animation) {
                     loadingIndicator.setVisibility(View.INVISIBLE);
-                    Log.v("DBG", "onAnimationEnd");
                 }
             });
 
