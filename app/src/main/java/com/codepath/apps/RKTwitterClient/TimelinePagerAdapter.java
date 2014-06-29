@@ -12,14 +12,8 @@ public class TimelinePagerAdapter extends FragmentPagerAdapter {
 
     TweetsListFragment fragments[];
 
-    /**
-     * Passed to fragments.
-     */
-    public TweetsListFragment.TweetsListListener listener;
-
-    public TimelinePagerAdapter(FragmentManager fragmentManager, TweetsListFragment.TweetsListListener theListener) {
+    public TimelinePagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
-        listener = theListener;
         fragments = new TweetsListFragment[2];
     }
 

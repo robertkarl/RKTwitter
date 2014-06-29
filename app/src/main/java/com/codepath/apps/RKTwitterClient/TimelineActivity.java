@@ -48,7 +48,7 @@ public class TimelineActivity extends StatusTrackingActivity implements TweetsLi
         setActionBarTwitterColor();
 
 
-        tweetsListPagerAdapter = new TimelinePagerAdapter(getSupportFragmentManager(), this);
+        tweetsListPagerAdapter = new TimelinePagerAdapter(getSupportFragmentManager());
         timelinePager = (ViewPager)findViewById(R.id.vpTimelineFragmentContainer);
         timelinePager.setAdapter(tweetsListPagerAdapter);
         timelinePager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

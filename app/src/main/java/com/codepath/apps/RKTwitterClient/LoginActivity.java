@@ -20,6 +20,7 @@ public class LoginActivity extends OAuthLoginActivity<TwitterClient> {
 
     @Override
     public void onLoginSuccess() {
+        Log.v("DBG", "LoginActivity: Login succeeded.");
     	Intent i = new Intent(this, TimelineActivity.class);
     	startActivity(i);
     }

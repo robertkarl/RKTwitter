@@ -28,6 +28,7 @@ import com.codepath.apps.RKTwitterClient.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +68,36 @@ public abstract class TweetsListFragment extends Fragment {
                 completeRefreshIfNeeded(true);
                 setActionBarTwitterColor();
                 getListener().onConnectionRegained();
+            }
+
+            @Override
+            public void onSuccess(String s) {
+                super.onSuccess(s);
+            }
+
+            @Override
+            public void onSuccess(int i, JSONArray jsonArray) {
+                super.onSuccess(i, jsonArray);
+            }
+
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+                super.onSuccess(jsonObject);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable, JSONObject jsonObject) {
+                super.onFailure(throwable, jsonObject);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                super.onFailure(throwable);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable, JSONArray jsonArray) {
+                super.onFailure(throwable, jsonArray);
             }
 
             @Override
