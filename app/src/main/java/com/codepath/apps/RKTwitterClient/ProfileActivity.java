@@ -1,12 +1,11 @@
 package com.codepath.apps.RKTwitterClient;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
 import com.codepath.apps.RKTwitterClient.fragments.TweetsListFragment;
 import com.codepath.apps.RKTwitterClient.models.Tweet;
 
-public class ProfileActivity extends FragmentActivity implements TweetsListFragment.TweetsListListener {
+public class ProfileActivity extends StatusTrackingActivity implements TweetsListFragment.TweetsListListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

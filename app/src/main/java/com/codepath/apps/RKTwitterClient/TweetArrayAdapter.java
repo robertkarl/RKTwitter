@@ -1,6 +1,5 @@
 package com.codepath.apps.RKTwitterClient;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Handler;
@@ -21,6 +20,12 @@ import java.util.List;
 public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
     static int x = 0;
     Typeface robotoMedium;
+
+    public interface TweetActionsListener {
+        void onTweetFavorited(Tweet tweet);
+        void onTweetRetweeted(Tweet tweet);
+        void onTweetClicked(Tweet tweet);
+    }
 
     public TweetArrayAdapter(Context context, List<Tweet> tweets) {
         super(context, 0, tweets);
@@ -152,8 +157,11 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         userNameView.setTypeface(robotoMedium);
     }
 
+    TweetActionsListener getListener() {
+        return (TweetActionsListener)getContext();
+    }
+
     private void setupTweetBody(final Tweet tweet, TextView body) {
-        final TimelineActivity activity = (TimelineActivity)getContext();
         body.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,15 +170,15 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        ((Activity)getContext()).runOnUiThread(new Runnable() {
+                        final StatusTrackingActivity activity = (StatusTrackingActivity) getContext();
+                        activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 if (!activity.mIsRunning) {
                                     Log.d("DBG", "Detected a click on a URL. ignoring.");
                                     return;
-                                }
-                                else {
-                                    activity.onTweetClicked(tweet);
+                                } else {
+                                    getListener().onTweetClicked(tweet);
                                 }
                             }
                         });

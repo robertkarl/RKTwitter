@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
@@ -25,7 +24,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
-public class TimelineActivity extends FragmentActivity implements TweetsListFragment.TweetsListListener {
+public class TimelineActivity extends StatusTrackingActivity implements TweetsListFragment.TweetsListListener {
     public static int COMPOSE_REQUEST = 1234;
     private TwitterClient client;
     private boolean mConnecting = false;
