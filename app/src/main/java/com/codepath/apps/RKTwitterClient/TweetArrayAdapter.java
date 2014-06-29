@@ -52,7 +52,6 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
     public View getView(int position, View convertView, ViewGroup parent) {
         final Tweet tweet = getItem(position);
         View v;
-        Log.v("DBG", String.format("getView pos %d count = %d", position, ++x));
         final TweetViewHolder holder;
         if (convertView == null) {
             LayoutInflater inflator = LayoutInflater.from(getContext());
@@ -76,7 +75,6 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
             v = convertView;
             holder = (TweetViewHolder)v.getTag();
         }
-        final View tweetContainerView = v;
 
         setupUsername(holder.tvUserName);
         setupProfileImage(holder.ivProfile, tweet);

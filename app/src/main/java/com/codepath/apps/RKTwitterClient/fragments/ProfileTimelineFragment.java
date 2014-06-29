@@ -12,6 +12,8 @@ import org.json.JSONArray;
 
 public class ProfileTimelineFragment extends TweetsListFragment {
 
+    public static String FRAGMENT_NAME = "profile_fragment";
+
     public User user;
 
     @Override
@@ -43,6 +45,15 @@ public class ProfileTimelineFragment extends TweetsListFragment {
         }
     }
 
+    public static ProfileTimelineFragment newInstance(int numberOfTweetsToLoad) {
+        ProfileTimelineFragment frag = new ProfileTimelineFragment();
+        Bundle args = new Bundle();
+        if (numberOfTweetsToLoad > 0) {
+            args.putInt(ProfileTimelineFragment.TWEET_COUNT_KEY, numberOfTweetsToLoad);
+        }
+        frag.setArguments(args);
+        return frag;
+    }
 
     public void onTriggerInfiniteScroll() {
         client.fetchOlderTweets("mentions_timelineTODO",new JsonHttpResponseHandler() {

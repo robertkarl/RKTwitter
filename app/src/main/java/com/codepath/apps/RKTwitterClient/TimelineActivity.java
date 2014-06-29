@@ -24,7 +24,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
-public class TimelineActivity extends StatusTrackingActivity implements TweetsListFragment.TweetsListListener {
+public class TimelineActivity extends StatusTrackingActivity implements TweetsListFragment.TweetsListListener, TweetArrayAdapter.TweetActionsListener{
     public static int COMPOSE_REQUEST = 1234;
     private TwitterClient client;
     private boolean mConnecting = false;
@@ -46,7 +46,6 @@ public class TimelineActivity extends StatusTrackingActivity implements TweetsLi
         setTitle("Home");
 
         setActionBarTwitterColor();
-
 
         tweetsListPagerAdapter = new TimelinePagerAdapter(getSupportFragmentManager());
         timelinePager = (ViewPager)findViewById(R.id.vpTimelineFragmentContainer);
@@ -72,6 +71,16 @@ public class TimelineActivity extends StatusTrackingActivity implements TweetsLi
         checkBackForAConnection(0);
 
         User.fetchCurrentUser(null);
+
+    }
+
+    @Override
+    public void onTweetFavorited(Tweet tweet) {
+
+    }
+
+    @Override
+    public void onTweetRetweeted(Tweet tweet) {
 
     }
 

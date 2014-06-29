@@ -91,11 +91,6 @@ public abstract class TweetsListFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Throwable throwable) {
-                super.onFailure(throwable);
-            }
-
-            @Override
             public void onFailure(Throwable throwable, JSONArray jsonArray) {
                 super.onFailure(throwable, jsonArray);
             }
@@ -109,11 +104,12 @@ public abstract class TweetsListFragment extends Fragment {
         };
     }
 
-    public void addAll(List<Tweet> tweets) {
+    void addAll(List<Tweet> tweets) {
         Log.d("DBG", String.format("%s: Adding %d tweets to adapter", getTitle(), tweets.size()));
         tweetsAdapter.addAll(tweets);
         tweetsAdapter.notifyDataSetChanged();
     }
+
     public void clearTweets() {
         if (tweetsAdapter.isEmpty()) {
             Log.d("DBG", String.format("Not clearing an empty adapter"));
@@ -217,11 +213,18 @@ public abstract class TweetsListFragment extends Fragment {
             @Override
             protected Void doInBackground(Void... params) {
                 final ArrayList<Tweet> receivedTweets = Tweet.fromJSONArray(jsonArray);
-                lastTweetID = getOldestTweetId(receivedTweets);
                 TweetsListFragment.this.getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        addAll(receivedTweets);
+                        ArrayList<Tweet> tweetsToAdd = new ArrayList<Tweet>();
+                        if (numberOfTweetsToLoad == -1) {
+                            tweetsToAdd.addAll(receivedTweets);
+                        }
+                        else {
+                            tweetsToAdd.addAll(numberOfTweetsToLoad, receivedTweets);
+                        }
+                        lastTweetID = getOldestTweetId(tweetsToAdd);
+                        addAll(tweetsToAdd);
                         toggleLoadingVisibility(false);
                     }
                 });
