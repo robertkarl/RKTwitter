@@ -76,11 +76,6 @@ public abstract class TweetsListFragment extends Fragment {
             }
 
             @Override
-            public void onSuccess(int i, JSONArray jsonArray) {
-                super.onSuccess(i, jsonArray);
-            }
-
-            @Override
             public void onSuccess(JSONObject jsonObject) {
                 super.onSuccess(jsonObject);
             }
@@ -124,16 +119,18 @@ public abstract class TweetsListFragment extends Fragment {
         return (TweetsListListener)getActivity();
     }
 
-    public String getTitle() {
-        return "Tweets list";
-    }
+    public abstract String getTitle();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            numberOfTweetsToLoad = savedInstanceState.getInt(TWEET_COUNT_KEY, -1);
+        if (getArguments() != null) {
+            numberOfTweetsToLoad = getArguments().getInt(TWEET_COUNT_KEY, -1);
         }
+        else {
+            numberOfTweetsToLoad = -1;
+        }
+        int q = 7;
     }
 
     @Override
@@ -217,11 +214,14 @@ public abstract class TweetsListFragment extends Fragment {
                     @Override
                     public void run() {
                         ArrayList<Tweet> tweetsToAdd = new ArrayList<Tweet>();
+                        Log.v("DBG", String.format("Loading %d of total %d tweets", numberOfTweetsToLoad, receivedTweets.size()));
                         if (numberOfTweetsToLoad == -1) {
                             tweetsToAdd.addAll(receivedTweets);
                         }
                         else {
-                            tweetsToAdd.addAll(numberOfTweetsToLoad, receivedTweets);
+                            for (int i = 0; i < numberOfTweetsToLoad; i++) {
+                                tweetsToAdd.add(receivedTweets.get(i));
+                            }
                         }
                         lastTweetID = getOldestTweetId(tweetsToAdd);
                         addAll(tweetsToAdd);
@@ -263,6 +263,7 @@ public abstract class TweetsListFragment extends Fragment {
             reveal.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationStart(final Animator animation) {
+
                 }
 
                 @Override

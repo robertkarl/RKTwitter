@@ -1,6 +1,7 @@
 package com.codepath.apps.RKTwitterClient.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,14 +24,16 @@ public class ProfileTimelineFragment extends TweetsListFragment {
     }
 
     private void fetchTheUsersTweets() {
+        Log.v("dbg", "Profile view initiating fetch");
         client.getProfileTimeline(user.uid, makeUnpackingRefreshingJsonHandler());
     }
 
     public void clearAndPopulate() {
+        Log.v("dbg", String.format("%s clearAndPopulate: %h", getTitle(), user));
         if (user == null) {
             toggleLoadingVisibility(true);
             // Fetch the user
-            // When that's done, perform the fetch
+            // When that's done, perform the data fetch
             User.fetchCurrentUser(new User.UserLoadedCallback() {
                 @Override
                 public void onUserLoaded(User user) {
@@ -49,10 +52,14 @@ public class ProfileTimelineFragment extends TweetsListFragment {
         ProfileTimelineFragment frag = new ProfileTimelineFragment();
         Bundle args = new Bundle();
         if (numberOfTweetsToLoad > 0) {
-            args.putInt(ProfileTimelineFragment.TWEET_COUNT_KEY, numberOfTweetsToLoad);
+            args.putInt(TweetsListFragment.TWEET_COUNT_KEY, numberOfTweetsToLoad);
         }
         frag.setArguments(args);
         return frag;
+    }
+
+    public String getTitle() {
+        return "Profile";
     }
 
     public void onTriggerInfiniteScroll() {

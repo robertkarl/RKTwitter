@@ -117,14 +117,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tweetsStatsBottom">
-        <fragment
-            android:id="@+id/profileAbbreviatedTimelineFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:name="com.codepath.apps.RKTwitterClient.fragments.ProfileTimelineFragment"
-            tools:layout="@layout/fragment_tweets_list">
-        </fragment>
-
     </RelativeLayout>
 
 
