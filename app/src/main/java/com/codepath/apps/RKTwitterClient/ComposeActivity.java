@@ -70,6 +70,7 @@ public class ComposeActivity extends Activity {
                     getProgressBar().setVisibility(View.VISIBLE);
                 }
                 else {
+                    mUser = user;
                     ImageLoader.getInstance().displayImage(mUser.getProfileImageURL(), ivProfile);
                     runOnUiThread(new Runnable() {
                         @Override

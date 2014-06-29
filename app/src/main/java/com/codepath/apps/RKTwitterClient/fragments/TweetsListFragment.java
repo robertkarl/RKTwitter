@@ -104,7 +104,9 @@ public abstract class TweetsListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        numberOfTweetsToLoad = savedInstanceState.getInt(TWEET_COUNT_KEY, -1);
+        if (savedInstanceState != null) {
+            numberOfTweetsToLoad = savedInstanceState.getInt(TWEET_COUNT_KEY, -1);
+        }
     }
 
     @Override
