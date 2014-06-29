@@ -3,3 +3,6 @@
 10 hours Sunday
 7 hours Tuesday 24
 
+2 hours Wednesday
+5 hours Friday 27
+8 hours Saturday

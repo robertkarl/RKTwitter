@@ -83,18 +83,18 @@ public abstract class TweetsListFragment extends Fragment {
             @Override
             public void onFailure(Throwable throwable, JSONObject jsonObject) {
                 super.onFailure(throwable, jsonObject);
+                getListener().onConnectionLost();
+                completeRefreshIfNeeded(false);
+                Log.e("DBG", String.format("Timeline populate failed %s %s", throwable.toString(), jsonObject.toString()));
+
             }
 
             @Override
             public void onFailure(Throwable throwable, JSONArray jsonArray) {
                 super.onFailure(throwable, jsonArray);
-            }
-
-            @Override
-            public void onFailure(Throwable throwable, String s) {
                 getListener().onConnectionLost();
                 completeRefreshIfNeeded(false);
-                Log.e("DBG", String.format("Timeline populate failed %s %s", throwable.toString(), s));
+                Log.e("DBG", String.format("Timeline populate failed %s %s", throwable.toString(), jsonArray.toString()));
             }
         };
     }
@@ -144,6 +144,7 @@ public abstract class TweetsListFragment extends Fragment {
                 .listener(new OnRefreshListener() {
                     @Override
                     public void onRefreshStarted(View view) {
+                        toggleLoadingVisibility(true);
                         clearAndPopulate();
                     }
                 })
@@ -263,27 +264,34 @@ public abstract class TweetsListFragment extends Fragment {
             reveal.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationStart(final Animator animation) {
-
+                    loadingIndicator.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onAnimationEnd(final Animator animation) {
+                    listHolder.setVisibility(View.INVISIBLE);
                 }
             });
 
-            reveal.setDuration(1000);
+            reveal.setDuration(300);
             reveal.start();
         } else {
             ValueAnimator reveal = ViewAnimationUtils.createCircularReveal(loadingIndicator, cx, cy, radius, 0);
 
             reveal.addListener(new AnimatorListenerAdapter() {
                 @Override
+                public void onAnimationStart(Animator animation) {
+                    listHolder.setVisibility(View.VISIBLE);
+                }
+
+                @Override
                 public void onAnimationEnd(final Animator animation) {
                     loadingIndicator.setVisibility(View.INVISIBLE);
                 }
             });
 
-            reveal.setDuration(500);
+
+            reveal.setDuration(300);
             reveal.start();
         }
     }
