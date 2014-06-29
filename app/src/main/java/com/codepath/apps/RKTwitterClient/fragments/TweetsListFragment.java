@@ -36,7 +36,7 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class TweetsListFragment extends Fragment {
+public abstract class TweetsListFragment extends Fragment {
 
     private ArrayList<Tweet> tweets;
     private TweetArrayAdapter tweetsAdapter;

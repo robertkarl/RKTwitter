@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/vgProfileRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <FrameLayout
+        android:id="@+id/vgProfileTopSection"
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+        <com.loopj.android.image.SmartImageView
+            android:id="@+id/ivProfileBanner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <com.loopj.android.image.SmartImageView
+                android:id="@+id/ivProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"/>
+            <TextView
+                android:id="@+id/tvUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/ivProfile"/>
+            <TextView
+                android:id="@+id/tvUserScreenName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/tvUserName"/>
+        </RelativeLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/vgStatsBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/vgProfileTopSection"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/vgTweetsStats"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="@dimen/stats_banner_height">
+            <TextView
+                android:id="@+id/tvTweetCount"
+                android:text="115"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tvTweetCountLabel"
+                android:text="Tweets"
+                android:layout_below="@id/tvTweetCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="@dimen/stats_banner_height"
+            android:background="@color/textGray" />
+        <RelativeLayout
+            android:id="@+id/vgFollowingStats"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/stats_banner_height">
+            <TextView
+                android:id="@+id/tvFollowingCount"
+                android:text="113"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tvFollowingCountLabel"
+                android:text="Following"
+                android:layout_below="@id/tvFollowingCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="30dp"
+            android:background="@color/textGray" />
+        <RelativeLayout
+            android:id="@+id/vgFollowersStats"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/stats_banner_height">
+            <TextView
+                android:id="@+id/tvFollowersCount"
+                android:text="113"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tvFollowersCountLabel"
+                android:text="Followers"
+                android:layout_below="@id/tvFollowersCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+    </LinearLayout>
+    <View
+        android:id="@+id/tweetsStatsBottom"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/textGray"
+        android:layout_below="@id/vgStatsBanner"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tweetsStatsBottom">
+        <fragment
+            android:id="@+id/profileAbbreviatedTimelineFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:name="com.codepath.apps.RKTwitterClient.fragments.ProfileTimelineFragment"
+            tools:layout="@layout/fragment_tweets_list">
+        </fragment>
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

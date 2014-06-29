@@ -167,6 +167,12 @@ public class TimelineActivity extends FragmentActivity implements TweetsListFrag
         return true;
     }
 
+    public boolean onProfileClicked(MenuItem item) {
+        Intent i = new Intent(this, ProfileActivity.class);
+        startActivity(i);
+        return true;
+    }
+
     public boolean onComposeClicked(MenuItem item) {
         Intent i = new Intent(this, ComposeActivity.class);
         startActivityForResult(i, COMPOSE_REQUEST);

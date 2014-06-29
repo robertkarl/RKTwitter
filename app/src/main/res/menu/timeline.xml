@@ -3,7 +3,6 @@
         android:id="@+id/action_loading"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:onClick="onComposeClicked"
         android:title="Loading"/>
 
 
@@ -13,5 +12,11 @@
         android:showAsAction="ifRoom"
         android:onClick="onComposeClicked"
         android:title="Compose"/>
+    <item
+        android:id="@+id/action_profile"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:onClick="onProfileClicked"
+        android:title="Profile"/>
 
 </menu>
