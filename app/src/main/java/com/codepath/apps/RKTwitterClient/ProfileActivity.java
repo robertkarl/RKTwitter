@@ -11,9 +11,19 @@ import com.codepath.apps.RKTwitterClient.models.User;
 import com.codepath.apps.RKTwitterClient.util.Util;
 import com.loopj.android.image.SmartImageView;
 
-public class ProfileActivity extends StatusTrackingActivity implements TweetsListFragment.TweetsListListener {
+public class ProfileActivity extends StatusTrackingActivity implements TweetsListFragment.TweetsListListener, TweetArrayAdapter.TweetActionsListener {
 
     User mUser;
+
+    @Override
+    public void onTweetRetweeted(Tweet tweet) {
+
+    }
+
+    @Override
+    public void onTweetFavorited(Tweet tweet) {
+        
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +46,7 @@ public class ProfileActivity extends StatusTrackingActivity implements TweetsLis
         tvUserName.setTypeface(Util.getRobotoMedium(this));
         tvUserName.setText(mUser.getName());
         TextView tvUserScreenName =  (TextView)findViewById(R.id.tvUserScreenName);
-        tvUserScreenName.setText(mUser.getScreenName());
+        tvUserScreenName.setText("@" + mUser.getScreenName());
 
     }
 
