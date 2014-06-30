@@ -1,7 +1,6 @@
 package com.codepath.apps.RKTwitterClient;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,13 +12,13 @@ import android.widget.TextView;
 
 import com.codepath.apps.RKTwitterClient.models.Tweet;
 import com.codepath.apps.RKTwitterClient.models.User;
+import com.codepath.apps.RKTwitterClient.util.Util;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
 public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
     static int x = 0;
-    Typeface robotoMedium;
 
     public interface TweetActionsListener {
         void onTweetFavorited(Tweet tweet);
@@ -76,10 +75,9 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
             holder = (TweetViewHolder)v.getTag();
         }
 
-        setupUsername(holder.tvUserName);
         setupProfileImage(holder.ivProfile, tweet);
-
         holder.tvUserName.setText(tweet.user.getName());
+        holder.tvUserName.setTypeface(Util.getRobotoMedium(getContext()));
         holder.tvUserScreenName.setText("@" + tweet.user.getScreenName());
         String tweetText;
         if (tweet.retweeted_status != null) {
@@ -146,13 +144,6 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         int retweetIconID = retweeted ? R.drawable.ic_retweet_blue: R.drawable.ic_retweet;
         retweetImage.setImageResource(retweetIconID);
         retweetImage.setEnabled(!retweeted);
-    }
-
-    private void setupUsername(TextView userNameView) {
-        if (robotoMedium == null) {
-            robotoMedium = Typeface.createFromAsset(getContext().getAssets(), "Roboto/Roboto-Medium.ttf");
-        }
-        userNameView.setTypeface(robotoMedium);
     }
 
     TweetActionsListener getListener() {

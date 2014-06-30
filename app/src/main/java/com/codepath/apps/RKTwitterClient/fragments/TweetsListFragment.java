@@ -40,6 +40,7 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 public abstract class TweetsListFragment extends Fragment {
 
     public static String TWEET_COUNT_KEY = "TWEET_COUNT";
+    static int REVEAL_DURATION_MILLIS = 300;
 
     protected int numberOfTweetsToLoad;
 
@@ -273,7 +274,7 @@ public abstract class TweetsListFragment extends Fragment {
                 }
             });
 
-            reveal.setDuration(300);
+            reveal.setDuration(REVEAL_DURATION_MILLIS );
             reveal.start();
         } else {
             ValueAnimator reveal = ViewAnimationUtils.createCircularReveal(loadingIndicator, cx, cy, radius, 0);
@@ -291,7 +292,7 @@ public abstract class TweetsListFragment extends Fragment {
             });
 
 
-            reveal.setDuration(300);
+            reveal.setDuration(REVEAL_DURATION_MILLIS);
             reveal.start();
         }
     }

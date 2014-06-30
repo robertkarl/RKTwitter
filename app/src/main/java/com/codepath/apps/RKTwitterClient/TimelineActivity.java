@@ -177,6 +177,7 @@ public class TimelineActivity extends StatusTrackingActivity implements TweetsLi
 
     public boolean onProfileClicked(MenuItem item) {
         Intent i = new Intent(this, ProfileActivity.class);
+        i.putExtra("user", User.currentlyAuthenticatedUser);
         startActivity(i);
         return true;
     }

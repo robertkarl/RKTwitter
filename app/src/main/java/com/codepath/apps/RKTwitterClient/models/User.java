@@ -5,7 +5,6 @@ import android.util.Log;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
-import com.activeandroid.query.Select;
 import com.codepath.apps.RKTwitterClient.TwitterApplication;
 import com.codepath.apps.RKTwitterClient.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -19,21 +18,26 @@ import java.io.Serializable;
 @Table(name = "User")
 public class User extends Model implements Serializable {
     static String PROFILE_IMAGE_KEY = "profile_image_url";
+    static String PROFILE_BANNER_KEY = "profile_banner_url";
 
-    @Column
+    public static User currentlyAuthenticatedUser;
+
     public boolean isAuthenticatedUser;
 
-    @Column(name="name")
+    @Column
     private String name;
 
     @Column(name="remote_id")
     public long uid;
 
-    @Column(name="screen_name")
+    @Column
     private String screenName;
 
     @Column(name="profile_image_url")
     private String profileImageURL;
+
+    @Column(name="profile_banner_url")
+    public String profileBannerUrl;
 
     public String getName() {
         return name;
@@ -52,19 +56,20 @@ public class User extends Model implements Serializable {
         try {
             user.name = object.getString("name");
             user.uid = object.getLong("id");
+            if (currentlyAuthenticatedUser != null && user.uid == currentlyAuthenticatedUser.uid) {
+                user.isAuthenticatedUser = true;
+            }
             user.screenName = object.getString("screen_name");
+            if (object.has(PROFILE_BANNER_KEY)) {
+                user.profileBannerUrl = object.getString(PROFILE_BANNER_KEY);
+            }
             if (object.has(PROFILE_IMAGE_KEY)) {
-                user.profileImageURL = object.getString(PROFILE_IMAGE_KEY);
+                user.profileImageURL = object.getString(PROFILE_IMAGE_KEY).replace("_normal", "");
             }
         }
         catch (JSONException e) {
             e.printStackTrace();
         }
-        return user;
-    }
-
-    public static User getCurrentUserFromLocalDBSynchronous() {
-        User user = new Select().from(User.class).where("isAuthenticatedUser = ?", true).executeSingle();
         return user;
     }
 
@@ -79,7 +84,7 @@ public class User extends Model implements Serializable {
                 public void onSuccess(JSONObject jsonObject) {
                     User user = User.fromJSON(jsonObject);
                     user.isAuthenticatedUser = true;
-                    user.save();
+                    currentlyAuthenticatedUser = user;
                     if (userLoadedCallback != null) {
                         userLoadedCallback.onUserLoaded(user);
                     }

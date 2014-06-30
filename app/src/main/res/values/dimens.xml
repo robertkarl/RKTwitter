@@ -5,6 +5,10 @@
     <dimen name="timeline_tweet_action_icon_size">20dp</dimen>
 
     <!-- Profile -->
-    <dimen name="stats_banner_height">30dp</dimen>
+    <dimen name="stats_banner_height">54dp</dimen>
+    <dimen name="stats_banner_left_margin">8dp</dimen>
+    <dimen name="stats_banner_top_margin">3dp</dimen>
+    <dimen name="stats_banner_divider_width">1px</dimen>
+    <dimen name="profile_banner_height">175dp</dimen>
 
 </resources>

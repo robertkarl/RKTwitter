@@ -19,7 +19,6 @@ public class ProfileTimelineFragment extends TweetsListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        user = User.getCurrentUserFromLocalDBSynchronous();
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
