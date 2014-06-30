@@ -5,8 +5,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import com.codepath.apps.RKTwitterClient.R;
 import com.codepath.apps.RKTwitterClient.models.User;
+import com.codepath.apps.RKTwitterClient.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -56,6 +59,31 @@ public class ProfileTimelineFragment extends TweetsListFragment {
         frag.setArguments(args);
         return frag;
     }
+
+    JsonHttpResponseHandler makeUnpackingRefreshingJsonHandler() {
+        return new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(JSONArray jsonArray) {
+                Log.v("dbg", String.format("%s onSuccess called", getTitle()));
+                clearTweets();
+                unpackTweetsFromJSON(jsonArray);
+                Util.setListViewHeightBasedOnChildren((ListView) getView().findViewById(R.id.lvTweetsFragmentList));
+                completeRefreshIfNeeded(true);
+                setActionBarTwitterColor();
+                getListener().onConnectionRegained();
+            }
+
+            @Override
+            public void onFailure(Throwable throwable, JSONArray jsonArray) {
+                super.onFailure(throwable, jsonArray);
+                getListener().onConnectionLost();
+                completeRefreshIfNeeded(false);
+                Log.e("DBG", String.format("Timeline populate failed %s %s", throwable.toString(), jsonArray.toString()));
+            }
+        };
+    }
+
 
     public String getTitle() {
         return "Profile";

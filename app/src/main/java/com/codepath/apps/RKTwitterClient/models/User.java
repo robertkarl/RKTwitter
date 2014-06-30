@@ -85,6 +85,7 @@ public class User extends Model implements Serializable {
                     User user = User.fromJSON(jsonObject);
                     user.isAuthenticatedUser = true;
                     currentlyAuthenticatedUser = user;
+                    Log.d("dbg", String.format("Completed fetching user %s", user.getScreenName()));
                     if (userLoadedCallback != null) {
                         userLoadedCallback.onUserLoaded(user);
                     }
