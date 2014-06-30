@@ -76,9 +76,15 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         }
 
         setupProfileImage(holder.ivProfile, tweet);
-        holder.tvUserName.setText(tweet.user.getName());
+        String usernameText = tweet.retweeted ?
+                tweet.retweeted_status.user.getName() :
+                tweet.user.getName();
+        holder.tvUserName.setText(usernameText);
         holder.tvUserName.setTypeface(Util.getRobotoMedium(getContext()));
-        holder.tvUserScreenName.setText("@" + tweet.user.getScreenName());
+        String userScreenName = tweet.retweeted ?
+                tweet.retweeted_status.user.getScreenName() :
+                tweet.user.getScreenName();
+        holder.tvUserScreenName.setText("@" + userScreenName);
         String tweetText;
         if (tweet.retweeted_status != null) {
             tweetText = tweet.getRetweetedText();
@@ -180,8 +186,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
     void setupRetweetBanner(ViewGroup banner, TextView retweeterLabel, Tweet tweet) {
         if (tweet.retweeted_status != null) {
             banner.setVisibility(View.VISIBLE);
-            User originalTweeter = tweet.retweeted_status.user;
-            retweeterLabel.setText(String.format("%s retweeted", originalTweeter .getScreenName()));
+            retweeterLabel.setText(String.format("%s retweeted", tweet.user.getScreenName()));
         }
         else {
             banner.setVisibility(View.GONE);
@@ -193,7 +198,12 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         profileImage.setImageResource(getContext().getResources().getColor(android.R.color.transparent));
         ImageLoader imageLoader = ImageLoader.getInstance();
         User user = tweet.user;
-        imageLoader.displayImage(user.getProfileImageURL(), profileImage);
+        if (tweet.retweeted) {
+            imageLoader.displayImage(tweet.retweeted_status.user.getProfileImageURL(), profileImage);
+        }
+        else {
+            imageLoader.displayImage(user.getProfileImageURL(), profileImage);
+        }
     }
 
 }

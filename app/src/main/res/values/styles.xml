@@ -35,6 +35,7 @@
         <item name="android:layout_marginTop">@dimen/stats_banner_top_margin</item>
         <item name="android:layout_marginLeft">@dimen/stats_banner_left_margin</item>
         <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/textGray</item>
     </style>
 
     <style name="ProfileFollowerCountLabel">

@@ -34,8 +34,9 @@ public class ProfileActivity extends StatusTrackingActivity implements TweetsLis
 
         TextView tvUserName = (TextView)findViewById(R.id.tvUserName);
         tvUserName.setTypeface(Util.getRobotoMedium(this));
+        tvUserName.setText(mUser.getName());
         TextView tvUserScreenName =  (TextView)findViewById(R.id.tvUserScreenName);
-
+        tvUserScreenName.setText(mUser.getScreenName());
 
     }
 
