@@ -13,7 +13,7 @@ import com.loopj.android.image.SmartImageView;
 
 public class ProfileActivity extends StatusTrackingActivity implements TweetsListFragment.TweetsListListener, TweetArrayAdapter.TweetActionsListener {
 
-    User mUser;
+    private User mUser;
 
     @Override
     public void onTweetRetweeted(Tweet tweet) {
@@ -28,13 +28,13 @@ public class ProfileActivity extends StatusTrackingActivity implements TweetsLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mUser = (User)getIntent().getSerializableExtra("user");
+
         setContentView(R.layout.activity_profile);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.vgProfileTweetsList, ProfileTimelineFragment.newInstance(3), ProfileTimelineFragment.FRAGMENT_NAME);
+        ft.add(R.id.vgProfileTweetsList, ProfileTimelineFragment.newInstance(3, mUser), ProfileTimelineFragment.FRAGMENT_NAME);
         ft.commit();
-
-        mUser = (User)getIntent().getSerializableExtra("user");
 
         final SmartImageView profileImage = (SmartImageView)findViewById(R.id.ivProfile);
         profileImage.setImageUrl(mUser.getProfileImageURL());
@@ -47,6 +47,15 @@ public class ProfileActivity extends StatusTrackingActivity implements TweetsLis
         tvUserName.setText(mUser.getName());
         TextView tvUserScreenName =  (TextView)findViewById(R.id.tvUserScreenName);
         tvUserScreenName.setText("@" + mUser.getScreenName());
+
+        TextView tvTweetCount = (TextView)findViewById(R.id.tvTweetCount);
+        tvTweetCount.setText(String.format("%d", mUser.tweetCount));
+
+        TextView tvFollowersCount = (TextView)findViewById(R.id.tvFollowersCount);
+        tvFollowersCount.setText(String.format("%d", mUser.followerCount));
+
+        TextView tvFollowingCount = (TextView)findViewById(R.id.tvFollowingCount);
+        tvFollowingCount.setText(String.format("%d", mUser.followingCount));
 
     }
 

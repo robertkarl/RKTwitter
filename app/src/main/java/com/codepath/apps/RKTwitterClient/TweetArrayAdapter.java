@@ -1,6 +1,7 @@
 package com.codepath.apps.RKTwitterClient;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -194,7 +195,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 
     }
 
-    void setupProfileImage(ImageView profileImage, Tweet tweet) {
+    void setupProfileImage(final ImageView profileImage, final Tweet tweet) {
         profileImage.setImageResource(getContext().getResources().getColor(android.R.color.transparent));
         ImageLoader imageLoader = ImageLoader.getInstance();
         User user = tweet.user;
@@ -204,6 +205,16 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         else {
             imageLoader.displayImage(user.getProfileImageURL(), profileImage);
         }
+
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext(), ProfileActivity.class);
+                User userToDisplay = tweet.retweeted ? tweet.retweeted_status.user : tweet.user;
+                i.putExtra("user", userToDisplay);
+                getContext().startActivity(i);
+            }
+        });
     }
 
 }

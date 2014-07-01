@@ -19,6 +19,8 @@ import java.io.Serializable;
 public class User extends Model implements Serializable {
     static String PROFILE_IMAGE_KEY = "profile_image_url";
     static String PROFILE_BANNER_KEY = "profile_banner_url";
+    static String FOLLOWERS_KEY = "followers_count";
+    static String FOLLOWING_KEY = "friends_count";
 
     public static User currentlyAuthenticatedUser;
 
@@ -38,6 +40,15 @@ public class User extends Model implements Serializable {
 
     @Column(name="profile_banner_url")
     public String profileBannerUrl;
+
+    @Column
+    public int tweetCount;
+
+    @Column
+    public int followerCount;
+
+    @Column
+    public int followingCount;
 
     public String getName() {
         return name;
@@ -60,6 +71,13 @@ public class User extends Model implements Serializable {
                 user.isAuthenticatedUser = true;
             }
             user.screenName = object.getString("screen_name");
+            if (object.has(FOLLOWERS_KEY)) {
+                user.followerCount = object.getInt("followers_count");
+            }
+            if (object.has(FOLLOWING_KEY)) {
+                user.followingCount = object.getInt(FOLLOWING_KEY);
+            }
+            user.tweetCount = object.getInt("statuses_count");
             if (object.has(PROFILE_BANNER_KEY)) {
                 user.profileBannerUrl = object.getString(PROFILE_BANNER_KEY);
             }

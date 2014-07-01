@@ -21,6 +21,14 @@ public class ProfileTimelineFragment extends TweetsListFragment {
     public User user;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null && getArguments().containsKey("user")) {
+            user = (User) getArguments().getSerializable("user");
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -50,12 +58,13 @@ public class ProfileTimelineFragment extends TweetsListFragment {
         }
     }
 
-    public static ProfileTimelineFragment newInstance(int numberOfTweetsToLoad) {
+    public static ProfileTimelineFragment newInstance(int numberOfTweetsToLoad, User userToDisplay) {
         ProfileTimelineFragment frag = new ProfileTimelineFragment();
         Bundle args = new Bundle();
         if (numberOfTweetsToLoad > 0) {
             args.putInt(TweetsListFragment.TWEET_COUNT_KEY, numberOfTweetsToLoad);
         }
+        args.putSerializable("user", userToDisplay);
         frag.setArguments(args);
         return frag;
     }
