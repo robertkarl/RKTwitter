@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="textBlack">#232323</color>
-    <color name="twitterBlue">#4099FF</color>
+    <color name="textBlack">#292f33</color>
+    <color name="twitterBlue">#55ACEE</color>
+    <color name="OldtwitterBlue">#4099FF</color>
     <color name="twitterBlueTransparent">#4099FFaa</color>
     <color name="tweetButtonDisabled">#BCDDF4</color>
-    <color name="tweetButtonEnabled">#55ACEE</color>8899a6
+    <color name="tweetButtonEnabled">@color/twitterBlue</color>
     <color name="tweetButtonEnabledSelected">#2795e9</color>
     <color name="textGray">#8899a6</color>
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
     <color name="lightBlueGray">#e0e4e8</color>
-    <color name="statsBannerDividerGray">#e0e4e8</color>
+    <color name="statsBannerDividerGray">#e1e8ed</color>
 </resources>

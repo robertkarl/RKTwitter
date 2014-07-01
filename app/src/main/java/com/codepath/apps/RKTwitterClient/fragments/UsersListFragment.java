@@ -8,3 +8,4 @@ public class UsersListFragment extends Fragment {
     UserArrayAdapter userArrayAdapter;
 
 }
+
