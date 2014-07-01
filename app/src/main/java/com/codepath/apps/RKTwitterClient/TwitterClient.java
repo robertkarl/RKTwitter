@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.codepath.apps.RKTwitterClient.models.Tweet;
+import com.codepath.apps.RKTwitterClient.models.User;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -72,6 +73,13 @@ public class TwitterClient extends OAuthBaseClient {
         String apiUrl = getApiUrl("account/verify_credentials.json");
         Log.i("DBG", String.format("Requesting %s ", apiUrl));
         client.get(apiUrl, handler);
+    }
+
+    public void getFollowers(User user, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("followers/ids.json");
+        RequestParams params = new RequestParams();
+        params.put("user_id", String.format("%d", user.uid));
+        client.get(apiUrl, params, handler);
     }
 
     public void performRetweet(Tweet tweet, AsyncHttpResponseHandler handler) {

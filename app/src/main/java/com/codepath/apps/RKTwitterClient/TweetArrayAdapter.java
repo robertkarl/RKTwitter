@@ -33,15 +33,15 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 
     static class TweetViewHolder {
         TextView tvBody;
-        TextView tvRelativeTimestamp;
         TextView tvUserName;
-        TextView tvUserScreenName;
         TextView tvFavoriteCount;
         TextView tvRetweetCount;
+        TextView tvRetweeterLabel;
+        TextView tvUserScreenName;
+        TextView tvRelativeTimestamp;
         ImageView ivReply;
         ImageView ivFavorite;
         ImageView ivRetweet;
-        TextView tvRetweeterLabel;
         ViewGroup llRetweetBanner;
 
         ImageView ivProfile;
@@ -56,20 +56,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         if (convertView == null) {
             LayoutInflater inflator = LayoutInflater.from(getContext());
             v = inflator.inflate(R.layout.tweet_item, parent, false);
-            holder = new TweetViewHolder();
-            holder.tvRelativeTimestamp = (TextView)v.findViewById(R.id.tvRelativeTimestamp);
-            holder.llRetweetBanner = (ViewGroup)v.findViewById(R.id.llRetweetContainer);
-            holder.tvUserScreenName = (TextView)v.findViewById(R.id.tvUserScreenName);
-            holder.tvRetweeterLabel = (TextView)v.findViewById(R.id.tvRetweeterLabel);
-            holder.tvFavoriteCount = (TextView)v.findViewById(R.id.tvFavoriteCount);
-            holder.tvRetweetCount = (TextView)v.findViewById(R.id.tvRetweetCount);
-            holder.ivProfile = (ImageView)v.findViewById(R.id.ivProfileImage);
-            holder.ivFavorite = (ImageView)v.findViewById(R.id.ivFavorite);
-            holder.tvUserName = (TextView)v.findViewById(R.id.tvUserName);
-            holder.ivRetweet = (ImageView)v.findViewById(R.id.ivRetweet);
-            holder.ivReply = (ImageView)v.findViewById(R.id.ivReply);
-            holder.tvBody = (TextView)v.findViewById(R.id.tvBody);
-            v.setTag(holder);
+            holder = setupHolder(v);
         }
         else {
             v = convertView;
@@ -133,6 +120,25 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
         setupRetweetBanner(holder.llRetweetBanner, holder.tvRetweeterLabel, tweet);
 
         return v;
+    }
+
+    private TweetViewHolder setupHolder(View v) {
+        TweetViewHolder holder;
+        holder = new TweetViewHolder();
+        holder.tvRelativeTimestamp = (TextView)v.findViewById(R.id.tvRelativeTimestamp);
+        holder.llRetweetBanner = (ViewGroup)v.findViewById(R.id.llRetweetContainer);
+        holder.tvUserScreenName = (TextView)v.findViewById(R.id.tvUserScreenName);
+        holder.tvRetweeterLabel = (TextView)v.findViewById(R.id.tvRetweeterLabel);
+        holder.tvFavoriteCount = (TextView)v.findViewById(R.id.tvFavoriteCount);
+        holder.tvRetweetCount = (TextView)v.findViewById(R.id.tvRetweetCount);
+        holder.ivProfile = (ImageView)v.findViewById(R.id.ivProfileImage);
+        holder.ivFavorite = (ImageView)v.findViewById(R.id.ivFavorite);
+        holder.tvUserName = (TextView)v.findViewById(R.id.tvUserName);
+        holder.ivRetweet = (ImageView)v.findViewById(R.id.ivRetweet);
+        holder.ivReply = (ImageView)v.findViewById(R.id.ivReply);
+        holder.tvBody = (TextView)v.findViewById(R.id.tvBody);
+        v.setTag(holder);
+        return holder;
     }
 
     /**
