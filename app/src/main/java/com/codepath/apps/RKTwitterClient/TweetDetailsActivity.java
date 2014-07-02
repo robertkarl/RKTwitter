@@ -2,7 +2,6 @@ package com.codepath.apps.RKTwitterClient;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 
 import com.codepath.apps.RKTwitterClient.models.Tweet;
 import com.codepath.apps.RKTwitterClient.models.User;
-import com.codepath.apps.RKTwitterClient.util.Util;
 import com.loopj.android.image.SmartImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -50,7 +48,6 @@ public class TweetDetailsActivity extends Activity {
         ImageLoader.getInstance().displayImage(tweet.user.getProfileImageURL(), profileImage);
         setupRetweetBanner(v, tweet);
 
-        Util.setActionBarDrawable(getActionBar(), new ColorDrawable(getResources().getColor(R.color.twitterBlue)));
         getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

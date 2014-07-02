@@ -20,7 +20,6 @@ import com.codepath.apps.RKTwitterClient.fragments.HomeTimelineFragment;
 import com.codepath.apps.RKTwitterClient.fragments.TweetsListFragment;
 import com.codepath.apps.RKTwitterClient.models.Tweet;
 import com.codepath.apps.RKTwitterClient.models.User;
-import com.codepath.apps.RKTwitterClient.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
@@ -44,8 +43,6 @@ public class TimelineActivity extends StatusTrackingActivity implements TweetsLi
 
         setContentView(R.layout.activity_timeline);
         setTitle("Home");
-
-        setActionBarTwitterColor();
 
         tweetsListPagerAdapter = new TimelinePagerAdapter(getSupportFragmentManager());
         timelinePager = (ViewPager)findViewById(R.id.vpTimelineFragmentContainer);
@@ -165,17 +162,6 @@ public class TimelineActivity extends StatusTrackingActivity implements TweetsLi
         i.putExtra("tweet", tweet);
         startActivity(i);
     }
-
-
-    void setActionBarTwitterColor() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Util.setActionBarDrawable(getActionBar(), new ColorDrawable(getResources().getColor(R.color.twitterBlue)));
-            }
-        });
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

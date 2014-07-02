@@ -1,12 +1,10 @@
 package com.codepath.apps.RKTwitterClient;
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.codepath.apps.RKTwitterClient.util.Util;
 import com.codepath.oauth.OAuthLoginActivity;
 
 public class LoginActivity extends OAuthLoginActivity<TwitterClient> {
@@ -15,7 +13,6 @@ public class LoginActivity extends OAuthLoginActivity<TwitterClient> {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-        Util.setActionBarDrawable(getActionBar(), new ColorDrawable(getResources().getColor(R.color.twitterBlue)));
 	}
 
     @Override

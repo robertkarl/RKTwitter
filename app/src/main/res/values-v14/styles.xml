@@ -9,12 +9,25 @@
         parent="android:Theme.Holo.Light.DarkActionBar">
         <!--<item name="android:actionBarTabStyle">@style/WhiteActionBarTabs</item>-->
         <item name="android:actionBarTabTextStyle">@style/TwitterBlueActionBarText</item>
+        <item name="android:actionBarStyle">@style/BlueActionBar</item>
+        
         <!-- API 14 theme customizations can go here. -->
     </style>
 
     <style name="WhiteActionBarTabs"
         parent="android:Widget.Holo.Light.ActionBar.TabView">
         <item name="android:background">@drawable/tab_background</item>
+    </style>
+
+    <style name="BlueActionBar"
+        parent="android:Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/twitterBlue</item>
+        <item name="android:titleTextStyle">@style/whiteTextStyle</item>
+    </style>
+    
+    <style name="whiteTextStyle"
+        parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="TwitterBlueActionBarText"

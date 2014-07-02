@@ -70,7 +70,6 @@ public abstract class TweetsListFragment extends Fragment {
                 clearTweets();
                 unpackTweetsFromJSON(jsonArray);
                 completeRefreshIfNeeded(true);
-                setActionBarTwitterColor();
                 getListener().onConnectionRegained();
             }
 
@@ -192,16 +191,6 @@ public abstract class TweetsListFragment extends Fragment {
         tweets = new ArrayList<Tweet>();
         tweetsAdapter = new TweetArrayAdapter(getActivity(), tweets);
         lvTweets.setAdapter(tweetsAdapter);
-    }
-
-
-    void setActionBarTwitterColor() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Util.setActionBarDrawable(getActivity().getActionBar(), new ColorDrawable(getResources().getColor(R.color.twitterBlue)));
-            }
-        });
     }
 
     public interface TweetsListListener {

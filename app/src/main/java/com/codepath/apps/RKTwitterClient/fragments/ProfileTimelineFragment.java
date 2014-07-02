@@ -80,7 +80,6 @@ public class ProfileTimelineFragment extends TweetsListFragment {
                 unpackTweetsFromJSON(jsonArray);
                 Util.setListViewHeightBasedOnChildren((ListView) getView().findViewById(R.id.lvTweetsFragmentList));
                 completeRefreshIfNeeded(true);
-                setActionBarTwitterColor();
                 getListener().onConnectionRegained();
             }
 
