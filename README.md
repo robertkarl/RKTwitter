@@ -7,35 +7,30 @@
 
 
 ## User Stories
-#### Timeline
-- [x] User should be able to see the username, name, body and timestamp for each tweet
-- [x] User can view the tweets from their home timeline
-- [x] User should be displayed the relative timestamp for a tweet "8m", "7h"
-- [x] User can view more tweets as they scroll with infinite pagination
-- [x] autolink
+#### Timeline and Mention views
+- [x] User can view their home timeline tweets.
+- [x] User can view the recent mentions of their username.
+- [x] User can scroll to bottom of either of these lists and new tweets will load ("infinite scroll")
+- [ ] Optional: Implement tabs in a gingerbread-compatible approach
 
-#### Compose
-- [x] User can compose a new tweet
-- [x] User can then enter a new tweet and post this to twitter
-- [x] User is taken back and the new tweet is visible
-- [x] User can see a counter of number of characters available
+#### User can navigate to their own profile
+- [x] See picture, # followers, # following, # tweets
+- [ ] tagline (oops)
 
-#### Optionals
-- [x] Pull to refresh
-- [x] Offline, persisted tweets
-- [x] Detail view for a tweet
-- [x] reply to respond to a tweet
-- [x] Brand the app like twitter
-  - [x] Tweets list branding
-  - [x] Compose branding
-  - [x] Detail branding
-- [x] User can see embedded image media within the tweet detail view
-- [ ] Compose is replaced with a modal overlay (tried this, not the correct U/X if you ask me)
+#### View another user's profile by clicking their profile image
+- [x] See picture, # followers, # following, # tweets
+- [ ] other user's tagline
+- [x] Include that user's timeline
+- [ ] View following/followers list
 
-#### Extras
-- [x] Automatically check back periodically after failures and refresh UI when internet is reconnected
-- [x] User can favorite a tweet
-- [x] user can view all their favorites in the timeline
+- [ ] Advanced: Robust error handling, check if internet is available, handle error cases, network failures
+- [x] Advanced: When a network request is sent, user sees an indeterminate progress indicator
+- [x] Advanced: User can "reply" to any tweet on their home timeline. The user that wrote the original tweet is automatically "@" replied in compose
+- [x] Advanced: User can click on a tweet to be taken to a "detail view" of that tweet
+- [x] Advanced: User can take favorite (and unfavorite) or reweet actions on a tweet
+- [x] Advanced: Improve the user interface and theme the app to feel twitter branded
+- [ ] Advanced: User can search for tweets matching a particular query and see results
+- [ ] Bonus: User can view their direct messages (or send new ones)
 
 ## Time spent
 ~25 hours
