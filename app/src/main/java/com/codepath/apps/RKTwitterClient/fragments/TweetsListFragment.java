@@ -300,11 +300,19 @@ public abstract class TweetsListFragment extends Fragment {
     public void showSavedTweetsIfNeeded(boolean forceReload) {
         if (tweetsAdapter.getCount() == 0 || forceReload) {
             clearTweets();
-            List<Tweet> storedTweets = new Select().from(Tweet.class).execute();
-            Log.d("DBG", String.format("showing %d saved tweets", storedTweets.size()));
-            addAll(storedTweets);
+            List<Tweet> storedTweets = getStoredTweets();
+            Log.d("DBG", String.format("showing %d saved tweets", storedTweets == null? 0 : storedTweets.size()));
+            if (storedTweets != null) {
+                addAll(storedTweets);
+            }
             toggleLoadingVisibility(false);
         }
+    }
+
+    protected List<Tweet> getStoredTweets() {
+        List <Tweet> tweets = new Select().from(Tweet.class).orderBy("remote_id DESC").execute();
+        Log.d("DBG", String.format("%s loading %d stored tweets", getTitle(), tweets.size()));
+        return tweets;
     }
 
     protected abstract String getEndpoint();

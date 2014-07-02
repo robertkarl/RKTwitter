@@ -2,7 +2,9 @@ package com.codepath.apps.RKTwitterClient;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -65,7 +67,22 @@ public class TimelineActivity extends StatusTrackingActivity implements TweetsLi
         });
         setupTabs();
 
-        User.fetchCurrentUser(null);
+        SharedPreferences prefs = getSharedPreferences(
+                "net.robertkarl", Context.MODE_PRIVATE);
+        User.currentUsername = prefs.getString("current_user_name", null);
+
+        User.fetchCurrentUser(new User.UserLoadedCallback() {
+            @Override
+            public void onUserLoaded(User user) {
+                SharedPreferences prefs = getSharedPreferences(
+                        "net.robertkarl", Context.MODE_PRIVATE);
+                /// Used for offline mentions
+                if (user != null) {
+                    prefs.edit().putString("current_user_name", user.getScreenName()).commit();
+                }
+
+            }
+        });
 
     }
 

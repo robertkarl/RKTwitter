@@ -26,6 +26,8 @@ public class User extends Model implements Serializable {
 
     public static User currentlyAuthenticatedUser;
 
+    public static String currentUsername;
+
     public boolean isAuthenticatedUser;
 
     @Column
