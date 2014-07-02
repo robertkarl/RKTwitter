@@ -1,6 +1,6 @@
+# CodePath - Week 4 - Twitter client - Robert Karl
 [_View Week 3 submission notes here_](https://github.com/robertkarl/RKTwitter/wiki/Week-3-Submission)
 
-# CodePath - Week 4 - Twitter client - Robert Karl
 ## GIF Walkthrough
 
 ![Walkthrough](https://raw.githubusercontent.com/robertkarl/RKTwitter/master/RKTwitterDemo.gif)
