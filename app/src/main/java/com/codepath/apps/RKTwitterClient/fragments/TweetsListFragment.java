@@ -3,7 +3,6 @@ package com.codepath.apps.RKTwitterClient.fragments;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,9 +23,9 @@ import com.codepath.apps.RKTwitterClient.TweetArrayAdapter;
 import com.codepath.apps.RKTwitterClient.TwitterApplication;
 import com.codepath.apps.RKTwitterClient.TwitterClient;
 import com.codepath.apps.RKTwitterClient.models.Tweet;
+import com.codepath.apps.RKTwitterClient.models.User;
 import com.codepath.apps.RKTwitterClient.util.Connectivity;
 import com.codepath.apps.RKTwitterClient.util.EndlessScrollListener;
-import com.codepath.apps.RKTwitterClient.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -74,31 +73,24 @@ public abstract class TweetsListFragment extends Fragment {
             }
 
             @Override
-            public void onSuccess(String s) {
-                super.onSuccess(s);
-            }
-
-            @Override
-            public void onSuccess(JSONObject jsonObject) {
-                super.onSuccess(jsonObject);
-            }
-
-            @Override
             public void onFailure(Throwable throwable, JSONObject jsonObject) {
-                super.onFailure(throwable, jsonObject);
-                getListener().onConnectionLost();
-                completeRefreshIfNeeded(false);
-                Log.e("DBG", String.format("Timeline populate failed %s %s", throwable.toString(), jsonObject.toString()));
+                onFailureReported();
+            }
 
+            @Override
+            public void onFailure(Throwable throwable, String s) {
+                onFailureReported();
             }
 
             @Override
             public void onFailure(Throwable throwable, JSONArray jsonArray) {
-                super.onFailure(throwable, jsonArray);
-                getListener().onConnectionLost();
+                onFailureReported();
+            }
 
+            void onFailureReported() {
+                getListener().onConnectionLost();
                 completeRefreshIfNeeded(false);
-                Log.e("DBG", String.format("Timeline populate failed %s %s", throwable.toString(), jsonArray.toString()));
+                Log.e("DBG", "Timeline populate failed %s %s");
             }
         };
     }

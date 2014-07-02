@@ -21,7 +21,7 @@
 - [x] See picture, # followers, # following, # tweets
 - [ ] other user's tagline
 - [x] Include that user's timeline
-- [ ] View following/followers list
+- [ ] (optional) View following/followers list
 
 - [ ] Advanced: Robust error handling, check if internet is available, handle error cases, network failures
 - [x] Advanced: When a network request is sent, user sees an indeterminate progress indicator

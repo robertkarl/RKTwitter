@@ -9,6 +9,7 @@ import com.codepath.apps.RKTwitterClient.TwitterApplication;
 import com.codepath.apps.RKTwitterClient.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,6 +22,7 @@ public class User extends Model implements Serializable {
     static String PROFILE_BANNER_KEY = "profile_banner_url";
     static String FOLLOWERS_KEY = "followers_count";
     static String FOLLOWING_KEY = "friends_count";
+    static String STATUSES_COUNT = "statuses_count";
 
     public static User currentlyAuthenticatedUser;
 
@@ -77,7 +79,9 @@ public class User extends Model implements Serializable {
             if (object.has(FOLLOWING_KEY)) {
                 user.followingCount = object.getInt(FOLLOWING_KEY);
             }
-            user.tweetCount = object.getInt("statuses_count");
+            if (object.has(STATUSES_COUNT)) {
+                user.tweetCount = object.getInt(STATUSES_COUNT);
+            }
             if (object.has(PROFILE_BANNER_KEY)) {
                 user.profileBannerUrl = object.getString(PROFILE_BANNER_KEY);
             }
@@ -109,12 +113,29 @@ public class User extends Model implements Serializable {
                     }
                 }
 
-                @Override
+            @Override
+            public void onFailure(Throwable throwable, JSONObject jsonObject) {
+                onFailureReported(throwable);
+                super.onFailure(throwable, jsonObject);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable, JSONArray jsonArray) {
+                onFailureReported(throwable);
+                super.onFailure(throwable, jsonArray);
+            }
+
+            void onFailureReported(Throwable t) {
+                Log.d("DBG", "Failed to load the current user");
+                Log.e("DBG", t.toString());
+                if (userLoadedCallback != null) {
+                    userLoadedCallback.onUserLoaded(null);
+                }
+            }
+
+            @Override
                 public void onFailure(Throwable throwable, String s) {
-                    Log.e("DBG", throwable.toString());
-                    if (userLoadedCallback != null) {
-                        userLoadedCallback.onUserLoaded(null);
-                    }
+                onFailureReported(throwable);
                 }
             });
     }
