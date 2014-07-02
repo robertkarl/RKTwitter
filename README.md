@@ -32,11 +32,8 @@ CodePath - Week 3 - Twitter client - Robert Karl
 
 # GIF Walkthroughs
 
-#### Login, infinite scroll, Favorite, Tweet details and images
-![Walkthrough 1](https://raw.githubusercontent.com/robertkarl/secret-wookie/master/RKTwitterDemoPart1.gif)
-
 #### Offline state, auto-retry, compose and reply 
-![Walkthrough 2](https://raw.githubusercontent.com/robertkarl/secret-wookie/master/RKTwitterDemoPart2.gif)
+![Walkthrough 2](https://raw.githubusercontent.com/robertkarl/RKTwitter/master/RKTwitter1.mp4)
 
 # Time spent
 ~25 hours

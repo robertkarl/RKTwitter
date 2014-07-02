@@ -8,4 +8,4 @@
     android:fontFamily="sans-serif-light"
     android:textColor="@color/twitterBlue"
     android:textSize="16dp"
-    android:paddingTop="12dp" />
+    android:paddingTop="14dp" />

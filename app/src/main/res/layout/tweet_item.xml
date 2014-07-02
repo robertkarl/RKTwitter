@@ -112,8 +112,8 @@
             android:layout_gravity="center_vertical"
             style="@style/RelativeTimeText"
             android:layout_width="wrap_content"
-            android:layout_marginTop="3dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/tweet_item_action_banner_top_margin"
             android:layout_toRightOf="@id/ivRetweet"/>
         <ImageView
             android:id="@+id/ivFavorite"
@@ -128,8 +128,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             style="@style/RelativeTimeText"
-            android:layout_marginTop="3dp"
             android:layout_toRightOf="@id/ivFavorite"
+            android:layout_marginTop="@dimen/tweet_item_action_banner_top_margin"
             android:text="41"/>
     </RelativeLayout>
 
