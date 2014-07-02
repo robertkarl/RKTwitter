@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.codepath.apps.RKTwitterClient.R;
+import com.codepath.apps.RKTwitterClient.TwitterClient;
 import com.codepath.apps.RKTwitterClient.models.User;
 import com.codepath.apps.RKTwitterClient.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -98,21 +99,8 @@ public class ProfileTimelineFragment extends TweetsListFragment {
         return "Profile";
     }
 
-    public void onTriggerInfiniteScroll() {
-        client.fetchOlderTweets("mentions_timelineTODO",new JsonHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(JSONArray jsonArray) {
-                unpackTweetsFromJSON(jsonArray);
-                getListener().onConnectionRegained();
-            }
-
-            @Override
-            public void onFailure(Throwable throwable, String s) {
-                getListener().onConnectionLost();
-            }
-        }, lastTweetID - 1);
+    @Override
+    protected String getEndpoint() {
+        return TwitterClient.PROFILE_ENDPOINT;
     }
-
-
 }

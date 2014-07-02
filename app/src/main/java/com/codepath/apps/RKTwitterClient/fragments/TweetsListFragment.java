@@ -175,7 +175,7 @@ public abstract class TweetsListFragment extends Fragment {
         lvTweets.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                getListener().onTriggerInfiniteScroll();
+                onTriggerInfiniteScroll();
             }
         });
         lvTweets.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -201,7 +201,6 @@ public abstract class TweetsListFragment extends Fragment {
 
     public interface TweetsListListener {
         void onTweetClicked(Tweet tweet);
-        void onTriggerInfiniteScroll();
         void onConnectionLost();
         void onConnectionRegained();
     }
@@ -321,5 +320,23 @@ public abstract class TweetsListFragment extends Fragment {
     }
 
 
+    protected abstract String getEndpoint();
+
+
+    public void onTriggerInfiniteScroll() {
+        client.fetchOlderTweets(getEndpoint(), new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(JSONArray jsonArray) {
+                unpackTweetsFromJSON(jsonArray);
+                getListener().onConnectionRegained();
+            }
+
+            @Override
+            public void onFailure(Throwable throwable, String s) {
+                getListener().onConnectionLost();
+            }
+        }, lastTweetID - 1);
+    }
 
 }

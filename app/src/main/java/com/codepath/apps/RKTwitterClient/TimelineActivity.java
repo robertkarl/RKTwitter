@@ -114,16 +114,16 @@ public class TimelineActivity extends StatusTrackingActivity implements TweetsLi
         /// Create tabs -- 42:53
         ActionBar.Tab homeTab = actionBar.newTab()
                 .setText("Home")
-                .setIcon(android.R.drawable.ic_menu_today)
                 .setTag("HomeTimelineFragment")
                 .setTabListener(listener);
 
         /// Create tabs -- 42:53
         ActionBar.Tab mentionsTab = actionBar.newTab()
                 .setText("Mentions")
-                .setIcon(android.R.drawable.ic_menu_add)
                 .setTag("MentionsFragment")
                 .setTabListener(listener);
+
+        getActionBar().setStackedBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.white)));
 
         actionBar.addTab(homeTab);
         actionBar.addTab(mentionsTab);
@@ -278,11 +278,6 @@ public class TimelineActivity extends StatusTrackingActivity implements TweetsLi
     public void onConnectionRegained() {
         setNoNetworkBannerVisibility(View.GONE);
         mConnecting = false; // Stops any retrying that's in progress
-    }
-
-    @Override
-    public void onTriggerInfiniteScroll() {
-
     }
 
     private void setNoNetworkBannerVisibility(int visibility) {

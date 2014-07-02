@@ -74,8 +74,4 @@ public class ProfileActivity extends StatusTrackingActivity implements TweetsLis
 
     }
 
-    @Override
-    public void onTriggerInfiniteScroll() {
-        /// Ignore these
-    }
 }

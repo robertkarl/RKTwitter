@@ -30,17 +30,21 @@ public class TwitterClient extends OAuthBaseClient {
     public static final String REST_CONSUMER_KEY = "FT5gJGNvj5JPSrX8W5HrF14wC";
     public static final String REST_CONSUMER_SECRET = "Cc4gudmSfWD8FynCwdt11Kf1ojjF22CMsuOU0CJNS2x9aquz4p";
     public static final String REST_CALLBACK_URL = "oauth://cpbasictweets"; // Change this (here and in manifest)
-    
+
+    public static final String MENTIONS_ENDPOINT = "statuses/mentions_timeline.json";
+    public static final String HOME_TIMELINE_ENDPOINT = "statuses/home_timeline.json";
+    public static final String PROFILE_ENDPOINT = "statuses/user_timeline.json";
+
     public TwitterClient(Context context) {
         super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
     }
 
     public void getMentionsTimeline(AsyncHttpResponseHandler handler) {
-        fetchOlderTweets("statuses/mentions_timeline.json", handler, 0);
+        fetchOlderTweets(MENTIONS_ENDPOINT, handler, 0);
     }
 
     public void getHomeTimeline(AsyncHttpResponseHandler handler) {
-        fetchOlderTweets("statuses/home_timeline.json", handler, 0);
+        fetchOlderTweets(HOME_TIMELINE_ENDPOINT, handler, 0);
     }
 
     /**
@@ -99,7 +103,7 @@ public class TwitterClient extends OAuthBaseClient {
     public void getProfileTimeline(long userID, AsyncHttpResponseHandler handler) {
         RequestParams params = new RequestParams();
         params.put("id", String.format("%d", userID));
-        String apiUrl = getApiUrl("statuses/user_timeline.json");
+        String apiUrl = getApiUrl(PROFILE_ENDPOINT);
         Log.i("DBG", String.format("Requesting %s", apiUrl));
         client.get(apiUrl, params, handler);
     }

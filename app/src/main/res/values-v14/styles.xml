@@ -5,8 +5,21 @@
         AppBaseTheme from BOTH res/values/styles.xml and
         res/values-v11/styles.xml on API 14+ devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="AppBaseTheme"
+        parent="android:Theme.Holo.Light.DarkActionBar">
+        <!--<item name="android:actionBarTabStyle">@style/WhiteActionBarTabs</item>-->
+        <item name="android:actionBarTabTextStyle">@style/TwitterBlueActionBarText</item>
         <!-- API 14 theme customizations can go here. -->
+    </style>
+
+    <style name="WhiteActionBarTabs"
+        parent="android:Widget.Holo.Light.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_background</item>
+    </style>
+
+    <style name="TwitterBlueActionBarText"
+        parent="android:Widget.Holo.Light.ActionBar.TabText">
+        <item name="android:textColor">@color/twitterBlue</item>
     </style>
 
 </resources>
