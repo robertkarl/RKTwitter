@@ -1,10 +1,12 @@
-CodePath - Week 3 - Twitter client - Robert Karl
-# GIF Walkthrough
+[_View Week 3 submission notes here_](https://github.com/robertkarl/RKTwitter/wiki/Week-3-Submission)
+
+# CodePath - Week 4 - Twitter client - Robert Karl
+## GIF Walkthrough
 
 ![Walkthrough](https://raw.githubusercontent.com/robertkarl/RKTwitter/master/RKTwitterDemo.gif)
 
 
-# User Stories
+## User Stories
 #### Timeline
 - [x] User should be able to see the username, name, body and timestamp for each tweet
 - [x] User can view the tweets from their home timeline
@@ -35,10 +37,10 @@ CodePath - Week 3 - Twitter client - Robert Karl
 - [x] User can favorite a tweet
 - [x] user can view all their favorites in the timeline
 
-# Time spent
+## Time spent
 ~25 hours
 
-# Previous GIF Walkthroughs - pre-fragments
+## GIF Walkthroughs before adding fragments
 
 #### Login, infinite scroll, Favorite, Tweet details and images
 -![Walkthrough 1](https://raw.githubusercontent.com/robertkarl/secret-wookie/master/RKTwitterDemoPart1.gif)
