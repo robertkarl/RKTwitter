@@ -3,15 +3,18 @@ package com.codepath.apps.RKTwitterClient;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.apps.RKTwitterClient.fragments.HomeTimelineFragment;
@@ -92,6 +95,8 @@ public class TimelineActivity extends StatusTrackingActivity implements TweetsLi
         ActionBar.TabListener listener = new ActionBar.TabListener() {
             @Override
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                TextView tv = (TextView)tab.getCustomView();
+                tv.setTypeface(Typeface.create("sans-serif-light", Typeface.BOLD));
                 if (tab.getTag() == HomeTimelineFragment.FRAGMENT_NAME) {
                     timelinePager.setCurrentItem(0, true);
                 }
@@ -102,6 +107,8 @@ public class TimelineActivity extends StatusTrackingActivity implements TweetsLi
 
             @Override
             public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                TextView tv = (TextView)tab.getCustomView();
+                tv.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
 
             }
 
@@ -113,21 +120,30 @@ public class TimelineActivity extends StatusTrackingActivity implements TweetsLi
 
         /// Create tabs -- 42:53
         ActionBar.Tab homeTab = actionBar.newTab()
-                .setText("Home")
                 .setTag("HomeTimelineFragment")
                 .setTabListener(listener);
 
+        LayoutInflater inflater = LayoutInflater.from(this);
+        TextView customView = (TextView)inflater.inflate(R.layout.tab_title, null);
+        customView.setText("Home");
+
+        homeTab.setCustomView(customView);
+
         /// Create tabs -- 42:53
         ActionBar.Tab mentionsTab = actionBar.newTab()
-                .setText("Mentions")
                 .setTag("MentionsFragment")
                 .setTabListener(listener);
+
+        TextView mentionsCustom = (TextView)inflater.inflate(R.layout.tab_title, null);
+        mentionsCustom.setText("Mentions");
+        mentionsTab.setCustomView(mentionsCustom);
+
+
 
         getActionBar().setStackedBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.white)));
 
         actionBar.addTab(homeTab);
         actionBar.addTab(mentionsTab);
-
 
     }
 
