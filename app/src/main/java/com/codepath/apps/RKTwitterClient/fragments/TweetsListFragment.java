@@ -90,6 +90,7 @@ public abstract class TweetsListFragment extends Fragment {
             void onFailureReported() {
                 getListener().onConnectionLost();
                 completeRefreshIfNeeded(false);
+                showSavedTweetsIfNeeded(true);
                 Log.e("DBG", "Timeline populate failed %s %s");
             }
         };
@@ -236,8 +237,8 @@ public abstract class TweetsListFragment extends Fragment {
 
 
     protected void toggleLoadingVisibility(boolean showLoading) {
+        Log.d("DBG", String.format("Beginning toggle %b", showLoading));
         final View loadingIndicator = getProgressBar();
-        final View listHolder = rootView.findViewById(R.id.lvTweetsFragmentList);
 
         final int cx = loadingIndicator.getRight() / 2;
         final int cy = loadingIndicator.getBottom() / 2;
@@ -255,7 +256,6 @@ public abstract class TweetsListFragment extends Fragment {
 
                 @Override
                 public void onAnimationEnd(final Animator animation) {
-                    listHolder.setVisibility(View.INVISIBLE);
                 }
             });
 
@@ -267,7 +267,6 @@ public abstract class TweetsListFragment extends Fragment {
             reveal.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationStart(Animator animation) {
-                    listHolder.setVisibility(View.VISIBLE);
                 }
 
                 @Override
@@ -298,8 +297,8 @@ public abstract class TweetsListFragment extends Fragment {
     }
 
 
-    public void showSavedTweetsIfNeeded() {
-        if (tweetsAdapter.getCount() == 0) {
+    public void showSavedTweetsIfNeeded(boolean forceReload) {
+        if (tweetsAdapter.getCount() == 0 || forceReload) {
             clearTweets();
             List<Tweet> storedTweets = new Select().from(Tweet.class).execute();
             Log.d("DBG", String.format("showing %d saved tweets", storedTweets.size()));
@@ -308,9 +307,7 @@ public abstract class TweetsListFragment extends Fragment {
         }
     }
 
-
     protected abstract String getEndpoint();
-
 
     public void onTriggerInfiniteScroll() {
         client.fetchOlderTweets(getEndpoint(), new JsonHttpResponseHandler() {
@@ -357,7 +354,7 @@ public abstract class TweetsListFragment extends Fragment {
                     Log.d("DBG", String.format("Checking server connection in %d millis", delay * 2));
                     checkBackForAConnection(delay == 0 ? 500 : delay * 2);
                     getListener().onConnectionLost();
-                    showSavedTweetsIfNeeded();
+                    showSavedTweetsIfNeeded(false);
                 }
             }
         }, delay);
