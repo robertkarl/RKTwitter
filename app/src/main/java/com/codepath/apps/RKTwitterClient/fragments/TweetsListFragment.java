@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import com.codepath.apps.RKTwitterClient.TweetArrayAdapter;
 import com.codepath.apps.RKTwitterClient.TwitterApplication;
 import com.codepath.apps.RKTwitterClient.TwitterClient;
 import com.codepath.apps.RKTwitterClient.models.Tweet;
+import com.codepath.apps.RKTwitterClient.util.Connectivity;
 import com.codepath.apps.RKTwitterClient.util.EndlessScrollListener;
 import com.codepath.apps.RKTwitterClient.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -52,6 +54,7 @@ public abstract class TweetsListFragment extends Fragment {
     private View rootView;
 
     long lastTweetID = -1;
+    boolean mConnecting;
 
     TweetsListFragment() {
         super();
@@ -94,6 +97,7 @@ public abstract class TweetsListFragment extends Fragment {
             public void onFailure(Throwable throwable, JSONArray jsonArray) {
                 super.onFailure(throwable, jsonArray);
                 getListener().onConnectionLost();
+
                 completeRefreshIfNeeded(false);
                 Log.e("DBG", String.format("Timeline populate failed %s %s", throwable.toString(), jsonArray.toString()));
             }
@@ -161,6 +165,7 @@ public abstract class TweetsListFragment extends Fragment {
     @Override
     public void onResume() {
         Log.v("DBG", ((Object) this).getClass().getSimpleName() +  "onResume");
+        checkBackForAConnection(0);
         super.onResume();
     }
 
@@ -312,11 +317,14 @@ public abstract class TweetsListFragment extends Fragment {
     }
 
 
-    void showSavedTweets() {
-        getProgressBar().setVisibility(View.GONE);
-        clearTweets();
-        List<Tweet> storedTweets = new Select().from(Tweet.class).execute();
-        addAll(storedTweets);
+    public void showSavedTweetsIfNeeded() {
+        if (tweetsAdapter.getCount() == 0) {
+            clearTweets();
+            List<Tweet> storedTweets = new Select().from(Tweet.class).execute();
+            Log.d("DBG", String.format("showing %d saved tweets", storedTweets.size()));
+            addAll(storedTweets);
+            toggleLoadingVisibility(false);
+        }
     }
 
 
@@ -337,6 +345,41 @@ public abstract class TweetsListFragment extends Fragment {
                 getListener().onConnectionLost();
             }
         }, lastTweetID - 1);
+    }
+
+
+    /**
+     * Perform exponential backoff checking for internet connectivity
+     * @param delay milliseconds later for initial check.
+     */
+    private void checkBackForAConnection(final int delay) {
+        if (mConnecting && delay == 0) {
+            // Don't spawn off multiple threads trying to check back
+            return;
+        }
+        mConnecting = true;
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!mConnecting) {
+                    return;
+                }
+                if (Connectivity.isOnline(getActivity())) {
+                    getListener().onConnectionRegained();
+                    if (delay != 0) {
+                        Toast.makeText(getActivity(), "Welcome back", Toast.LENGTH_SHORT).show();
+                        Log.d("DBG", String.format("found a connection again! delay would have been %d", delay));
+                    }
+                    mConnecting = false;
+                } else {
+                    Log.d("DBG", String.format("Checking server connection in %d millis", delay * 2));
+                    checkBackForAConnection(delay == 0 ? 500 : delay * 2);
+                    getListener().onConnectionLost();
+                    showSavedTweetsIfNeeded();
+                }
+            }
+        }, delay);
     }
 
 }

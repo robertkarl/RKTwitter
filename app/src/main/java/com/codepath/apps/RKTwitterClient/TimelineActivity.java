@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,7 +20,6 @@ import com.codepath.apps.RKTwitterClient.fragments.HomeTimelineFragment;
 import com.codepath.apps.RKTwitterClient.fragments.TweetsListFragment;
 import com.codepath.apps.RKTwitterClient.models.Tweet;
 import com.codepath.apps.RKTwitterClient.models.User;
-import com.codepath.apps.RKTwitterClient.util.Connectivity;
 import com.codepath.apps.RKTwitterClient.util.Util;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -30,7 +28,6 @@ import org.json.JSONObject;
 public class TimelineActivity extends StatusTrackingActivity implements TweetsListFragment.TweetsListListener, TweetArrayAdapter.TweetActionsListener{
     public static int COMPOSE_REQUEST = 1234;
     private TwitterClient client;
-    private boolean mConnecting = false;
 
     private MenuItem mRefreshItem;
 
@@ -70,8 +67,6 @@ public class TimelineActivity extends StatusTrackingActivity implements TweetsLi
             }
         });
         setupTabs();
-
-        checkBackForAConnection(0);
 
         User.fetchCurrentUser(null);
 
@@ -288,12 +283,10 @@ public class TimelineActivity extends StatusTrackingActivity implements TweetsLi
 
     public void onConnectionLost() {
         setNoNetworkBannerVisibility(View.VISIBLE);
-        checkBackForAConnection(0);
     }
     @Override
     public void onConnectionRegained() {
         setNoNetworkBannerVisibility(View.GONE);
-        mConnecting = false; // Stops any retrying that's in progress
     }
 
     private void setNoNetworkBannerVisibility(int visibility) {
@@ -301,41 +294,8 @@ public class TimelineActivity extends StatusTrackingActivity implements TweetsLi
         v.setVisibility(visibility);
     }
 
-
-    /**
-     * Perform exponential backoff checking for internet connectivity
-     * @param delay milliseconds later for initial check.
-     */
-    private void checkBackForAConnection(final int delay) {
-        if (mConnecting && delay == 0) {
-            // Don't spawn off multiple threads trying to check back
-            return;
-        }
-        mConnecting = true;
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!mConnecting) {
-                    return;
-                }
-                if (Connectivity.isOnline(TimelineActivity.this)) {
-                    setNoNetworkBannerVisibility(View.GONE);
-                    if (delay != 0) {
-                        Toast.makeText(TimelineActivity.this, "Welcome back", Toast.LENGTH_SHORT).show();
-                        Log.d("DBG", String.format("found a connection again! delay would have been %d", delay));
-                    }
-                    mConnecting = false;
-                } else {
-                    Log.d("DBG", String.format("Checking server connection in %d millis", delay * 2));
-                    checkBackForAConnection(delay == 0 ? 500 : delay * 2);
-                    setNoNetworkBannerVisibility(View.VISIBLE);
-                    /// For each fragment:
-//                        showSavedTweets();
-                }
-            }
-        }, delay);
+    private TweetsListFragment getCurrentFragment() {
+        return (TweetsListFragment)tweetsListPagerAdapter.getItem(timelinePager.getCurrentItem());
     }
-
 
 }
